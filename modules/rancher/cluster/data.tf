@@ -27,8 +27,8 @@ data "template_file" "config_template" {
   template = "${file("${path.module}/.files/config.yaml")}"
 
   vars {
-    member_startup = "${replace(var.rancher_registration_token, "sudo docker", "/usr/bin/docker")}"
     environment    = "${var.environment_name}"
+    startup = "${replace(var.rancher_registration_token, "sudo docker", "/usr/bin/docker")}"
   }
 }
 

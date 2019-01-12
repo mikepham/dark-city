@@ -9,7 +9,7 @@ systemd:
         Requires=docker.service
 
         [Service]
-        ExecStart=${agent_startup}
+        ExecStart=${startup}
         Type=oneshot
 
         [Install]
