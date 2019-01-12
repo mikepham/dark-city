@@ -37,7 +37,7 @@
 
 | Name | Description |
 |------|-------------|
-| aws\_certificate\_arn |  |
+| aws\_certificate\_arn | Certificate ARN |
 
 ## Module: rancher
 ## Inputs
@@ -81,7 +81,7 @@
 
 | Name | Description |
 |------|-------------|
-| rancher\_environment\_id |  |
+| rancher\_environment\_id | Rancher Environment ID |
 
 ## Module: rancher-aws
 ## Inputs
@@ -94,5 +94,5 @@
 
 | Name | Description |
 |------|-------------|
-| secrets |  |
+| secrets | Environment Secrets |
 
