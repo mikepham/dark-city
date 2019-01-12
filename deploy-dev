@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sh ./docs.sh
+sh ./docs.sh development
 
 cd env_development
 terraform fmt
