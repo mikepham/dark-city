@@ -1,8 +1,0 @@
-#!/bin/bash
-
-sh ./docs.sh internal
-terraform fmt
-
-cd env_internal
-terraform init
-terraform apply

@@ -1,8 +1,0 @@
-#!/bin/bash
-
-sh ./docs.sh production
-terraform fmt
-
-cd env_production
-terraform init
-terraform apply

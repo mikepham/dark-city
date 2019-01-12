@@ -1,0 +1,78 @@
+#!/bin/bash
+
+# Argument Parsing
+#------------------------------------------------------------------------------
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+  key="$1"
+
+  case $key in
+    -a|--apply)
+      APPLY=true
+      shift
+    ;;
+
+    -e|--environment)
+      ENVIRONMENT="$2"
+      shift
+      shift
+    ;;
+
+    *)
+      ENVIRONMENT="$1"
+      POSITIONAL+=("$1")
+      shift
+    ;;
+  esac
+done
+set -- "${POSITIONAL[@]}"
+
+# Validation
+#------------------------------------------------------------------------------
+if [ "$ENVIRONMENT" = "" ]; then
+  echo "Must provide an environment to deploy"
+  exit
+fi
+
+case $ENVIRONMENT in
+  "dev")
+    ENVIRONMENT=development
+  ;;
+
+  "int")
+    ENVIRONMENT=internal
+  ;;
+
+  "prod")
+    ENVIRONMENT=production
+  ;;
+esac
+
+if [ ! -d "env_$ENVIRONMENT" ]; then
+  echo "Invalid Environment $ENVIRONMENT"
+  exit
+fi
+
+ENVIRONMENT_PATH="env_$ENVIRONMENT"
+
+# Informational
+#------------------------------------------------------------------------------
+echo "Environment: $ENVIRONMENT"
+echo "Environment Path: $ENVIRONMENT_PATH"
+echo "------------------------------------------------------------------------"
+echo ""
+
+# Entry Point
+#------------------------------------------------------------------------------
+sh ./docs.sh $ENVIRONMENT
+terraform fmt
+
+cd $ENVIRONMENT_PATH
+terraform init
+
+if [ "$APPLY" = "true" ]; then
+  terraform apply
+else
+  terraform plan
+fi
