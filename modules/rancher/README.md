@@ -28,6 +28,9 @@
 | drone\_github\_secret | Drone GitHub Secret | string | n/a | yes |
 | drone\_image\_tag | Drone Image Tag | string | n/a | yes |
 | drone\_shared\_secret | Drone Shared Secret | string | n/a | yes |
+| elasticsearch\_instance\_type | ElasticSearch Instance Type | string | n/a | yes |
+| elasticsearch\_snapshot\_start\_hour | When to start the snapshot | string | n/a | yes |
+| elasticsearch\_version | ElasticSearch Version | string | n/a | yes |
 | environment\_domain | Environment Domain Name | string | n/a | yes |
 | environment\_domain\_tld | Environment Domain TLD | string | n/a | yes |
 | environment\_name | Rancher Environment | string | n/a | yes |

@@ -1,4 +1,5 @@
 data "null_data_source" "dsn" {
+  count      = "${var.enabled}"
   depends_on = ["aws_db_instance.drone"]
 
   inputs = {
@@ -7,7 +8,9 @@ data "null_data_source" "dsn" {
 }
 
 data "template_file" "drone_docker_compose" {
-  template = "${file("${path.module}/.files/drone_docker-compose.yaml")}"
+  count      = "${var.enabled}"
+  depends_on = ["aws_db_instance.drone"]
+  template   = "${file("${path.module}/.files/drone_docker-compose.yaml")}"
 
   vars {
     drone_admin                = "${join(",", var.admin_accounts)}"

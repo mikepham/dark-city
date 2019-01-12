@@ -53,6 +53,21 @@ variable "drone_image_tag" {
   description = "Drone Image Docker Tag"
 }
 
+variable "elasticsearch_instance_type" {
+  description = "ElasticSearch Instance Type"
+  type        = "string"
+}
+
+variable "elasticsearch_snapshot_start_hour" {
+  default     = 23
+  description = "When to start snapshot"
+}
+
+variable "elasticsearch_version" {
+  default     = "6.3"
+  description = "ElasticSearch Version"
+}
+
 variable "rancher_ami_image" {
   description = "Rancher AMI Image ID"
   type        = "string"

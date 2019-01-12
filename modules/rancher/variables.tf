@@ -117,6 +117,21 @@ variable "drone_enabled" {
   type        = "string"
 }
 
+variable "elasticsearch_instance_type" {
+  description = "ElasticSearch Instance Type"
+  type        = "string"
+}
+
+variable "elasticsearch_snapshot_start_hour" {
+  description = "When to start the snapshot"
+  type        = "string"
+}
+
+variable "elasticsearch_version" {
+  description = "ElasticSearch Version"
+  type        = "string"
+}
+
 variable "environment_domain" {
   description = "Environment Domain Name"
   type        = "string"

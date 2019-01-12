@@ -55,6 +55,15 @@ module "cluster" {
   vpc_ids                 = "${var.vpc_ids}"
 }
 
+module "elasticsearch" {
+  source = "elasticsearch"
+
+  domain                = "${var.environment_domain}"
+  instance_type         = "${var.elasticsearch_instance_type}"
+  snapshot_start_hour   = "${var.elasticsearch_snapshot_start_hour}"
+  elasticsearch_version = "${var.elasticsearch_version}"
+}
+
 module "storage" {
   source = "storage"
 

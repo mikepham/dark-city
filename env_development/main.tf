@@ -26,9 +26,11 @@ module "environment" {
   source = "../environment"
 
   drone_admin_accounts         = ["mikepham"]
-  drone_enabled                = true
+  drone_enabled                = false
   drone_database_instance_type = "t2.micro"
   drone_github_organizations   = ["nativecode-dev"]
+
+  elasticsearch_instance_type = "t2.small.elasticsearch"
 
   rancher_ami_image          = "ami-0b1db01d775d666c2"
   rancher_availability_zones = ["us-east-1"]

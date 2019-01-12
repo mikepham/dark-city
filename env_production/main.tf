@@ -30,6 +30,8 @@ module "environment" {
   drone_database_instance_type = "t2.micro"
   drone_github_organizations   = ["nativecode-dev"]
 
+  elasticsearch_instance_type = "t2.small.elasticsearch"
+
   rancher_ami_image          = "ami-0b1db01d775d666c2"
   rancher_availability_zones = ["us-east-1"]
   rancher_certificate_domain = "nativecode.net"
