@@ -11,6 +11,8 @@
 
 #### Configure Go
 ```bash
+mkdir ~/go
+echo "PATH=~/go:$PATH" >> ~/.profile
 ```
 
 #### Install Plugins
