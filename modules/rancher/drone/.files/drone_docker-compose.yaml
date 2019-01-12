@@ -1,0 +1,44 @@
+version: "2"
+services:
+  server:
+    image: drone/drone:${drone_tag}
+    environment:
+      DRONE_ADMIN: ${drone_admin}
+      DRONE_DATABASE_DATASOURCE: ${drone_database_dsn}
+      DRONE_DATABASE_DRIVER: ${drone_database_type}
+      DRONE_GITHUB: true
+      DRONE_GITHUB_CLIENT: ${drone_github_client}
+      DRONE_GITHUB_SECRET: ${drone_github_secret}
+      DRONE_HOST: ${drone_url}
+      DRONE_OPEN: true
+      DRONE_ORGS: ${drone_github_organizations}
+      DRONE_SECRET: ${drone_shared secret}
+      GIN_MODE: release
+    stdin_open: true
+    tty: true
+    labels:
+      io.rancher.container.pull_image: always
+  agent:
+    image: drone/agent:${drone_image_tag}
+    environment:
+      DRONE_SECRET: ${drone_secret}
+      DRONE_SERVER: server:9000
+      NO_PROXY: drone
+    health_check:
+      healthy_threshold: 2
+      response_timeout: 2000
+      port: 3000
+      unhealthy_threshold: 3
+      initializing_timeout: 60000
+      interval: 2000
+      strategy: recreate
+      reinitializing_timeout: 60000
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.scheduler.global: true
+    links:
+      - server:server
+    stdin_open: true
+    tty: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

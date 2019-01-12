@@ -8,6 +8,10 @@ provider "rancher" {
   version    = "1.2.1"
 }
 
+provider "http" {
+  version = "1.0"
+}
+
 provider "template" {
   version = "1.0.0"
 }
@@ -57,4 +61,28 @@ module "storage" {
   environment     = "${var.environment_name}"
   security_groups = ["${module.security.security_group_storage}"]
   subnets         = "${var.subnets}"
+}
+
+module "drone" {
+  source  = "drone"
+  enabled = "${var.drone_enabled}"
+
+  admin_accounts           = "${var.drone_admin_accounts}"
+  environment              = "${var.environment_name}"
+  environment_domain       = "${var.environment_domain}"
+  environment_id           = "${rancher_environment.env.id}"
+  database_disk_size       = "${var.drone_database_disk_size}"
+  database_instance_type   = "${var.drone_database_instance_type}"
+  database_name            = "${var.drone_database_name}"
+  database_parameter_group = "${var.drone_database_parameter_group}"
+  database_password        = "${var.drone_database_password}"
+  database_security_groups = ["${module.security.security_group_database}"]
+  database_type            = "${var.drone_database_type}"
+  database_type_version    = "${var.drone_database_type_version}"
+  database_username        = "${var.drone_database_username}"
+  image_tag                = "${var.drone_image_tag}"
+  github_client            = "${var.drone_github_client}"
+  github_organizations     = "${var.drone_github_organizations}"
+  github_secret            = "${var.drone_github_secret}"
+  shared_secret            = "${var.drone_shared_secret}"
 }

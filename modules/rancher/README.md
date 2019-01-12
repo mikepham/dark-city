@@ -13,6 +13,21 @@
 | cluster\_member\_size | Rancher Cluster member Size | string | n/a | yes |
 | cluster\_name |  | string | n/a | yes |
 | cluster\_size | Rancher Cluster Size | string | n/a | yes |
+| drone\_admin\_accounts | Drone Admin Accounts | list | n/a | yes |
+| drone\_database\_disk\_size | Drone Database Disk Size | string | n/a | yes |
+| drone\_database\_instance\_type | Drone Database Instance Type | string | n/a | yes |
+| drone\_database\_name | Drone Database Name | string | n/a | yes |
+| drone\_database\_parameter\_group | Drone Database Parameter Group | string | n/a | yes |
+| drone\_database\_password | Drone Database Password | string | n/a | yes |
+| drone\_database\_type | Drone Database Type | string | n/a | yes |
+| drone\_database\_type\_version | Drone Database Type Version | string | n/a | yes |
+| drone\_database\_username | Drone Database UserName | string | n/a | yes |
+| drone\_enabled | Enable Drone Module | string | n/a | yes |
+| drone\_github\_client | Drone GitHub Client | string | n/a | yes |
+| drone\_github\_organizations | Drone GitHub Organizations | list | n/a | yes |
+| drone\_github\_secret | Drone GitHub Secret | string | n/a | yes |
+| drone\_image\_tag | Drone Image Tag | string | n/a | yes |
+| drone\_shared\_secret | Drone Shared Secret | string | n/a | yes |
 | environment\_domain | Environment Domain Name | string | n/a | yes |
 | environment\_domain\_tld | Environment Domain TLD | string | n/a | yes |
 | environment\_name | Rancher Environment | string | n/a | yes |

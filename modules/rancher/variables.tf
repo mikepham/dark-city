@@ -42,6 +42,81 @@ variable "cluster_member_size" {
   type        = "string"
 }
 
+variable "drone_admin_accounts" {
+  description = "Drone Admin Accounts"
+  type        = "list"
+}
+
+variable "drone_database_disk_size" {
+  description = "Drone Database Disk Size"
+  type        = "string"
+}
+
+variable "drone_database_instance_type" {
+  description = "Drone Database Instance Type"
+  type        = "string"
+}
+
+variable "drone_database_name" {
+  description = "Drone Database Name"
+  type        = "string"
+}
+
+variable "drone_database_parameter_group" {
+  description = "Drone Database Parameter Group"
+  type        = "string"
+}
+
+variable "drone_database_password" {
+  description = "Drone Database Password"
+  type        = "string"
+}
+
+variable "drone_database_type" {
+  description = "Drone Database Type"
+  type        = "string"
+}
+
+variable "drone_database_type_version" {
+  description = "Drone Database Type Version"
+  type        = "string"
+}
+
+variable "drone_database_username" {
+  description = "Drone Database UserName"
+  type        = "string"
+}
+
+variable "drone_image_tag" {
+  description = "Drone Image Tag"
+  type        = "string"
+}
+
+variable "drone_github_client" {
+  description = "Drone GitHub Client"
+  type        = "string"
+}
+
+variable "drone_github_organizations" {
+  description = "Drone GitHub Organizations"
+  type        = "list"
+}
+
+variable "drone_github_secret" {
+  description = "Drone GitHub Secret"
+  type        = "string"
+}
+
+variable "drone_shared_secret" {
+  description = "Drone Shared Secret"
+  type        = "string"
+}
+
+variable "drone_enabled" {
+  description = "Enable Drone Module"
+  type        = "string"
+}
+
 variable "environment_domain" {
   description = "Environment Domain Name"
   type        = "string"

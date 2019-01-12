@@ -1,3 +1,58 @@
+variable "drone_admin_accounts" {
+  description = "Drone Admin Account"
+  type        = "list"
+}
+
+variable "drone_database_disk_size" {
+  default     = 10
+  description = "Drone Database Disk Size"
+}
+
+variable "drone_database_instance_type" {
+  description = "Drone Database Instance Type"
+  type        = "string"
+}
+
+variable "drone_database_name" {
+  default     = "drone"
+  description = "Drone Database Name"
+}
+
+variable "drone_database_type" {
+  default     = "mysql"
+  description = "Database Type"
+}
+
+variable "drone_database_type_version" {
+  default     = "5.7"
+  description = "Drone Database Type Version"
+}
+
+variable "drone_database_parameter_group" {
+  default     = "default.mysql5.7"
+  description = "Drone Database Parameter Group"
+}
+
+variable "drone_database_username" {
+  default     = "drone"
+  description = "Drone Database UserName"
+}
+
+variable "drone_enabled" {
+  description = "Enables Drone Deployment"
+  type        = "string"
+}
+
+variable "drone_github_organizations" {
+  description = "Drone GitHub Organizations"
+  type        = "list"
+}
+
+variable "drone_image_tag" {
+  default     = "0.8-alpine"
+  description = "Drone Image Docker Tag"
+}
+
 variable "rancher_ami_image" {
   description = "Rancher AMI Image ID"
   type        = "string"
