@@ -28,6 +28,11 @@ variable "domain" {
   type        = "string"
 }
 
+variable "environment" {
+  description = "Environment"
+  type        = "string"
+}
+
 variable "elasticsearch_version" {
   description = "ElasticSearch Version"
   type        = "string"
@@ -51,6 +56,16 @@ variable "instance_type" {
 variable "snapshot_start_hour" {
   description = "When to start snapshots"
   type        = "string"
+}
+
+variable "subnets" {
+  description = "AWS Subnets"
+  type        = "list"
+}
+
+variable "vpc_ids" {
+  description = "VPCs"
+  type        = "list"
 }
 
 variable "zone_awareness_enabled" {

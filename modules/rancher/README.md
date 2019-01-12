@@ -35,6 +35,7 @@
 | elasticsearch\_instance\_type | ElasticSearch Instance Type | string | n/a | yes |
 | elasticsearch\_node2node\_encryption | Enable Node-to-Node Encryption | string | n/a | yes |
 | elasticsearch\_snapshot\_start\_hour | When to start the snapshot | string | n/a | yes |
+| elasticsearch\_subnets | ElasticSearch Subnets | list | n/a | yes |
 | elasticsearch\_version | ElasticSearch Version | string | n/a | yes |
 | elasticsearch\_zone\_awareness\_enabled | Enable AWS Zone Awareness | string | n/a | yes |
 | environment\_domain | Environment Domain Name | string | n/a | yes |

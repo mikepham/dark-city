@@ -64,11 +64,14 @@ module "elasticsearch" {
   dedicated_master_enabled = "${var.elasticsearch_dedicated_master_enabled}"
   dedicated_master_type    = "${var.elasticsearch_dedicated_master_type}"
   domain                   = "${var.environment_domain}"
+  environment              = "${var.environment_name}"
   elasticsearch_version    = "${var.elasticsearch_version}"
   instance_count           = "${var.elasticsearch_instance_count}"
   instance_type            = "${var.elasticsearch_instance_type}"
   node2node_encryption     = "${var.elasticsearch_node2node_encryption}"
   snapshot_start_hour      = "${var.elasticsearch_snapshot_start_hour}"
+  subnets                  = "${var.elasticsearch_subnets}"
+  vpc_ids                  = "${var.vpc_ids}"
   zone_awareness_enabled   = "${var.elasticsearch_zone_awareness_enabled}"
 }
 

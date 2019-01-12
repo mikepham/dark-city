@@ -20,7 +20,7 @@
 | elasticsearch\_instance\_count | Number of ElasticSearch Instances | string | n/a | yes |
 | elasticsearch\_instance\_type | ElasticSearch Instance Type | string | n/a | yes |
 | elasticsearch\_node2node\_encryption | Enable Node-to-Node Encryption | string | n/a | yes |
-| elasticsearch\_snapshot\_start\_hour | When to start the snapshot | string | n/a | yes |
+| elasticsearch\_snapshot\_start\_hour | When to start the snapshot | string | `"23"` | no |
 | elasticsearch\_version | ElasticSearch Version | string | n/a | yes |
 | elasticsearch\_zone\_awareness\_enabled | Enable AWS Zone Awareness | string | n/a | yes |
 | rancher\_ami\_image | Rancher AMI Image ID | string | n/a | yes |

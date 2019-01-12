@@ -1,3 +1,30 @@
+resource "aws_security_group" "elasticsearch" {
+  count       = "${length(var.vpc_ids)}"
+  name_prefix = "elasticsearch-${var.environment}-"
+  description = "Allows ElasticSearch traffic from instances within the VPC."
+  vpc_id      = "${element(var.vpc_ids, count.index)}"
+
+  egress {
+    from_port = 9200
+    to_port   = 9200
+    protocol  = "tcp"
+
+    cidr_blocks = ["${element(data.aws_vpc.vpc.*.cidr_block, count.index)}"]
+  }
+
+  ingress {
+    from_port = 9200
+    to_port   = 9200
+    protocol  = "tcp"
+
+    cidr_blocks = ["${element(data.aws_vpc.vpc.*.cidr_block, count.index)}"]
+  }
+
+  tags {
+    Name = "elasticsearch-${var.environment}"
+  }
+}
+
 resource "aws_cloudwatch_log_group" "cloudwatch" {
   name = "${var.domain}"
 }
@@ -43,7 +70,7 @@ resource "aws_elasticsearch_domain" "elasticsearch" {
   }
 
   vpc_options {
-    security_group_ids = "${var.security_groups}"
+    security_group_ids = ["${aws_security_group.elasticsearch.id}"]
     subnet_ids         = "${var.subnets}"
   }
 }

@@ -84,6 +84,7 @@ variable "elasticsearch_node2node_encryption" {
 }
 
 variable "elasticsearch_snapshot_start_hour" {
+  default     = 23
   description = "When to start the snapshot"
   type        = "string"
 }

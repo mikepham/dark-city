@@ -152,6 +152,11 @@ variable "elasticsearch_snapshot_start_hour" {
   type        = "string"
 }
 
+variable "elasticsearch_subnets" {
+  description = "ElasticSearch Subnets"
+  type        = "list"
+}
+
 variable "elasticsearch_version" {
   description = "ElasticSearch Version"
   type        = "string"

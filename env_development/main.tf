@@ -30,7 +30,14 @@ module "environment" {
   drone_database_instance_type = "t2.micro"
   drone_github_organizations   = ["nativecode-dev"]
 
-  elasticsearch_instance_type = "t2.small.elasticsearch"
+  elasticsearch_instance_type            = "t2.small.elasticsearch"
+  elasticsearch_dedicated_master_count   = 1
+  elasticsearch_dedicated_master_enabled = false
+  elasticsearch_dedicated_master_type    = "t2.small.elasticsearch"
+  elasticsearch_instance_count           = 1
+  elasticsearch_node2node_encryption     = false
+  elasticsearch_zone_awareness_enabled   = false
+  elasticsearch_version                  = "6.3"
 
   rancher_ami_image          = "ami-0b1db01d775d666c2"
   rancher_availability_zones = ["us-east-1"]
