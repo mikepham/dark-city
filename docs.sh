@@ -1,12 +1,15 @@
 #!/bin/bash
 
-echo "#" > README.md
+echo "#" > ./modules/README.md
 
-echo "## Module: main" >> README.md
-terraform-docs markdown . >> README.md
+echo "## Module: environment" >> ./modules/README.md
+terraform-docs markdown environment >> ./modules/README.md
 
-echo "## Module: rancher" >> README.md
-terraform-docs markdown rancher >> README.md
+echo "## Module: certificates" >> ./modules/README.md
+terraform-docs markdown modules/certificates >> ./modules/README.md
 
-echo "## Module: rancher-aws" >> README.md
-terraform-docs markdown rancher-aws >> README.md
+echo "## Module: rancher" >> ./modules/README.md
+terraform-docs markdown modules/rancher >> ./modules/README.md
+
+echo "## Module: rancher-aws" >> ./modules/README.md
+terraform-docs markdown modules/secrets >> ./modules/README.md
