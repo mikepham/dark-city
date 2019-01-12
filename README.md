@@ -8,6 +8,12 @@
 
 - [Go](https://golang.org/dl])
 - [Terraform](https://www.terraform.io/downloads.html)
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
+
+#### Configure AWS
+```bash
+aws configure
+```
 
 #### Configure Go
 ```bash
