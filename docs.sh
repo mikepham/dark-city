@@ -1,7 +1,9 @@
 #!/bin/bash
 
 if [ $# -eq 0 ]; then
-  echo "No arguments supplied"
+  sh ./docs.sh development
+  sh ./docs.sh internal
+  sh ./docs.sh production
   exit
 fi
 
@@ -16,5 +18,5 @@ terraform-docs markdown modules/certificates >> ./env_$1/README.md
 echo "## Module: rancher" >> ./env_$1/README.md
 terraform-docs markdown modules/rancher >> ./env_$1/README.md
 
-echo "## Module: rancher-aws" >> ./env_$1/README.md
+echo "## Module: secrets" >> ./env_$1/README.md
 terraform-docs markdown modules/secrets >> ./env_$1/README.md

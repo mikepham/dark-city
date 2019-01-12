@@ -83,7 +83,7 @@
 |------|-------------|
 | rancher\_environment\_id | Rancher Environment ID |
 
-## Module: rancher-aws
+## Module: secrets
 ## Inputs
 
 | Name | Description | Type | Default | Required |
