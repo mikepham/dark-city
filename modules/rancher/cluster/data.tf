@@ -27,8 +27,8 @@ data "template_file" "config_template" {
   template = "${file("${path.module}/.files/config.yaml")}"
 
   vars {
-    environment    = "${var.environment_name}"
-    startup = "${replace(var.rancher_registration_token, "sudo docker", "/usr/bin/docker")}"
+    environment = "${var.environment_name}"
+    startup     = "${replace(var.agent_startup, "sudo docker", "/usr/bin/docker")}"
   }
 }
 
@@ -40,10 +40,10 @@ data "template_file" "etcd" {
   template = "${file("${path.module}/.files/etcd.yaml")}"
 
   vars {
+    discovery_url     = "${trimspace(data.http.etcd_discovery.body)}"
+    domain_name       = "${var.environment_domain}"
     etcd_cluster_name = "${var.cluster_name}"
     etcd_token        = "${var.etcd_token}"
-    domain_name       = "${var.environment_domain}"
-    discovery_url     = "${trimspace(data.http.etcd_discovery.body)}"
   }
 }
 

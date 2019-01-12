@@ -11,11 +11,6 @@ variable "availability_zones" {
   type = "list"
 }
 
-variable "aws_subnets" {
-  description = "AWS Subnets"
-  type        = "list"
-}
-
 variable "capacity" {
   type = "string"
 }

@@ -9,17 +9,17 @@ variable "rancher_availability_zones" {
 }
 
 variable "rancher_capacity" {
-  default = 3
+  default     = 3
   description = "AutoScaling Capacity"
 }
 
 variable "rancher_capacity_max" {
-  default = 5
+  default     = 5
   description = "AutoScaling Capacity Max"
 }
 
 variable "rancher_capacity_min" {
-  default = 3
+  default     = 3
   description = "AutoScaling Capacity Min"
 }
 
@@ -29,12 +29,12 @@ variable "rancher_certificate_domain" {
 }
 
 variable "rancher_cluster_size" {
-  default = 1
+  default     = 1
   description = "Instance Count"
 }
 
 variable "rancher_cluster_member_size" {
-  default = 3
+  default     = 3
   description = "Cluster member Size"
 }
 
@@ -49,12 +49,12 @@ variable "rancher_environment" {
 }
 
 variable "rancher_etcd_token" {
-  default = "etcd-token"
+  default     = "etcd-token"
   description = "Rancher ETCD Cluster Token"
 }
 
 variable "rancher_iam_profile" {
-  default = "EC2"
+  default     = "EC2"
   description = "AWS IAM Profile"
 }
 
@@ -69,7 +69,7 @@ variable "rancher_keypair" {
 }
 
 variable "rancher_monitoring" {
-  default = true
+  default     = true
   description = "Rancher Enable AWS Monitoring"
 }
 
@@ -90,12 +90,12 @@ variable "rancher_url" {
 }
 
 variable "rancher_use_public_ip" {
-  default = true
+  default     = true
   description = "Rancher Enable Public IP"
 }
 
 variable "rancher_volume_size" {
-  default = 8
+  default     = 8
   description = "Rancher Volume Size"
 }
 

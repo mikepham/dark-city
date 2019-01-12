@@ -1,8 +1,8 @@
 #!/bin/bash
 
 sh ./docs.sh production
+terraform fmt
 
 cd env_production
-terraform fmt
 terraform init
 terraform apply

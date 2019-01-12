@@ -1,8 +1,8 @@
 #!/bin/bash
 
 sh ./docs.sh development
+terraform fmt
 
 cd env_development
-terraform fmt
 terraform init
 terraform apply

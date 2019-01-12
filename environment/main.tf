@@ -23,7 +23,6 @@ module "rancher" {
   access_key              = "${module.secrets.secrets["RANCHER_ACCESS_KEY"]}"
   ami_image               = "${var.rancher_ami_image}"
   availability_zones      = "${var.rancher_availability_zones}"
-  aws_subnets             = "${var.rancher_subnets}"
   capacity                = "${var.rancher_capacity}"
   capacity_max            = "${var.rancher_capacity_max}"
   capacity_min            = "${var.rancher_capacity_min}"

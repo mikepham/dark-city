@@ -1,5 +1,5 @@
 output "aws_certificate_arn" {
-  depends_on = ["data.aws_acm_certificate.certficate"]
+  depends_on  = ["data.aws_acm_certificate.certficate"]
   description = "Certificate ARN"
-  value = "${data.aws_acm_certificate.certficate.arn}"
+  value       = "${data.aws_acm_certificate.certficate.arn}"
 }

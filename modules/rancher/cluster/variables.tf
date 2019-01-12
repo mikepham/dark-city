@@ -1,14 +1,19 @@
+variable "agent_startup" {
+  description = "Rancher Agent Command"
+  type        = "string"
+}
+
+variable "agent_token" {
+  description = "Rancher Agent Registration Token"
+  type        = "string"
+}
+
 variable "ami_image" {
   type = "string"
 }
 
 variable "availability_zones" {
   type = "list"
-}
-
-variable "aws_subnets" {
-  description = "AWS Subnets"
-  type        = "list"
 }
 
 variable "capacity" {
@@ -94,11 +99,6 @@ variable "keypair" {
 variable "ntp_hosts" {
   description = "NTP hosts"
   type        = "list"
-}
-
-variable "rancher_registration_token" {
-  description = "Rancher Registration Token"
-  type        = "string"
 }
 
 variable "ssl_port" {

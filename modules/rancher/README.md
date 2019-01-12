@@ -6,7 +6,6 @@
 | access\_key | Rancher Access Key | string | n/a | yes |
 | ami\_image |  | string | n/a | yes |
 | availability\_zones |  | list | n/a | yes |
-| aws\_subnets | AWS Subnets | list | n/a | yes |
 | capacity |  | string | n/a | yes |
 | capacity\_max |  | string | n/a | yes |
 | capacity\_min |  | string | n/a | yes |
