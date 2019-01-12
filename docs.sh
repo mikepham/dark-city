@@ -12,11 +12,11 @@ echo "#" > ./env_$1/README.md
 echo "## Environment: $1" >> ./env_$1/README.md
 terraform-docs markdown environment >> ./env_$1/README.md
 
-echo "## Module: certificates" >> ./env_$1/README.md
-terraform-docs markdown modules/certificates >> ./env_$1/README.md
+echo "## Module: certificates" >> ./modules/certificates/README.md
+terraform-docs markdown modules/certificates >> ./modules/certificates/README.md
 
-echo "## Module: rancher" >> ./env_$1/README.md
-terraform-docs markdown modules/rancher >> ./env_$1/README.md
+echo "## Module: rancher" >> ./modules/rancher/README.md
+terraform-docs markdown modules/rancher >> ./modules/rancher/README.md
 
-echo "## Module: secrets" >> ./env_$1/README.md
-terraform-docs markdown modules/secrets >> ./env_$1/README.md
+echo "## Module: secrets" >> ./modules/secrets/README.md
+terraform-docs markdown modules/secrets >> ./modules/secrets/README.md
