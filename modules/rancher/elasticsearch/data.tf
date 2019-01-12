@@ -1,5 +1,5 @@
 data "template_file" "access_policy" {
-  template = "${file("${path.module}/.files/access_policy.json")}"
+  template = "${file("${path.module}/.files/access-policy.json")}"
 
   vars {
     account_id        = "${var.account_id}"

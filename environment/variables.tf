@@ -53,19 +53,49 @@ variable "drone_image_tag" {
   description = "Drone Image Docker Tag"
 }
 
+variable "elasticsearch_dedicated_master_count" {
+  description = "Number of Dedicated Master Nodes"
+  type        = "string"
+}
+
+variable "elasticsearch_dedicated_master_enabled" {
+  description = "Enable Dedicated Master Node"
+  type        = "string"
+}
+
+variable "elasticsearch_dedicated_master_type" {
+  description = "Master Node Instance Type"
+  type        = "string"
+}
+
+variable "elasticsearch_instance_count" {
+  description = "Number of ElasticSearch Instances"
+  type        = "string"
+}
+
 variable "elasticsearch_instance_type" {
   description = "ElasticSearch Instance Type"
   type        = "string"
 }
 
+variable "elasticsearch_node2node_encryption" {
+  description = "Enable Node-to-Node Encryption"
+  type        = "string"
+}
+
 variable "elasticsearch_snapshot_start_hour" {
-  default     = 23
-  description = "When to start snapshot"
+  description = "When to start the snapshot"
+  type        = "string"
 }
 
 variable "elasticsearch_version" {
-  default     = "6.3"
   description = "ElasticSearch Version"
+  type        = "string"
+}
+
+variable "elasticsearch_zone_awareness_enabled" {
+  description = "Enable AWS Zone Awareness"
+  type        = "string"
 }
 
 variable "rancher_ami_image" {

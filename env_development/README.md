@@ -14,9 +14,15 @@
 | drone\_enabled | Enables Drone Deployment | string | n/a | yes |
 | drone\_github\_organizations | Drone GitHub Organizations | list | n/a | yes |
 | drone\_image\_tag | Drone Image Docker Tag | string | `"0.8-alpine"` | no |
+| elasticsearch\_dedicated\_master\_count | Number of Dedicated Master Nodes | string | n/a | yes |
+| elasticsearch\_dedicated\_master\_enabled | Enable Dedicated Master Node | string | n/a | yes |
+| elasticsearch\_dedicated\_master\_type | Master Node Instance Type | string | n/a | yes |
+| elasticsearch\_instance\_count | Number of ElasticSearch Instances | string | n/a | yes |
 | elasticsearch\_instance\_type | ElasticSearch Instance Type | string | n/a | yes |
-| elasticsearch\_snapshot\_start\_hour | When to start snapshot | string | `"23"` | no |
-| elasticsearch\_version | ElasticSearch Version | string | `"6.3"` | no |
+| elasticsearch\_node2node\_encryption | Enable Node-to-Node Encryption | string | n/a | yes |
+| elasticsearch\_snapshot\_start\_hour | When to start the snapshot | string | n/a | yes |
+| elasticsearch\_version | ElasticSearch Version | string | n/a | yes |
+| elasticsearch\_zone\_awareness\_enabled | Enable AWS Zone Awareness | string | n/a | yes |
 | rancher\_ami\_image | Rancher AMI Image ID | string | n/a | yes |
 | rancher\_availability\_zones | AWS Availibility Zones | list | n/a | yes |
 | rancher\_capacity | AutoScaling Capacity | string | `"3"` | no |

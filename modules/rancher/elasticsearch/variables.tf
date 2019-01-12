@@ -8,8 +8,38 @@ variable "availability_zones" {
   type        = "list"
 }
 
+variable "dedicated_master_count" {
+  description = "Dedicated Master Count"
+  type        = "string"
+}
+
+variable "dedicated_master_enabled" {
+  description = "Enable Dedicated Master"
+  type        = "string"
+}
+
+variable "dedicated_master_type" {
+  description = "Dedicated Master Instance Type"
+  type        = "string"
+}
+
 variable "domain" {
   description = "Domain"
+  type        = "string"
+}
+
+variable "elasticsearch_version" {
+  description = "ElasticSearch Version"
+  type        = "string"
+}
+
+variable "node2node_encryption" {
+  description = "Enable Node-to-Node Encryption"
+  type        = "string"
+}
+
+variable "instance_count" {
+  description = "Count of ElasticSearch Nodes"
   type        = "string"
 }
 
@@ -23,7 +53,7 @@ variable "snapshot_start_hour" {
   type        = "string"
 }
 
-variable "elasticsearch_version" {
-  description = "ElasticSearch Version"
+variable "zone_awareness_enabled" {
+  description = "Enable Zone Awareness"
   type        = "string"
 }
