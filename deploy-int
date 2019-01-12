@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd env_internal
+terraform fmt
+terraform init
+terraform apply

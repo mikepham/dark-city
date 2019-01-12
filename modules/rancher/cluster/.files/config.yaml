@@ -1,0 +1,23 @@
+systemd:
+  units:
+    - name: rancher-bootstrap.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Rancher Agent
+        After=docker.service
+        Requires=docker.service
+
+        [Service]
+        ExecStart=${agent_startup}
+        Type=oneshot
+
+        [Install]
+        WantedBy=multi-user.target
+
+    - name: getty@.service
+      dropins:
+        - name: no-disallocate.conf
+          contents: |
+            [Service]
+            TTYVTDisallocate=no

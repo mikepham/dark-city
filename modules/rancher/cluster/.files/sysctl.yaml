@@ -1,0 +1,11 @@
+storage:
+  files:
+    - path: /etc/sysctl.d/90-filesystem.conf
+      filesystem: root
+      contents:
+        inline: "fs.file-max=200000"
+
+    - path: /etc/sysctl.d/91-virtual-memory.conf
+      filesystem: root
+      contents:
+        inline: "vm.max_map_count=262144"

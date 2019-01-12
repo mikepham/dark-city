@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd env_production
+terraform fmt
+terraform init
+terraform apply
