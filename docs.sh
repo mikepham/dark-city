@@ -7,7 +7,7 @@ fi
 
 echo "#" > ./env_$1/README.md
 
-echo "## Module: environment" >> ./env_$1/README.md
+echo "## Module: $1" >> ./env_$1/README.md
 terraform-docs markdown environment >> ./env_$1/README.md
 
 echo "## Module: certificates" >> ./env_$1/README.md

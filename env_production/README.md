@@ -1,5 +1,5 @@
 #
-## Module: environment
+## Module: production
 ## Inputs
 
 | Name | Description | Type | Default | Required |
