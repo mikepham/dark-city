@@ -1,5 +1,4 @@
-#
-## Environment: internal
+# Environment: internal
 ## Inputs
 
 | Name | Description | Type | Default | Required |

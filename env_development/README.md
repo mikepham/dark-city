@@ -1,5 +1,4 @@
-#
-## Environment: development
+# Environment: development
 ## Inputs
 
 | Name | Description | Type | Default | Required |

@@ -1,5 +1,4 @@
-#
-## Environment: production
+# Environment: production
 ## Inputs
 
 | Name | Description | Type | Default | Required |
