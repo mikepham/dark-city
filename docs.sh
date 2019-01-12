@@ -7,6 +7,8 @@ if [ $# -eq 0 ]; then
   exit
 fi
 
+echo "Generating documentation for $1"
+
 echo "# Environment: $1" > ./env_$1/README.md
 terraform-docs markdown environment >> ./env_$1/README.md
 
@@ -18,3 +20,5 @@ terraform-docs markdown modules/rancher >> ./modules/rancher/README.md
 
 echo "# Module: secrets" > ./modules/secrets/README.md
 terraform-docs markdown modules/secrets >> ./modules/secrets/README.md
+
+echo "------------------------------------------------------------------------"

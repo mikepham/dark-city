@@ -13,6 +13,11 @@ do
       shift
     ;;
 
+    -d|--docs)
+      DOCS=true
+      shift
+    ;;
+
     -e|--environment)
       ENVIRONMENT="$2"
       shift
@@ -61,11 +66,15 @@ ENVIRONMENT_PATH="env_$ENVIRONMENT"
 echo "Environment: $ENVIRONMENT"
 echo "Environment Path: $ENVIRONMENT_PATH"
 echo "------------------------------------------------------------------------"
-echo ""
 
 # Entry Point
 #------------------------------------------------------------------------------
-sh ./docs.sh $ENVIRONMENT
+if [ "$DOCS" = "true" ]; then
+  sh ./docs.sh
+else
+  sh ./docs.sh $ENVIRONMENT
+fi
+
 terraform fmt
 
 cd $ENVIRONMENT_PATH

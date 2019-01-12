@@ -58,6 +58,8 @@ module "cluster" {
 module "elasticsearch" {
   source = "elasticsearch"
 
+  account_id            = "${data.aws_caller_identity.account.account_id}"
+  availability_zones    = "${var.availability_zones}"
   domain                = "${var.environment_domain}"
   instance_type         = "${var.elasticsearch_instance_type}"
   snapshot_start_hour   = "${var.elasticsearch_snapshot_start_hour}"

@@ -1,3 +1,13 @@
+variable "account_id" {
+  description = "AWS Account ID"
+  type        = "string"
+}
+
+variable "availability_zones" {
+  description = "Availability Zones"
+  type        = "list"
+}
+
 variable "domain" {
   description = "Domain"
   type        = "string"
