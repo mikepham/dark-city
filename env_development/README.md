@@ -88,7 +88,7 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| secret\_name |  | string | n/a | yes |
+| secret\_name | Secret Name | string | n/a | yes |
 
 ## Outputs
 
