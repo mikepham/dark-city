@@ -1,5 +1,7 @@
 # Dark City
 
+![dark-city](dark-city.jpg)
+
 ## NativeCode Infrastructure
 
 Deploys the following services:
