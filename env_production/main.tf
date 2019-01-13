@@ -37,6 +37,7 @@ module "environment" {
   elasticsearch_instance_type         = "t2.small.elasticsearch"
   elasticsearch_volume_size           = 10
   rancher_certificate_domain          = "nativecode.net"
+  rancher_enable_services             = true
   rancher_environment                 = "prod"
   rancher_instance_type               = "t2.small"
   rancher_volume_size                 = 32

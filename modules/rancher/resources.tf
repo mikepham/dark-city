@@ -13,6 +13,7 @@ resource "rancher_registration_token" "member" {
 }
 
 resource "rancher_stack" "cowcheck" {
+  count      = "${var.enable_services}"
   name       = "cowcheck"
   depends_on = ["rancher_stack.route53"]
 
@@ -24,6 +25,7 @@ resource "rancher_stack" "cowcheck" {
 }
 
 resource "rancher_stack" "janitor" {
+  count      = "${var.enable_services}"
   name       = "janitor"
   depends_on = ["rancher_stack.route53"]
 
@@ -35,7 +37,8 @@ resource "rancher_stack" "janitor" {
 }
 
 resource "rancher_stack" "route53" {
-  name = "route53"
+  count = "${var.enable_services}"
+  name  = "route53"
 
   catalog_id      = "library:infra*route53:17"
   environment_id  = "${rancher_environment.env.id}"
@@ -52,7 +55,8 @@ resource "rancher_stack" "route53" {
 }
 
 resource "rancher_stack" "nfs" {
-  name = "nfs"
+  count = "${var.enable_services}"
+  name  = "nfs"
 
   depends_on = [
     "module.nfs",

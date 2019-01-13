@@ -35,6 +35,7 @@
 | rancher\_certificate\_domain | Rancher Certificate Domain | string | n/a | yes |
 | rancher\_cluster\_member\_size | Cluster member Size | string | `"3"` | no |
 | rancher\_cluster\_size | Instance Count | string | `"1"` | no |
+| rancher\_enable\_services | Enable Additional Rancher Services | string | n/a | yes |
 | rancher\_environment | Environment Name | string | n/a | yes |
 | rancher\_environment\_domain | Rancher Environment Domain | string | n/a | yes |
 | rancher\_etcd\_token | Rancher ETCD Cluster Token | string | `"etcd-token"` | no |

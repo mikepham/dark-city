@@ -1,5 +1,5 @@
 resource "aws_security_group" "nfs" {
-  count       = "${length(var.vpc_ids)}"
+  count       = "${var.enabled * length(var.vpc_ids)}"
   name_prefix = "${var.environment}-member-security-nfs-"
   description = "Allows NFS traffic from instances within the VPC."
   vpc_id      = "${element(var.vpc_ids, count.index)}"
@@ -21,11 +21,12 @@ resource "aws_security_group" "nfs" {
   }
 
   tags {
-    Name = "${var.environment}-member-security-storage"
+    Name = "${var.environment}-member-security-nfs"
   }
 }
 
 resource "aws_efs_file_system" "nfs" {
+  count          = "${var.enabled}"
   creation_token = "${var.environment}-nfs-${var.name}"
 
   tags {
@@ -34,7 +35,7 @@ resource "aws_efs_file_system" "nfs" {
 }
 
 resource "aws_efs_mount_target" "nfs_mount" {
-  count = "${length(var.subnets)}"
+  count = "${var.enabled * length(var.subnets)}"
 
   depends_on = [
     "aws_efs_file_system.nfs",

@@ -1,5 +1,6 @@
 module "nfs" {
-  source = "../nfs"
+  enabled = true
+  source  = "../nfs"
 
   environment = "${var.environment_name}"
   name        = "etcd-${var.cluster_name}"

@@ -159,6 +159,11 @@ variable "rancher_cluster_member_size" {
   description = "Cluster member Size"
 }
 
+variable "rancher_enable_services" {
+  description = "Enable Additional Rancher Services"
+  type        = "string"
+}
+
 variable "rancher_environment_domain" {
   description = "Rancher Environment Domain"
   type        = "string"

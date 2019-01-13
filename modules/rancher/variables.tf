@@ -222,6 +222,11 @@ variable "etcd_discovery_url" {
   description = "ETCD Cluster Discovery URL"
 }
 
+variable "enable_services" {
+  description = "Enable Additional Rancher Services"
+  type        = "string"
+}
+
 variable "etcd_token" {
   description = "ETCD Cluster Token"
   type        = "string"

@@ -55,6 +55,7 @@ module "rancher" {
   elasticsearch_volume_size              = "${var.elasticsearch_volume_size}"
   elasticsearch_volume_type              = "${var.elasticsearch_volume_type}"
   elasticsearch_zone_awareness_enabled   = "${var.elasticsearch_zone_awareness_enabled}"
+  enable_services                        = "${var.rancher_enable_services}"
 
   # etcd_discovery_url                     = "${module.secrets.secrets["ETCD_DISCOVERY_URL"]}"
   etcd_token              = "${var.rancher_etcd_token}"
