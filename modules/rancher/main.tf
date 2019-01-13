@@ -34,6 +34,7 @@ module "cluster" {
   cluster_size            = "${var.cluster_size}"
   cluster_member_size     = "${var.cluster_member_size}"
   environment_name        = "${var.environment_name}"
+  discovery_url           = "${var.etcd_discovery_url}"
   etcd_token              = "${var.etcd_token}"
   environment_domain      = "${var.environment_domain}"
   environment_domain_tld  = "${var.environment_domain_tld}"

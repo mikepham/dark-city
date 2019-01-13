@@ -46,56 +46,101 @@ if [ "$ENVIRONMENT" = "" ]; then
 fi
 
 case $ENVIRONMENT in
-   "dev") ENVIRONMENT=development
-       ;;
-   "int") ENVIRONMENT=internal
-       ;;
-  "prod") ENVIRONMENT=production
-       ;;
+  "dev")
+      ENVIRONMENT=development
+    ;;
+  "int")
+      ENVIRONMENT=internal
+    ;;
+  "prod")
+      ENVIRONMENT=production
+    ;;
 esac
 
-if [ ! -d "env_$ENVIRONMENT" ]; then
+ENVIRONMENT_PATH="env_$ENVIRONMENT"
+
+if [ ! -d "$ENVIRONMENT_PATH" ]; then
   echo "Invalid Environment $ENVIRONMENT"
   exit
 fi
 
-ENVIRONMENT_PATH="env_$ENVIRONMENT"
+ENVIRONMENT_PLAN="$ENVIRONMENT_PATH/$ENVIRONMENT.plan"
 
 # Informational
 #------------------------------------------------------------------------------
+echo "Current Working Directory: `pwd`"
 echo "Environment: $ENVIRONMENT"
 echo "Environment Path: $ENVIRONMENT_PATH"
+echo "Environment Plan: $ENVIRONMENT_PLAN"
+if [ -f "$ENVIRONMENT_PLAN" ]; then
+  echo "Environment Plan Exists"
+fi
 echo "------------------------------------------------------------------------"
 
 # Entry Point
 #------------------------------------------------------------------------------
-if [ "$DOCS" = "true" ]; then
-  sh ./docs.sh
-else
-  sh ./docs.sh $ENVIRONMENT
-fi
+echo "Generating documentation for $ENVIRONMENT"
+echo "------------------------------------------------------------------------"
+function generate() {
+  echo "# Environment: $ENVIRONMENT" > ./$ENVIRONMENT_PATH/README.md
+  terraform-docs markdown environment >> ./$ENVIRONMENT_PATH/README.md
 
+  echo "# Module: certificates" > ./modules/certificates/README.md
+  terraform-docs markdown modules/certificates >> ./modules/certificates/README.md
+
+  echo "# Module: rancher" > ./modules/rancher/README.md
+  terraform-docs markdown modules/rancher >> ./modules/rancher/README.md
+
+  echo "# Module: secrets" > ./modules/secrets/README.md
+  terraform-docs markdown modules/secrets >> ./modules/secrets/README.md
+}
+generate
+
+echo "Formatting source files for $ENVIRONMENT"
+echo "------------------------------------------------------------------------"
 terraform fmt
 
-cd $ENVIRONMENT_PATH
-echo `pwd`
+echo "Executing $ENVIRONMENT"
 echo "------------------------------------------------------------------------"
+function apply() {
+  if [ ! -f "$ENVIRONMENT_PLAN" ]; then
+    run "false"
+  fi
+  echo "------------------------------------------------------------------------"
+  terraform apply $ENVIRONMENT_PLAN
+}
 
-terraform validate
-terraform init
+function destroy() {
+  if [ ! -f "$ENVIRONMENT_PLAN" ]; then
+    run "false"
+  fi
+  echo "------------------------------------------------------------------------"
+  terraform destroy $ENVIRONMENT_PATH
+}
 
-if [ -f "$ENVIRONMENT.plan" ]; then
-  ENVIRONMENT_PLAN="$ENVIRONMENT.plan"
-fi
+function run() {
+  if [ ! -d ".terraform" ]; then
+    terraform init "$ENVIRONMENT_PATH"
+    terraform validate "$ENVIRONMENT_PATH"
+    echo "------------------------------------------------------------------------"
+  fi
+  terraform plan -out="$ENVIRONMENT_PLAN" "$ENVIRONMENT_PATH"
+}
 
 case $ACTION in
   "apply")
-    terraform apply $ENVIRONMENT_PLAN
+      apply
     ;;
   "destroy")
-    terraform destroy $ENVIRONMENT_PLAN
+      destroy
     ;;
   *)
-    terraform plan -out="$ENVIRONMENT.plan"
+      run
     ;;
 esac
+
+echo "Cleaning $ENVIRONMENT"
+echo "------------------------------------------------------------------------"
+if [ -f "$ENVIRONMENT_PLAN" ] && [ "$ACTION" != "" ]; then
+  rm -f "$ENVIRONMENT_PLAN"
+fi

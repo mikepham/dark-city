@@ -47,6 +47,11 @@ variable "cluster_member_size" {
   type        = "string"
 }
 
+variable "discovery_url" {
+  default     = ""
+  description = "ETCD Discovery URL"
+}
+
 variable "environment_domain" {
   description = "Environment Domain Name"
   type        = "string"

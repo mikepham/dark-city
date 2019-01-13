@@ -6,6 +6,8 @@
 | access\_key | Rancher Access Key | string | n/a | yes |
 | ami\_image |  | string | n/a | yes |
 | availability\_zones |  | list | n/a | yes |
+| aws\_access\_key | AWS Access Key | string | n/a | yes |
+| aws\_secret\_key | AWS Secret Key | string | n/a | yes |
 | capacity |  | string | n/a | yes |
 | capacity\_max |  | string | n/a | yes |
 | capacity\_min |  | string | n/a | yes |
@@ -45,6 +47,7 @@
 | environment\_domain\_tld | Environment Domain TLD | string | n/a | yes |
 | environment\_name | Rancher Environment | string | n/a | yes |
 | environment\_rancher\_url | Rancher Environment Url | string | n/a | yes |
+| etcd\_discovery\_url | ETCD Cluster Discovery URL | string | `""` | no |
 | etcd\_token | ETCD Cluster Token | string | n/a | yes |
 | http\_port | HTTP Port | string | `"80"` | no |
 | http\_protocol | HTTP Protocol | string | `"HTTP"` | no |
@@ -67,5 +70,9 @@
 
 | Name | Description |
 |------|-------------|
+| rancher\_efs\_security\_groups |  |
 | rancher\_environment\_id | Rancher Environment ID |
+| rancher\_es\_security\_groups |  |
+| rancher\_member\_security\_groups |  |
+| rancher\_security\_groups |  |
 

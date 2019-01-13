@@ -7,6 +7,16 @@ variable "ami_image" {
   type = "string"
 }
 
+variable "aws_access_key" {
+  description = "AWS Access Key"
+  type        = "string"
+}
+
+variable "aws_secret_key" {
+  description = "AWS Secret Key"
+  type        = "string"
+}
+
 variable "availability_zones" {
   type = "list"
 }
@@ -200,6 +210,11 @@ variable "environment_name" {
 variable "environment_rancher_url" {
   description = "Rancher Environment Url"
   type        = "string"
+}
+
+variable "etcd_discovery_url" {
+  default     = ""
+  description = "ETCD Cluster Discovery URL"
 }
 
 variable "etcd_token" {

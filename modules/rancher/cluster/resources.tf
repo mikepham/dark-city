@@ -43,6 +43,12 @@ resource "aws_autoscaling_group" "cluster_autoscale" {
   lifecycle {
     create_before_destroy = true
   }
+
+  tag {
+    key                 = "Name"
+    value               = "${var.environment_name}-rancher-autoscale"
+    propagate_at_launch = true
+  }
 }
 
 resource "aws_alb" "lb" {
@@ -93,7 +99,8 @@ resource "aws_alb_listener" "https" {
 }
 
 resource "aws_alb_target_group" "target_group" {
-  count = "${length(var.vpc_ids)}"
+  count       = "${length(var.vpc_ids)}"
+  name_prefix = "${var.environment_name}"
 
   port     = "${var.http_port}"
   protocol = "${var.http_protocol}"
@@ -104,7 +111,7 @@ resource "aws_alb_target_group" "target_group" {
     unhealthy_threshold = 10
     timeout             = 5
     interval            = 10
-    port                = "${var.http_port}"
+    port                = 9200
   }
 
   tags {

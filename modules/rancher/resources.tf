@@ -44,9 +44,10 @@ resource "rancher_stack" "route53" {
   start_on_create = true
 
   environment {
-    AWS_ACCESS_KEY = "${var.access_key}"
-    AWS_SECRET_KEY = "${var.secret_key}"
-    ROOT_DOMAIN    = "${var.environment_domain_tld}"
+    AWS_ACCESS_KEY  = "${var.aws_access_key}"
+    AWS_SECRET_KEY  = "${var.aws_secret_key}"
+    ROOT_DOMAIN     = "${var.environment_domain_tld}"
+    ROUTE53_ZONE_ID = "${data.aws_route53_zone.zone.id}"
   }
 }
 
@@ -65,7 +66,7 @@ resource "rancher_stack" "nfs" {
   start_on_create = true
 
   environment {
-    MOUNT_DIR     = "/volumes"
+    MOUNT_DIR     = "/"
     MOUNT_OPTS    = "rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2"
     NFS_SERVER    = "${module.storage.efs_dns_name}"
     NFS_VERS      = "nfsvers=4.1"

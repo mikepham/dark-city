@@ -17,3 +17,24 @@ systemd:
             [Service]
             Environment=/run/metadata/coreos
             ExecStartPre=echo {PRIVATE_IPV4}
+
+    - name: date.service
+      contents: |
+        [Unit]
+        Description=Backup ETCD Data
+
+        [Service]
+        Type=oneshot
+        ExecStart=/usr/bin/etcdctl
+
+    - name: date.timer
+      enable: true
+      contents: |
+        [Unit]
+        Description=Run date.service every 10 minutes
+
+        [Timer]
+        OnCalendar=*:0/10
+
+        [Install]
+        WantedBy=multi-user.target
