@@ -4,7 +4,7 @@ etcd:
   advertise_client_urls: "http://{PRIVATE_IPV4}:2379"
   data_dir: /tmp
   discovery: "${discovery_url}"
-  listen_client_urls: "http://{PRIVATE_IPV4}:2379,http://localhost:2379"
+  listen_client_urls: "http://{HOSTNAME}:2379,http://{PRIVATE_IPV4}:2379,http://localhost:2379"
   listen_peer_urls: "http://{PRIVATE_IPV4}:2380"
   initial_advertise_peer_urls: "http://{PRIVATE_IPV4}:2380"
 

@@ -1,0 +1,33 @@
+systemd:
+  units:
+    - name: rancher-bootstrap.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Rancher member
+        After=docker.service
+        Requires=docker.service
+
+        [Service]
+        ExecStartPre=/usr/bin/docker pull rancher/server:v1.6.25
+        ExecStart=/usr/bin/docker run \
+          --name rancher \
+          --hostname rancher \
+          --rm \
+          -p 80:8080 \
+          rancher/server:v1.6.25 \
+          --db-host ${rancher_db_host} \
+          --db-pass ${rancher_db_pass} \
+        ;
+        TimeoutSec=600
+        Type=oneshot
+
+        [Install]
+        WantedBy=multi-user.target
+
+    - name: getty@.service
+      dropins:
+        - name: no-disallocate.conf
+          contents: |
+            [Service]
+            TTYVTDisallocate=no

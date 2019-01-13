@@ -8,10 +8,6 @@ provider "rancher" {
   version    = "1.2.1"
 }
 
-provider "http" {
-  version = "1.0"
-}
-
 provider "template" {
   version = "1.0.0"
 }

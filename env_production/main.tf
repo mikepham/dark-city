@@ -67,9 +67,9 @@ module "environment" {
   rancher_url                = "https://rancher.nativecode.net"
   rancher_vpc_ids            = ["vpc-ecedad97"]
 
-  rancher_subnets = [[
+  rancher_subnets = [
     "subnet-b27b9f9c",
     "subnet-354be57f",
     "subnet-11e3f94c",
-  ]]
+  ]
 }

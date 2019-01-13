@@ -22,9 +22,6 @@ systemd:
         RemainAfterExit=true
         Type=oneshot
 
-        [Install]
-        WantedBy=multi-user.target
-
     - name: var-vm-swapfile.swap
       enabled: true
       contents: |

@@ -57,8 +57,7 @@ resource "aws_security_group" "member" {
   }
 
   tags {
-    Name        = "${var.environment_name}-member-security"
-    rancher_env = "${var.environment_name}"
+    Name = "${var.environment_name}-member-security"
   }
 }
 
@@ -97,8 +96,7 @@ resource "aws_security_group" "member_database" {
   }
 
   tags {
-    Name        = "${var.environment_name}-member-security-database"
-    rancher_env = "${var.environment_name}"
+    Name = "${var.environment_name}-member-security-database"
   }
 }
 
@@ -137,7 +135,6 @@ resource "aws_security_group" "etcd" {
   }
 
   tags {
-    Name        = "${var.environment_name}-member-security-etcd"
-    rancher_env = "${var.environment_name}"
+    Name = "${var.environment_name}-member-security-etcd"
   }
 }

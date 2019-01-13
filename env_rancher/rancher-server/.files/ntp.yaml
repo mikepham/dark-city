@@ -1,0 +1,11 @@
+systemd:
+  units:
+    - name: ntp.service
+      enabled: true
+      contents: |
+        [Service]
+        ExecStart=/sbin/ntpdate ${ntp_host}
+        Type=oneshot
+
+        [Install]
+        WantedBy=multi-user.target
