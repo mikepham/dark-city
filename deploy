@@ -122,10 +122,6 @@ function apply() {
 }
 
 function destroy() {
-  if [ ! -f "$ENVIRONMENT_PLAN" ]; then
-    run
-    echo "------------------------------------------------------------------------"
-  fi
   terraform destroy
 }
 
@@ -155,9 +151,3 @@ case $ACTION in
       run
     ;;
 esac
-
-echo "Cleaning $ENVIRONMENT"
-echo "------------------------------------------------------------------------"
-if [ "$ACTION" != "" ]; then
-  rm -f "$ENVIRONMENT_PLAN"
-fi

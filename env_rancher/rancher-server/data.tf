@@ -11,8 +11,6 @@ data "aws_route53_zone" "zone" {
 }
 
 data "ct_config" "config" {
-  count = "${var.cluster_size}"
-
   content      = "${data.template_file.config_template.rendered}"
   platform     = "ec2"
   pretty_print = true

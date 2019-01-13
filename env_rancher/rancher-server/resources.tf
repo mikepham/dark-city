@@ -1,5 +1,5 @@
 resource "aws_security_group" "rancher" {
-  name_prefix = "member-security-"
+  name = "rancher-security"
 
   description = "Allows rancher traffic from instances within the VPC."
   vpc_id      = "${data.aws_vpc.vpc.id}"
@@ -57,12 +57,12 @@ resource "aws_security_group" "rancher" {
   }
 
   tags {
-    Name = "member-security"
+    Name = "rancher-security"
   }
 }
 
 resource "aws_security_group" "rancher_database" {
-  name_prefix = "member-security-database-"
+  name = "rancher-security-database"
 
   description = "Allows Database traffic from instances within the VPC."
   vpc_id      = "${data.aws_vpc.vpc.id}"
@@ -96,13 +96,17 @@ resource "aws_security_group" "rancher_database" {
   }
 
   tags {
-    Name = "member-security-database"
+    Name = "rancher-security-database"
   }
 }
 
 resource "aws_launch_configuration" "rancher" {
-  count       = "${var.cluster_size}"
-  name_prefix = "rancher-"
+  name = "rancher-configuration"
+
+  depends_on = [
+    "aws_security_group.rancher",
+    "aws_security_group.rancher_database",
+  ]
 
   associate_public_ip_address = true
   enable_monitoring           = true
@@ -110,7 +114,7 @@ resource "aws_launch_configuration" "rancher" {
   image_id                    = "${var.ami_image}"
   instance_type               = "${var.instance_type}"
   key_name                    = "${var.keypair}"
-  user_data                   = "${element(data.ct_config.config.*.rendered, count.index)}"
+  user_data                   = "${data.ct_config.config.rendered}"
 
   security_groups = [
     "${aws_security_group.rancher.id}",
@@ -118,7 +122,7 @@ resource "aws_launch_configuration" "rancher" {
   ]
 
   lifecycle {
-    create_before_destroy = true
+    create_before_destroy = false
   }
 
   root_block_device {
@@ -129,16 +133,19 @@ resource "aws_launch_configuration" "rancher" {
 }
 
 resource "aws_autoscaling_group" "rancher_autoscale" {
-  count       = "${var.cluster_size}"
-  name_prefix = "rancher-autoscale-"
-  depends_on  = ["aws_launch_configuration.rancher"]
+  name = "rancher-autoscale"
+
+  depends_on = [
+    "aws_launch_configuration.rancher",
+    "aws_alb_target_group.target_group",
+  ]
 
   availability_zones        = "${var.availability_zones}"
   desired_capacity          = 1
   force_delete              = false
   health_check_grace_period = 180
   health_check_type         = "EC2"
-  launch_configuration      = "${element(aws_launch_configuration.rancher.*.name, count.index)}"
+  launch_configuration      = "${aws_launch_configuration.rancher.name}"
   max_size                  = 1
   min_size                  = 1
   target_group_arns         = ["${aws_alb_target_group.target_group.*.arn}"]
@@ -146,7 +153,7 @@ resource "aws_autoscaling_group" "rancher_autoscale" {
   vpc_zone_identifier       = "${var.subnets}"
 
   lifecycle {
-    create_before_destroy = true
+    create_before_destroy = false
   }
 
   tag {
@@ -158,6 +165,11 @@ resource "aws_autoscaling_group" "rancher_autoscale" {
 
 resource "aws_alb" "lb" {
   name = "rancher-${local.domain_slug}"
+
+  depends_on = [
+    "aws_security_group.rancher",
+    "aws_security_group.rancher_database",
+  ]
 
   enable_deletion_protection = false
   subnets                    = "${var.subnets}"
