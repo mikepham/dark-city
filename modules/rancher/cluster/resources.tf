@@ -111,7 +111,8 @@ resource "aws_alb_target_group" "target_group" {
     unhealthy_threshold = 10
     timeout             = 5
     interval            = 10
-    port                = 9200
+    path                = "/health"
+    port                = 2379
   }
 
   tags {

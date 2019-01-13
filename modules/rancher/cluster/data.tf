@@ -49,6 +49,7 @@ data "template_file" "etcd" {
     domain_name       = "${var.environment_domain}"
     etcd_cluster_name = "${var.cluster_name}"
     etcd_token        = "${var.etcd_token}"
+    etcd_nfs_mount    = "${module.storage.efs_dns_name}"
   }
 }
 

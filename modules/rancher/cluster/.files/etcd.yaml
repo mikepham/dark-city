@@ -8,33 +8,61 @@ etcd:
   listen_peer_urls: "http://{PRIVATE_IPV4}:2380"
   initial_advertise_peer_urls: "http://{PRIVATE_IPV4}:2380"
 
+storage:
+  files:
+    - path: /run/metadata/etcd
+      filesystem: root
+      contents: |
+        ETCDCTL_API=3
+
 systemd:
   units:
+    - name: var-nfs.mount
+      enable: true
+      contents: |
+        [Unit]
+        Before=remote-fs.target
+
+        [Mount]
+        What=${etcd_nfs_mount}
+        Where=/var/nfs
+        Type=nfs
+
+        [Install]
+        WantedBy=remote-fs.target
+
     - name: etcd-member.service
       dropins:
         - name: conf1.conf
           contents: |
             [Service]
-            Environment=/run/metadata/coreos
-            ExecStartPre=echo {PRIVATE_IPV4}
+            EnvironmentFile=/run/metadata/coreos
 
-    - name: date.service
+    - name: etcd-member-backup.service
       contents: |
         [Unit]
         Description=Backup ETCD Data
+        After=var-nfs.mount
+        Requires=var-nfs.mount
 
         [Service]
+        EnvironmetnFile=/etc/environment
+        EnvironmentFile=/run/metadata/coreos
+        EnvironmentFile=/run/metadata/etcd
+        ExecStartPre=/usr/bin/mkdir -p /var/nfs/$${HOSTNAME}
+        ExecStart=/usr/bin/etcdctl backup --with-v3 --backup-dir /var/nfs/$${HOSTNAME} --backup-wal-dir /var/nfs/$${HOSTNAME}
         Type=oneshot
-        ExecStart=/usr/bin/etcdctl
 
-    - name: date.timer
+    - name: etcd-member-backup.timer
       enable: true
       contents: |
         [Unit]
-        Description=Run date.service every 10 minutes
+        Description=Run etcd-member-backup.service every hour
+        After=var-nfs.mount
+        Requires=var-nfs.mount
 
         [Timer]
-        OnCalendar=*:0/10
+        OnCalendar=*:0/60
 
         [Install]
         WantedBy=multi-user.target

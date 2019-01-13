@@ -18,6 +18,11 @@ do
       shift
     ;;
 
+    -i|--init)
+      ACTION=init
+      shift
+    ;;
+
     --destroy)
       ACTION=destroy
       shift
@@ -81,6 +86,7 @@ echo "------------------------------------------------------------------------"
 #------------------------------------------------------------------------------
 echo "Generating documentation for $ENVIRONMENT"
 echo "------------------------------------------------------------------------"
+
 function generate() {
   echo "# Environment: $ENVIRONMENT" > ./$ENVIRONMENT_PATH/README.md
   terraform-docs markdown environment >> ./$ENVIRONMENT_PATH/README.md
@@ -96,33 +102,39 @@ function generate() {
 }
 generate
 
+#------------------------------------------------------------------------------
 echo "Formatting source files for $ENVIRONMENT"
 echo "------------------------------------------------------------------------"
 terraform fmt
 
+#------------------------------------------------------------------------------
 echo "Executing $ENVIRONMENT"
 echo "------------------------------------------------------------------------"
+
 function apply() {
   if [ ! -f "$ENVIRONMENT_PLAN" ]; then
-    run "false"
+    run
+    echo "------------------------------------------------------------------------"
   fi
-  echo "------------------------------------------------------------------------"
   terraform apply $ENVIRONMENT_PLAN
 }
 
 function destroy() {
   if [ ! -f "$ENVIRONMENT_PLAN" ]; then
-    run "false"
+    run
+    echo "------------------------------------------------------------------------"
   fi
-  echo "------------------------------------------------------------------------"
   terraform destroy $ENVIRONMENT_PATH
+}
+
+function init () {
+  terraform init "$ENVIRONMENT_PATH"
 }
 
 function run() {
   if [ ! -d ".terraform" ]; then
     terraform init "$ENVIRONMENT_PATH"
     terraform validate "$ENVIRONMENT_PATH"
-    echo "------------------------------------------------------------------------"
   fi
   terraform plan -out="$ENVIRONMENT_PLAN" "$ENVIRONMENT_PATH"
 }
@@ -134,6 +146,9 @@ case $ACTION in
   "destroy")
       destroy
     ;;
+  "init")
+      init
+    ;;
   *)
       run
     ;;
@@ -141,6 +156,6 @@ esac
 
 echo "Cleaning $ENVIRONMENT"
 echo "------------------------------------------------------------------------"
-if [ -f "$ENVIRONMENT_PLAN" ] && [ "$ACTION" != "" ]; then
+if [ "$ACTION" != "" ]; then
   rm -f "$ENVIRONMENT_PLAN"
 fi

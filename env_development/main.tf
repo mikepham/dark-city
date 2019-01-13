@@ -5,9 +5,10 @@ terraform {
   required_version = ">= 0.11.11"
 
   backend "s3" {
-    bucket = "nativecode"
-    key    = "terraform/development.tfstate"
-    region = "us-east-1"
+    bucket  = "nativecode"
+    encrypt = true
+    key     = "terraform/development.tfstate"
+    region  = "us-east-1"
   }
 }
 
@@ -27,8 +28,8 @@ module "environment" {
 
   # Overrides
   drone_database_instance_type        = "t2.micro"
-  elasticsearch_instance_type         = "t2.small.elasticsearch"
   elasticsearch_dedicated_master_type = "t2.small.elasticsearch"
+  elasticsearch_instance_type         = "t2.small.elasticsearch"
   elasticsearch_volume_size           = 10
   rancher_certificate_domain          = "nativecode.net"
   rancher_environment                 = "dev"

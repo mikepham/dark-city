@@ -3,6 +3,11 @@ variable "environment" {
   type        = "string"
 }
 
+variable "name" {
+  description = "Name of the NFS mount"
+  type        = "string"
+}
+
 variable "subnets" {
   description = "Subnets to attach NFS to"
   type        = "list"
