@@ -17,6 +17,7 @@
 | elasticsearch\_dedicated\_master\_count | Number of Dedicated Master Nodes | string | n/a | yes |
 | elasticsearch\_dedicated\_master\_enabled | Enable Dedicated Master Node | string | n/a | yes |
 | elasticsearch\_dedicated\_master\_type | Master Node Instance Type | string | n/a | yes |
+| elasticsearch\_enabled | Enable ElasticSearch | string | n/a | yes |
 | elasticsearch\_encrypt\_at\_rest | Encrypt at Rest | string | n/a | yes |
 | elasticsearch\_instance\_count | Number of ElasticSearch Instances | string | n/a | yes |
 | elasticsearch\_instance\_type | ElasticSearch Instance Type | string | n/a | yes |

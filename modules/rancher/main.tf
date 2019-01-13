@@ -30,7 +30,7 @@ module "cluster" {
   capacity_max            = "${var.capacity_max}"
   capacity_min            = "${var.capacity_min}"
   certificate_arn         = "${var.certificate_arn}"
-  cluster_name            = "${var.environment_name}"
+  cluster_name            = "cluster-${var.environment_name}"
   cluster_size            = "${var.cluster_size}"
   cluster_member_size     = "${var.cluster_member_size}"
   environment_name        = "${var.environment_name}"
@@ -52,7 +52,7 @@ module "cluster" {
 
   security_groups = [
     "${module.security.security_groups}",
-    "${module.storage.efs_security_group}",
+    "${module.nfs.efs_security_group}",
     "${module.elasticsearch.elasticsearch_security_group}",
   ]
 }
@@ -82,7 +82,8 @@ module "drone" {
 }
 
 module "elasticsearch" {
-  source = "elasticsearch"
+  enabled = "${var.elasticsearch_enabled}"
+  source  = "elasticsearch"
 
   account_id               = "${data.aws_caller_identity.account.account_id}"
   availability_zones       = "${var.availability_zones}"
@@ -111,8 +112,8 @@ module "security" {
   vpc_ids          = "${var.vpc_ids}"
 }
 
-module "storage" {
-  source = "storage"
+module "nfs" {
+  source = "nfs"
 
   environment = "${var.environment_name}"
   name        = "${var.environment_name}"

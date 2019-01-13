@@ -8,7 +8,7 @@ Deploys the following services:
 
 - Application Load Balancer
 - Security Groups
-- EFS Mount
+- EFS Mounts
 - ElasticSearch Domain
 
 ### Rancher

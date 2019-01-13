@@ -49,6 +49,7 @@ module "environment" {
   # ElasticSearch
   elasticsearch_dedicated_master_count   = 1
   elasticsearch_dedicated_master_enabled = false
+  elasticsearch_enabled                  = true
   elasticsearch_encrypt_at_rest          = false
   elasticsearch_instance_count           = 1
   elasticsearch_node2node_encryption     = false

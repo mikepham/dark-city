@@ -10,7 +10,10 @@ resource "aws_launch_configuration" "cluster" {
   key_name                    = "${var.keypair}"
   user_data                   = "${element(data.ct_config.config.*.rendered, count.index)}"
 
-  security_groups = ["${var.security_groups}"]
+  security_groups = [
+    "${var.security_groups}",
+    "${module.nfs.efs_security_group}",
+  ]
 
   lifecycle {
     create_before_destroy = true
@@ -55,8 +58,8 @@ resource "aws_alb" "lb" {
   name = "${local.domain_slug}"
 
   enable_deletion_protection = false
-  subnets                    = "${var.subnets}"
   security_groups            = ["${var.security_groups}"]
+  subnets                    = "${var.subnets}"
 
   tags {
     Name = "${var.environment_domain}-alb"

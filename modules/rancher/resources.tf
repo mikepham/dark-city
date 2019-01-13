@@ -55,7 +55,7 @@ resource "rancher_stack" "nfs" {
   name = "nfs"
 
   depends_on = [
-    "module.storage",
+    "module.nfs",
     "rancher_stack.route53",
   ]
 
@@ -68,7 +68,7 @@ resource "rancher_stack" "nfs" {
   environment {
     MOUNT_DIR     = "/"
     MOUNT_OPTS    = "rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2"
-    NFS_SERVER    = "${module.storage.efs_dns_name}"
+    NFS_SERVER    = "${module.nfs.efs_dns_name}"
     NFS_VERS      = "nfsvers=4.1"
     ON_REMOVE     = "purge"
     RANCHER_DEBUG = true

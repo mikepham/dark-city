@@ -1,6 +1,6 @@
 resource "aws_security_group" "nfs" {
   count       = "${length(var.vpc_ids)}"
-  name_prefix = "${var.environment}-member-security-storage-"
+  name_prefix = "${var.environment}-member-security-nfs-"
   description = "Allows NFS traffic from instances within the VPC."
   vpc_id      = "${element(var.vpc_ids, count.index)}"
 

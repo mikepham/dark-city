@@ -44,6 +44,7 @@ module "rancher" {
   elasticsearch_dedicated_master_count   = "${var.elasticsearch_dedicated_master_count}"
   elasticsearch_dedicated_master_enabled = "${var.elasticsearch_dedicated_master_enabled}"
   elasticsearch_dedicated_master_type    = "${var.elasticsearch_dedicated_master_type}"
+  elasticsearch_enabled                  = "${var.elasticsearch_enabled}"
   elasticsearch_encrypt_at_rest          = "${var.elasticsearch_encrypt_at_rest}"
   elasticsearch_instance_count           = "${var.elasticsearch_instance_count}"
   elasticsearch_instance_type            = "${var.elasticsearch_instance_type}"

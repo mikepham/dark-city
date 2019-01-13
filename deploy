@@ -69,15 +69,16 @@ if [ ! -d "$ENVIRONMENT_PATH" ]; then
   exit
 fi
 
-ENVIRONMENT_PLAN="$ENVIRONMENT_PATH/$ENVIRONMENT.plan"
+ENVIRONMENT_PLAN="$ENVIRONMENT.plan"
+ENVIRONMENT_PLAN_PATH="$ENVIRONMENT_PATH/$ENVIRONMENT_PLAN"
 
 # Informational
 #------------------------------------------------------------------------------
 echo "Current Working Directory: `pwd`"
 echo "Environment: $ENVIRONMENT"
 echo "Environment Path: $ENVIRONMENT_PATH"
-echo "Environment Plan: $ENVIRONMENT_PLAN"
-if [ -f "$ENVIRONMENT_PLAN" ]; then
+echo "Environment Plan: $ENVIRONMENT_PLAN_PATH"
+if [ -f "$ENVIRONMENT_PLAN_PATH" ]; then
   echo "Environment Plan Exists"
 fi
 echo "------------------------------------------------------------------------"
@@ -110,6 +111,7 @@ terraform fmt
 #------------------------------------------------------------------------------
 echo "Executing $ENVIRONMENT"
 echo "------------------------------------------------------------------------"
+cd $ENVIRONMENT_PATH
 
 function apply() {
   if [ ! -f "$ENVIRONMENT_PLAN" ]; then
@@ -124,19 +126,19 @@ function destroy() {
     run
     echo "------------------------------------------------------------------------"
   fi
-  terraform destroy $ENVIRONMENT_PATH
+  terraform destroy
 }
 
 function init () {
-  terraform init "$ENVIRONMENT_PATH"
+  terraform init
 }
 
 function run() {
   if [ ! -d ".terraform" ]; then
-    terraform init "$ENVIRONMENT_PATH"
-    terraform validate "$ENVIRONMENT_PATH"
+    init
+    terraform validate
   fi
-  terraform plan -out="$ENVIRONMENT_PLAN" "$ENVIRONMENT_PATH"
+  terraform plan -out="$ENVIRONMENT_PLAN"
 }
 
 case $ACTION in

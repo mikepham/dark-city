@@ -1,5 +1,5 @@
 resource "aws_security_group" "elasticsearch" {
-  count       = "${length(var.vpc_ids)}"
+  count       = "${var.enabled * length(var.vpc_ids)}"
   name_prefix = "${var.environment}-elasticsearch-"
   description = "Allows ElasticSearch traffic from instances within the VPC."
   vpc_id      = "${element(var.vpc_ids, count.index)}"
@@ -26,15 +26,19 @@ resource "aws_security_group" "elasticsearch" {
 }
 
 resource "aws_cloudwatch_log_group" "cloudwatch" {
-  name = "${var.domain}"
+  count = "${var.enabled}"
+  name  = "${var.domain}"
 }
 
 resource "aws_cloudwatch_log_resource_policy" "cloudwatch" {
+  count           = "${var.enabled}"
   policy_name     = "${local.domain_slug}"
   policy_document = "${data.template_file.cloudwatch.rendered}"
 }
 
 resource "aws_elasticsearch_domain" "elasticsearch" {
+  count = "${var.enabled}"
+
   access_policies       = "${data.template_file.access_policy.rendered}"
   domain_name           = "${local.domain_slug}"
   elasticsearch_version = "${var.elasticsearch_version}"

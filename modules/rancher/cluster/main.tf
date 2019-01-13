@@ -1,8 +1,8 @@
-module "storage" {
-  source = "../storage"
+module "nfs" {
+  source = "../nfs"
 
   environment = "${var.environment_name}"
-  name        = "${var.cluster_name}"
+  name        = "etcd-${var.cluster_name}"
   subnets     = "${var.subnets}"
   vpc_ids     = "${var.vpc_ids}"
 }

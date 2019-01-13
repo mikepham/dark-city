@@ -68,6 +68,11 @@ variable "elasticsearch_dedicated_master_type" {
   type        = "string"
 }
 
+variable "elasticsearch_enabled" {
+  description = "Enable ElasticSearch"
+  type        = "string"
+}
+
 variable "elasticsearch_encrypt_at_rest" {
   description = "Encrypt at Rest"
   type        = "string"

@@ -13,7 +13,7 @@ output "rancher_security_groups" {
 
   value = [
     "${module.security.security_groups}",
-    "${module.storage.efs_security_group}",
+    "${module.nfs.efs_security_group}",
     "${module.elasticsearch.elasticsearch_security_group}",
   ]
 }
@@ -23,7 +23,7 @@ output "rancher_efs_security_groups" {
     "cluster",
   ]
 
-  value = ["${module.storage.efs_security_group}"]
+  value = ["${module.nfs.efs_security_group}"]
 }
 
 output "rancher_es_security_groups" {

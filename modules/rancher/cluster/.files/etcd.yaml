@@ -38,6 +38,21 @@ systemd:
             [Service]
             EnvironmentFile=/run/metadata/coreos
 
+    - name: etcd-member-remove.service
+      contents: |
+        [Unit]
+        Description=Remove Member from Cluster
+
+        [Service]
+        EnvironmentFile=/etc/environment
+        EnvironmentFile=/run/metadata/coreos
+        Type=oneshot
+        RemainAfterExit=true
+        ExecStop=/usr/bin/etcdctl member remove $${HOSTNAME} http://$${COREOS_EC2_PRIVATE_IPV4}
+
+        [Install]
+        WantedBy=multi-user.target
+
     - name: etcd-member-backup.service
       contents: |
         [Unit]

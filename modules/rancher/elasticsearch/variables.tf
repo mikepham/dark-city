@@ -28,6 +28,11 @@ variable "domain" {
   type        = "string"
 }
 
+variable "enabled" {
+  description = "Enable Module"
+  type        = "string"
+}
+
 variable "encrypt_at_rest" {
   description = "Encrypt Data at Rest"
   type        = "string"
