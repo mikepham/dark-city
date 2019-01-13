@@ -28,9 +28,12 @@ module "environment" {
   # Overrides
   drone_database_instance_type        = "t2.micro"
   elasticsearch_dedicated_master_type = "t2.small.elasticsearch"
+  elasticsearch_enabled               = false
   elasticsearch_instance_type         = "t2.small.elasticsearch"
   elasticsearch_volume_size           = 10
   rancher_certificate_domain          = "int.nativecode.net"
+  rancher_enable_remote_volumes       = true
+  rancher_enable_services             = true
   rancher_environment                 = "int"
   rancher_instance_type               = "t2.micro"
   rancher_volume_size                 = 10
@@ -43,7 +46,6 @@ module "environment" {
   # ElasticSearch
   elasticsearch_dedicated_master_count   = 1
   elasticsearch_dedicated_master_enabled = false
-  elasticsearch_enabled                  = false
   elasticsearch_encrypt_at_rest          = false
   elasticsearch_instance_count           = 1
   elasticsearch_node2node_encryption     = false

@@ -197,6 +197,16 @@ variable "elasticsearch_zone_awareness_enabled" {
   type        = "string"
 }
 
+variable "enable_remote_volumes" {
+  description = "Enable Remote Volumes"
+  type        = "string"
+}
+
+variable "enable_services" {
+  description = "Enable Additional Rancher Services"
+  type        = "string"
+}
+
 variable "environment_domain" {
   description = "Environment Domain Name"
   type        = "string"

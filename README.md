@@ -58,3 +58,14 @@ deploy-int
 
 deploy-prod
 ```
+
+## Notes
+
+### Unverified
+
+- Using multiple VPCs has not been tested.
+
+### Not Working
+
+- Agents do not unregistered with Rancher
+- Agents do not properly join/unjoin an etcd cluster

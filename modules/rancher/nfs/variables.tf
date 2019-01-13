@@ -1,3 +1,8 @@
+variable "enabled" {
+  description = "Enable NFS Storage"
+  type        = "string"
+}
+
 variable "environment" {
   description = "Environment Name"
   type        = "string"

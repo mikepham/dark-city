@@ -113,7 +113,8 @@ module "security" {
 }
 
 module "nfs" {
-  source = "nfs"
+  enabled = "${var.enable_remote_volumes * var.enable_services}"
+  source  = "nfs"
 
   environment = "${var.environment_name}"
   name        = "${var.environment_name}"

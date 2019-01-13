@@ -44,6 +44,8 @@
 | elasticsearch\_volume\_size | ElasticSearch Volume Size | string | n/a | yes |
 | elasticsearch\_volume\_type | ElasticSearch Volume Type | string | n/a | yes |
 | elasticsearch\_zone\_awareness\_enabled | Enable AWS Zone Awareness | string | n/a | yes |
+| enable\_remote\_volumes | Enable Remote Volumes | string | n/a | yes |
+| enable\_services | Enable Additional Rancher Services | string | n/a | yes |
 | environment\_domain | Environment Domain Name | string | n/a | yes |
 | environment\_domain\_tld | Environment Domain TLD | string | n/a | yes |
 | environment\_name | Rancher Environment | string | n/a | yes |
