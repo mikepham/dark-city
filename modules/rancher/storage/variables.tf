@@ -3,12 +3,12 @@ variable "environment" {
   type        = "string"
 }
 
-variable "security_groups" {
-  description = "AWS Security Groups"
+variable "subnets" {
+  description = "Subnets to attach NFS to"
   type        = "list"
 }
 
-variable "subnets" {
-  description = "Subnets to attach NFS to"
+variable "vpc_ids" {
+  description = "VPCs"
   type        = "list"
 }

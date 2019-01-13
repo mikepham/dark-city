@@ -28,6 +28,11 @@ variable "domain" {
   type        = "string"
 }
 
+variable "encrypt_at_rest" {
+  description = "Encrypt Data at Rest"
+  type        = "string"
+}
+
 variable "environment" {
   description = "Environment"
   type        = "string"
@@ -61,6 +66,16 @@ variable "snapshot_start_hour" {
 variable "subnets" {
   description = "AWS Subnets"
   type        = "list"
+}
+
+variable "volume_size" {
+  description = "Volume Size"
+  type        = "string"
+}
+
+variable "volume_type" {
+  description = "Volume Type"
+  type        = "string"
 }
 
 variable "vpc_ids" {

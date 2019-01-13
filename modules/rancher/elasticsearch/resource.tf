@@ -1,6 +1,6 @@
 resource "aws_security_group" "elasticsearch" {
   count       = "${length(var.vpc_ids)}"
-  name_prefix = "elasticsearch-${var.environment}-"
+  name_prefix = "${var.environment}-elasticsearch-"
   description = "Allows ElasticSearch traffic from instances within the VPC."
   vpc_id      = "${element(var.vpc_ids, count.index)}"
 
@@ -48,8 +48,14 @@ resource "aws_elasticsearch_domain" "elasticsearch" {
     zone_awareness_enabled   = "${var.zone_awareness_enabled}"
   }
 
+  ebs_options {
+    ebs_enabled = true
+    volume_size = "${var.volume_size}"
+    volume_type = "${var.volume_type}"
+  }
+
   encrypt_at_rest {
-    enabled = true
+    enabled = "${var.encrypt_at_rest}"
   }
 
   log_publishing_options {
@@ -71,6 +77,6 @@ resource "aws_elasticsearch_domain" "elasticsearch" {
 
   vpc_options {
     security_group_ids = ["${aws_security_group.elasticsearch.id}"]
-    subnet_ids         = "${var.subnets}"
+    subnet_ids         = ["${element(var.subnets, 1)}"]
   }
 }

@@ -11,12 +11,6 @@ module "certificates" {
   domain = "${var.rancher_certificate_domain}"
 }
 
-module "secrets" {
-  source = "../modules/secrets"
-
-  secret_name = "terraform-infrastructure"
-}
-
 module "rancher" {
   source = "../modules/rancher"
 
@@ -48,12 +42,15 @@ module "rancher" {
   elasticsearch_dedicated_master_count   = "${var.elasticsearch_dedicated_master_count}"
   elasticsearch_dedicated_master_enabled = "${var.elasticsearch_dedicated_master_enabled}"
   elasticsearch_dedicated_master_type    = "${var.elasticsearch_dedicated_master_type}"
+  elasticsearch_encrypt_at_rest          = "${var.elasticsearch_encrypt_at_rest}"
   elasticsearch_instance_count           = "${var.elasticsearch_instance_count}"
   elasticsearch_instance_type            = "${var.elasticsearch_instance_type}"
   elasticsearch_node2node_encryption     = "${var.elasticsearch_node2node_encryption}"
   elasticsearch_snapshot_start_hour      = "${var.elasticsearch_snapshot_start_hour}"
   elasticsearch_subnets                  = "${var.rancher_subnets}"
   elasticsearch_version                  = "${var.elasticsearch_version}"
+  elasticsearch_volume_size              = "${var.elasticsearch_volume_size}"
+  elasticsearch_volume_type              = "${var.elasticsearch_volume_type}"
   elasticsearch_zone_awareness_enabled   = "${var.elasticsearch_zone_awareness_enabled}"
   etcd_token                             = "${var.rancher_etcd_token}"
   environment_domain                     = "${local.domain}"
@@ -70,4 +67,10 @@ module "rancher" {
   use_public_ip                          = "${var.rancher_use_public_ip}"
   volume_size                            = "${var.rancher_volume_size}"
   vpc_ids                                = "${var.rancher_vpc_ids}"
+}
+
+module "secrets" {
+  source = "../modules/secrets"
+
+  secret_name = "terraform-infrastructure"
 }

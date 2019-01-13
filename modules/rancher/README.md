@@ -31,12 +31,15 @@
 | elasticsearch\_dedicated\_master\_count | Number of Dedicated Master Nodes | string | n/a | yes |
 | elasticsearch\_dedicated\_master\_enabled | Enable Dedicated Master Node | string | n/a | yes |
 | elasticsearch\_dedicated\_master\_type | Master Node Instance Type | string | n/a | yes |
+| elasticsearch\_encrypt\_at\_rest | Encrypt at Rest | string | n/a | yes |
 | elasticsearch\_instance\_count | Number of ElasticSearch Instances | string | n/a | yes |
 | elasticsearch\_instance\_type | ElasticSearch Instance Type | string | n/a | yes |
 | elasticsearch\_node2node\_encryption | Enable Node-to-Node Encryption | string | n/a | yes |
 | elasticsearch\_snapshot\_start\_hour | When to start the snapshot | string | n/a | yes |
 | elasticsearch\_subnets | ElasticSearch Subnets | list | n/a | yes |
 | elasticsearch\_version | ElasticSearch Version | string | n/a | yes |
+| elasticsearch\_volume\_size | ElasticSearch Volume Size | string | n/a | yes |
+| elasticsearch\_volume\_type | ElasticSearch Volume Type | string | n/a | yes |
 | elasticsearch\_zone\_awareness\_enabled | Enable AWS Zone Awareness | string | n/a | yes |
 | environment\_domain | Environment Domain Name | string | n/a | yes |
 | environment\_domain\_tld | Environment Domain TLD | string | n/a | yes |

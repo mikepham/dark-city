@@ -6,6 +6,11 @@ data "aws_route53_zone" "zone" {
   name = "${var.environment_domain_tld}."
 }
 
+data "aws_vpc" "vpc" {
+  count = "${length(var.vpc_ids)}"
+  id    = "${element(var.vpc_ids, count.index)}"
+}
+
 data "ct_config" "config" {
   count = "${var.cluster_size}"
 

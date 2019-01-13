@@ -1,6 +1,6 @@
 resource "aws_launch_configuration" "cluster" {
   count       = "${var.cluster_size}"
-  name_prefix = "rancher-${var.environment_name}-"
+  name_prefix = "${var.environment_name}-rancher-"
 
   associate_public_ip_address = "${var.use_public_ip}"
   enable_monitoring           = "${var.monitoring}"
@@ -25,7 +25,7 @@ resource "aws_launch_configuration" "cluster" {
 
 resource "aws_autoscaling_group" "cluster_autoscale" {
   count       = "${var.cluster_size}"
-  name_prefix = "rancher-autoscale-${var.environment_name}-"
+  name_prefix = "${var.environment_name}-rancher-autoscale-"
   depends_on  = ["aws_launch_configuration.cluster"]
 
   availability_zones        = "${var.availability_zones}"
@@ -43,24 +43,6 @@ resource "aws_autoscaling_group" "cluster_autoscale" {
   lifecycle {
     create_before_destroy = true
   }
-
-  tag {
-    key                 = "Name"
-    value               = "member-autoscale-${var.environment_name}"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "cluster-env"
-    value               = "${var.environment_name}"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "cluster-member"
-    value               = "member"
-    propagate_at_launch = true
-  }
 }
 
 resource "aws_alb" "lb" {
@@ -71,7 +53,7 @@ resource "aws_alb" "lb" {
   security_groups            = ["${var.security_groups}"]
 
   tags {
-    Name = "alb-${var.environment_domain}"
+    Name = "${var.environment_domain}-alb"
   }
 }
 
@@ -126,6 +108,6 @@ resource "aws_alb_target_group" "target_group" {
   }
 
   tags {
-    Name = "alb-target-${local.target_group}"
+    Name = "${local.target_group}-alb-target"
   }
 }

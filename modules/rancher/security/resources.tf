@@ -102,7 +102,7 @@ resource "aws_security_group" "member_database" {
   }
 }
 
-resource "aws_security_group" "member_etcd" {
+resource "aws_security_group" "etcd" {
   name_prefix = "${var.environment_name}-member-security-etcd-"
 
   description = "Allows etcd traffic from instances within the VPC."
@@ -138,37 +138,6 @@ resource "aws_security_group" "member_etcd" {
 
   tags {
     Name        = "${var.environment_name}-member-security-etcd"
-    rancher_env = "${var.environment_name}"
-  }
-}
-
-resource "aws_security_group" "member_storage" {
-  name_prefix = "${var.environment_name}-member-security-storage-"
-  description = "Allows NFS traffic from instances within the VPC."
-  vpc_id      = "${data.aws_vpc.vpc.id}"
-
-  egress {
-    from_port = 2049
-    to_port   = 2049
-    protocol  = "tcp"
-
-    cidr_blocks = [
-      "${data.aws_vpc.vpc.cidr_block}",
-    ]
-  }
-
-  ingress {
-    from_port = 2049
-    to_port   = 2049
-    protocol  = "tcp"
-
-    cidr_blocks = [
-      "${data.aws_vpc.vpc.cidr_block}",
-    ]
-  }
-
-  tags {
-    Name        = "${var.environment_name}-member-security-storage"
     rancher_env = "${var.environment_name}"
   }
 }

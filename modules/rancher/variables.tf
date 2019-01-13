@@ -132,6 +132,11 @@ variable "elasticsearch_dedicated_master_type" {
   type        = "string"
 }
 
+variable "elasticsearch_encrypt_at_rest" {
+  description = "Encrypt at Rest"
+  type        = "string"
+}
+
 variable "elasticsearch_instance_count" {
   description = "Number of ElasticSearch Instances"
   type        = "string"
@@ -159,6 +164,16 @@ variable "elasticsearch_subnets" {
 
 variable "elasticsearch_version" {
   description = "ElasticSearch Version"
+  type        = "string"
+}
+
+variable "elasticsearch_volume_size" {
+  description = "ElasticSearch Volume Size"
+  type        = "string"
+}
+
+variable "elasticsearch_volume_type" {
+  description = "ElasticSearch Volume Type"
   type        = "string"
 }
 

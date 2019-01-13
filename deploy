@@ -18,6 +18,11 @@ do
       shift
     ;;
 
+    --destroy)
+      DESTROY=true
+      shift
+    ;;
+
     -e|--environment)
       ENVIRONMENT="$2"
       shift
@@ -76,12 +81,16 @@ else
 fi
 
 terraform fmt
+terraform validate
 
 cd $ENVIRONMENT_PATH
+echo `pwd`
 terraform init
 
 if [ "$APPLY" = "true" ]; then
   terraform apply
+elif [ "$DESTROY" = "true" ]; then
+  terraform destroy
 else
   terraform plan
 fi

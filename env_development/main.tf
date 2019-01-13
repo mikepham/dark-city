@@ -6,7 +6,7 @@ terraform {
 
   backend "s3" {
     bucket = "nativecode"
-    key    = "terraform/development/"
+    key    = "terraform/development.tfstate"
     region = "us-east-1"
   }
 }
@@ -25,26 +25,35 @@ provider "aws" {
 module "environment" {
   source = "../environment"
 
-  drone_admin_accounts         = ["mikepham"]
-  drone_enabled                = false
-  drone_database_instance_type = "t2.micro"
-  drone_github_organizations   = ["nativecode-dev"]
+  # Overrides
+  drone_database_instance_type        = "t2.micro"
+  elasticsearch_instance_type         = "t2.small.elasticsearch"
+  elasticsearch_dedicated_master_type = "t2.small.elasticsearch"
+  elasticsearch_volume_size           = 10
+  rancher_certificate_domain          = "nativecode.net"
+  rancher_environment                 = "dev"
+  rancher_instance_type               = "t2.micro"
+  rancher_volume_size                 = 10
 
-  elasticsearch_instance_type            = "t2.small.elasticsearch"
+  # Drone
+  drone_admin_accounts       = ["mikepham"]
+  drone_enabled              = false
+  drone_github_organizations = ["nativecode-dev"]
+
+  # ElasticSearch
   elasticsearch_dedicated_master_count   = 1
   elasticsearch_dedicated_master_enabled = false
-  elasticsearch_dedicated_master_type    = "t2.small.elasticsearch"
+  elasticsearch_encrypt_at_rest          = false
   elasticsearch_instance_count           = 1
   elasticsearch_node2node_encryption     = false
+  elasticsearch_version                  = 6.3
+  elasticsearch_volume_type              = "gp2"
   elasticsearch_zone_awareness_enabled   = false
-  elasticsearch_version                  = "6.3"
 
+  # Rancher
   rancher_ami_image          = "ami-0b1db01d775d666c2"
   rancher_availability_zones = ["us-east-1"]
-  rancher_certificate_domain = "nativecode.net"
-  rancher_environment        = "dev"
   rancher_environment_domain = "nativecode.net"
-  rancher_instance_type      = "t2.micro"
   rancher_keypair            = "aws-nativecode-keypair"
   rancher_url                = "https://rancher.nativecode.net"
   rancher_vpc_ids            = ["vpc-ecedad97"]
