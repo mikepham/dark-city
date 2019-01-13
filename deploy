@@ -9,7 +9,7 @@ do
 
   case $key in
     -a|--apply)
-      APPLY=true
+      ACTION=apply
       shift
     ;;
 
@@ -19,7 +19,7 @@ do
     ;;
 
     --destroy)
-      DESTROY=true
+      ACTION=destroy
       shift
     ;;
 
@@ -46,17 +46,12 @@ if [ "$ENVIRONMENT" = "" ]; then
 fi
 
 case $ENVIRONMENT in
-  "dev")
-    ENVIRONMENT=development
-  ;;
-
-  "int")
-    ENVIRONMENT=internal
-  ;;
-
-  "prod")
-    ENVIRONMENT=production
-  ;;
+   "dev") ENVIRONMENT=development
+       ;;
+   "int") ENVIRONMENT=internal
+       ;;
+  "prod") ENVIRONMENT=production
+       ;;
 esac
 
 if [ ! -d "env_$ENVIRONMENT" ]; then
@@ -81,16 +76,26 @@ else
 fi
 
 terraform fmt
-terraform validate
 
 cd $ENVIRONMENT_PATH
 echo `pwd`
+echo "------------------------------------------------------------------------"
+
+terraform validate
 terraform init
 
-if [ "$APPLY" = "true" ]; then
-  terraform apply
-elif [ "$DESTROY" = "true" ]; then
-  terraform destroy
-else
-  terraform plan
+if [ -f "$ENVIRONMENT.plan" ]; then
+  ENVIRONMENT_PLAN="$ENVIRONMENT.plan"
 fi
+
+case $ACTION in
+  "apply")
+    terraform apply $ENVIRONMENT_PLAN
+    ;;
+  "destroy")
+    terraform destroy $ENVIRONMENT_PLAN
+    ;;
+  *)
+    terraform plan -out="$ENVIRONMENT.plan"
+    ;;
+esac
