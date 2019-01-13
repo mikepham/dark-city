@@ -28,6 +28,7 @@ module "rancher" {
   cluster_member_size                    = "${var.rancher_cluster_member_size}"
   drone_admin_accounts                   = "${var.drone_admin_accounts}"
   drone_database_disk_size               = "${var.drone_database_disk_size}"
+  drone_database_disk_type               = "${var.drone_database_disk_type}"
   drone_database_instance_type           = "${var.drone_database_instance_type}"
   drone_database_name                    = "${var.drone_database_name}"
   drone_database_parameter_group         = "${var.drone_database_parameter_group}"

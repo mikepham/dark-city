@@ -1,2 +1,0 @@
-locksmith:
-  reboot_strategy: "etcd-lock"

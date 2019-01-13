@@ -15,9 +15,9 @@ systemd:
         RequiresMountsFor=/var
 
         [Service]
-        ExecStartPre=/usr/bin/mkdir -p /var/vm
-        ExecStartPre=/usr/bin/fallocate -l 2048m /var/vm/swapfile
-        ExecStartPre=/usr/bin/chmod 600 /var/vm/swapfile
+        ExecStart=/usr/bin/mkdir /var/vm
+        ExecStart=/usr/bin/fallocate -l 2048m /var/vm/swapfile
+        ExecStart=/usr/bin/chmod 600 /var/vm/swapfile
         ExecStart=/usr/sbin/mkswap /var/vm/swapfile
         RemainAfterExit=true
         Type=oneshot

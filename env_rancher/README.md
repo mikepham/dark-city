@@ -5,6 +5,7 @@
 |------|-------------|:----:|:-----:|:-----:|
 | drone\_admin\_accounts | Drone Admin Account | list | n/a | yes |
 | drone\_database\_disk\_size | Drone Database Disk Size | string | `"10"` | no |
+| drone\_database\_disk\_type | Drone Database Disk Type | string | `"gp2"` | no |
 | drone\_database\_instance\_type | Drone Database Instance Type | string | n/a | yes |
 | drone\_database\_name | Drone Database Name | string | `"drone"` | no |
 | drone\_database\_parameter\_group | Drone Database Parameter Group | string | `"default.mysql5.7"` | no |

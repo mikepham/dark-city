@@ -1,3 +1,13 @@
+resource "tls_private_key" "rancher" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "aws_key_pair" "rancher" {
+  key_name   = "${var.keypair}"
+  public_key = "${tls_private_key.rancher.public_key_openssh}"
+}
+
 resource "aws_security_group" "rancher" {
   name = "rancher-security"
 
@@ -100,8 +110,25 @@ resource "aws_security_group" "rancher_database" {
   }
 }
 
+resource "aws_db_instance" "rancher" {
+  name = "rancher"
+
+  allocated_storage         = 10
+  apply_immediately         = true
+  engine                    = "mysql"
+  engine_version            = "5.7"
+  final_snapshot_identifier = "final-snapshot-rancher"
+  instance_class            = "db.t2.micro"
+  password                  = "${module.secrets.secrets["RANCHER_DATABASE_PASSWORD"]}"
+  parameter_group_name      = "default.mysql5.7"
+  username                  = "rancher"
+  skip_final_snapshot       = true
+  storage_type              = "gp2"
+  vpc_security_group_ids    = ["${aws_security_group.rancher_database.id}"]
+}
+
 resource "aws_launch_configuration" "rancher" {
-  name = "rancher-configuration"
+  name_prefix = "rancher-configuration-"
 
   depends_on = [
     "aws_security_group.rancher",
@@ -122,7 +149,7 @@ resource "aws_launch_configuration" "rancher" {
   ]
 
   lifecycle {
-    create_before_destroy = false
+    create_before_destroy = true
   }
 
   root_block_device {
@@ -133,11 +160,12 @@ resource "aws_launch_configuration" "rancher" {
 }
 
 resource "aws_autoscaling_group" "rancher_autoscale" {
-  name = "rancher-autoscale"
+  name_prefix = "rancher-autoscale-"
 
   depends_on = [
-    "aws_launch_configuration.rancher",
     "aws_alb_target_group.target_group",
+    "aws_db_instance.rancher",
+    "aws_launch_configuration.rancher",
   ]
 
   availability_zones        = "${var.availability_zones}"
@@ -153,7 +181,7 @@ resource "aws_autoscaling_group" "rancher_autoscale" {
   vpc_zone_identifier       = "${var.subnets}"
 
   lifecycle {
-    create_before_destroy = false
+    create_before_destroy = true
   }
 
   tag {
@@ -231,11 +259,22 @@ resource "aws_alb_target_group" "target_group" {
     unhealthy_threshold = 10
     timeout             = 5
     interval            = 10
-    path                = "/ping"
+    path                = "/v1/scripts/api.crt"
     port                = 80
   }
 
   tags {
     Name = "rancher-alb-target"
   }
+}
+
+resource "aws_route53_record" "rancher" {
+  zone_id = "${data.aws_route53_zone.zone.zone_id}"
+  name    = "rancher.${var.domain}"
+  type    = "NS"
+  ttl     = "30"
+
+  records = [
+    "${aws_alb.lb.dns_name}",
+  ]
 }

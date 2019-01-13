@@ -25,6 +25,6 @@ resource "aws_db_instance" "drone" {
   parameter_group_name      = "${var.database_parameter_group}"
   username                  = "${var.database_username}"
   skip_final_snapshot       = true
-  storage_type              = "${var.database_disk_size}"
+  storage_type              = "${var.database_disk_type}"
   vpc_security_group_ids    = ["${var.database_security_groups}"]
 }

@@ -17,6 +17,7 @@
 | cluster\_size | Rancher Cluster Size | string | n/a | yes |
 | drone\_admin\_accounts | Drone Admin Accounts | list | n/a | yes |
 | drone\_database\_disk\_size | Drone Database Disk Size | string | n/a | yes |
+| drone\_database\_disk\_type | Drone Database Disk Type | string | n/a | yes |
 | drone\_database\_instance\_type | Drone Database Instance Type | string | n/a | yes |
 | drone\_database\_name | Drone Database Name | string | n/a | yes |
 | drone\_database\_parameter\_group | Drone Database Parameter Group | string | n/a | yes |

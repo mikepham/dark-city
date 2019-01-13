@@ -62,6 +62,11 @@ variable "drone_database_disk_size" {
   type        = "string"
 }
 
+variable "drone_database_disk_type" {
+  description = "Drone Database Disk Type"
+  type        = "string"
+}
+
 variable "drone_database_instance_type" {
   description = "Drone Database Instance Type"
   type        = "string"

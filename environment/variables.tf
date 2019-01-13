@@ -8,6 +8,11 @@ variable "drone_database_disk_size" {
   description = "Drone Database Disk Size"
 }
 
+variable "drone_database_disk_type" {
+  default     = "gp2"
+  description = "Drone Database Disk Type"
+}
+
 variable "drone_database_instance_type" {
   description = "Drone Database Instance Type"
   type        = "string"

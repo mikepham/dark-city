@@ -8,6 +8,11 @@ variable "database_disk_size" {
   type        = "string"
 }
 
+variable "database_disk_type" {
+  description = "Database Disk Type"
+  type        = "string"
+}
+
 variable "database_instance_type" {
   description = "Database Instance Type"
   type        = "string"

@@ -10,15 +10,15 @@ variable "cluster_size" {
 
 variable "domain" {}
 
-variable "filesystem_id" {}
-
 variable "iam_profile" {
   default = "EC2"
 }
 
 variable "instance_type" {}
 
-variable "keypair" {}
+variable "keypair" {
+  default = ""
+}
 
 variable "subnets" {
   type = "list"
@@ -26,6 +26,8 @@ variable "subnets" {
 
 variable "volume_size" {}
 
-variable "volume_type" {}
+variable "volume_type" {
+  default = "gp2"
+}
 
 variable "vpc_id" {}

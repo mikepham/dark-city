@@ -27,7 +27,7 @@ module "environment" {
   source = "../environment"
 
   # Overrides
-  drone_database_instance_type        = "t2.micro"
+  drone_database_instance_type        = "db.t2.micro"
   elasticsearch_dedicated_master_type = "t2.small.elasticsearch"
   elasticsearch_enabled               = false
   elasticsearch_instance_type         = "t2.small.elasticsearch"
@@ -64,7 +64,5 @@ module "environment" {
 
   rancher_subnets = [
     "subnet-62d02605",
-    "subnet-0e636331",
-    "subnet-5364df5c",
   ]
 }

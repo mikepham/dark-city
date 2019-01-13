@@ -62,6 +62,7 @@ module "drone" {
   environment_domain       = "${var.environment_domain}"
   environment_id           = "${rancher_environment.env.id}"
   database_disk_size       = "${var.drone_database_disk_size}"
+  database_disk_type       = "${var.drone_database_disk_type}"
   database_instance_type   = "${var.drone_database_instance_type}"
   database_name            = "${var.drone_database_name}"
   database_parameter_group = "${var.drone_database_parameter_group}"
@@ -110,7 +111,7 @@ module "security" {
 
 module "nfs" {
   enabled = "${var.enable_remote_volumes * var.enable_services}"
-  source  = "nfs"
+  source  = "../nfs"
 
   environment = "${var.environment_name}"
   name        = "${var.environment_name}"

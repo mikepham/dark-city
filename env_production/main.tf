@@ -32,7 +32,7 @@ module "environment" {
   rancher_cluster_size = 1
 
   # Overrides
-  drone_database_instance_type        = "t2.micro"
+  drone_database_instance_type        = "db.t2.micro"
   elasticsearch_dedicated_master_type = "t2.small.elasticsearch"
   elasticsearch_enabled               = true
   elasticsearch_instance_type         = "t2.small.elasticsearch"
@@ -70,6 +70,5 @@ module "environment" {
   rancher_subnets = [
     "subnet-b27b9f9c",
     "subnet-354be57f",
-    "subnet-11e3f94c",
   ]
 }
