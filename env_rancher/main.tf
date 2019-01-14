@@ -21,6 +21,7 @@ module "rancher_server" {
   ami_image          = "ami-0b1db01d775d666c2"
   availability_zones = ["us-east-1"]
   domain             = "nativecode.net"
+  keypair            = "aws-nativecode-keypair"
   instance_type      = "t2.micro"
   volume_size        = 16
   vpc_id             = "vpc-ecedad97"

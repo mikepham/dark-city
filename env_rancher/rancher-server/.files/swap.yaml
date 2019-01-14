@@ -10,23 +10,23 @@ systemd:
     - name: create-swapfile.service
       contents: |
         [Unit]
-        Description=Create a swapfile
-        ConditionPathExists=!/var/vm/swapfile
+        Description=Create swapfile
         RequiresMountsFor=/var
+        ConditionPathExists=!/var/vm/swapfile
 
         [Service]
-        ExecStart=/usr/bin/mkdir /var/vm
-        ExecStart=/usr/bin/fallocate -l 2048m /var/vm/swapfile
+        Type=oneshot
+        ExecStart=/usr/bin/mkdir -p /var/vm
+        ExecStart=/usr/bin/fallocate -l 1024m /var/vm/swapfile
         ExecStart=/usr/bin/chmod 600 /var/vm/swapfile
         ExecStart=/usr/sbin/mkswap /var/vm/swapfile
         RemainAfterExit=true
-        Type=oneshot
 
     - name: var-vm-swapfile.swap
       enabled: true
       contents: |
         [Unit]
-        Description=Turn on swap
+        Description=Enable swapon
         After=create-swapfile.service
         Requires=create-swapfile.service
 

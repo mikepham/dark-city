@@ -119,6 +119,13 @@ function apply() {
     echo "------------------------------------------------------------------------"
   fi
   terraform apply $ENVIRONMENT_PLAN
+  cleanup
+}
+
+function cleanup() {
+  if [ -f "$ENVIRONMENT_PLAN" ]; then
+    rm -r "$ENVIRONMENT_PLAN"
+  fi
 }
 
 function destroy() {

@@ -1,11 +1,15 @@
 resource "tls_private_key" "rancher" {
+  count = "${local.create_key_pair}"
+
   algorithm = "RSA"
   rsa_bits  = 4096
 }
 
 resource "aws_key_pair" "rancher" {
-  key_name   = "${var.keypair}"
-  public_key = "${tls_private_key.rancher.public_key_openssh}"
+  count = "${local.create_key_pair}"
+
+  key_name_prefix = "rancher-${local.domain_slug}-"
+  public_key      = "${tls_private_key.rancher.public_key_openssh}"
 }
 
 resource "aws_security_group" "rancher" {
@@ -111,20 +115,30 @@ resource "aws_security_group" "rancher_database" {
 }
 
 resource "aws_db_instance" "rancher" {
-  name = "rancher"
+  name                       = "rancher"
+  allocated_storage          = 10
+  apply_immediately          = true
+  auto_minor_version_upgrade = true
+  engine                     = "mysql"
+  engine_version             = "5.7"
+  final_snapshot_identifier  = "final-snapshot-rancher"
+  instance_class             = "db.t2.micro"
+  password                   = "${module.secrets.secrets["RANCHER_DATABASE_PASSWORD"]}"
+  parameter_group_name       = "default.mysql5.7"
+  publicly_accessible        = true
+  username                   = "rancher"
+  skip_final_snapshot        = true
+  storage_type               = "gp2"
+  vpc_security_group_ids     = ["${aws_security_group.rancher_database.id}"]
 
-  allocated_storage         = 10
-  apply_immediately         = true
-  engine                    = "mysql"
-  engine_version            = "5.7"
-  final_snapshot_identifier = "final-snapshot-rancher"
-  instance_class            = "db.t2.micro"
-  password                  = "${module.secrets.secrets["RANCHER_DATABASE_PASSWORD"]}"
-  parameter_group_name      = "default.mysql5.7"
-  username                  = "rancher"
-  skip_final_snapshot       = true
-  storage_type              = "gp2"
-  vpc_security_group_ids    = ["${aws_security_group.rancher_database.id}"]
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tags {
+    Product     = "Rancher"
+    ProductRole = "Database"
+  }
 }
 
 resource "aws_launch_configuration" "rancher" {
@@ -137,11 +151,12 @@ resource "aws_launch_configuration" "rancher" {
 
   associate_public_ip_address = true
   enable_monitoring           = true
-  iam_instance_profile        = "${data.aws_iam_instance_profile.iam_ec2.arn}"
-  image_id                    = "${var.ami_image}"
-  instance_type               = "${var.instance_type}"
-  key_name                    = "${var.keypair}"
-  user_data                   = "${data.ct_config.config.rendered}"
+
+  iam_instance_profile = "${data.aws_iam_instance_profile.iam_ec2.arn}"
+  image_id             = "${var.ami_image}"
+  instance_type        = "${var.instance_type}"
+  key_name             = "${var.keypair}"
+  user_data            = "${data.ct_config.config.rendered}"
 
   security_groups = [
     "${aws_security_group.rancher.id}",
@@ -269,12 +284,14 @@ resource "aws_alb_target_group" "target_group" {
 }
 
 resource "aws_route53_record" "rancher" {
-  zone_id = "${data.aws_route53_zone.zone.zone_id}"
-  name    = "rancher.${var.domain}"
-  type    = "NS"
-  ttl     = "30"
+  name = "rancher.${var.domain}"
 
-  records = [
-    "${aws_alb.lb.dns_name}",
-  ]
+  type    = "A"
+  zone_id = "${data.aws_route53_zone.zone.id}"
+
+  alias {
+    evaluate_target_health = true
+    name                   = "${aws_alb.lb.dns_name}"
+    zone_id                = "${aws_alb.lb.zone_id}"
+  }
 }
