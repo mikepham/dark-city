@@ -10,7 +10,7 @@ provider "http" {
 #------------------------------------------------------------------------------
 module "nfs" {
   enabled = true
-  source  = "../nfs"
+  source  = "../../nfs"
 
   environment = "${var.environment_name}"
   name        = "etcd-${var.cluster_name}"

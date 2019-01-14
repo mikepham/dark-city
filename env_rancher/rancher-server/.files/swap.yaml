@@ -17,7 +17,7 @@ systemd:
         [Service]
         Type=oneshot
         ExecStart=/usr/bin/mkdir -p /var/vm
-        ExecStart=/usr/bin/fallocate -l 1024m /var/vm/swapfile
+        ExecStart=/usr/bin/fallocate -l 2048m /var/vm/swapfile
         ExecStart=/usr/bin/chmod 600 /var/vm/swapfile
         ExecStart=/usr/sbin/mkswap /var/vm/swapfile
         RemainAfterExit=true

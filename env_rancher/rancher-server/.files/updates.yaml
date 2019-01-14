@@ -1,2 +1,5 @@
 locksmith:
   reboot_strategy: "reboot"
+
+update:
+  group: "rancher"

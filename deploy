@@ -56,22 +56,22 @@ set -- "${POSITIONAL[@]}"
 
 # Validation
 #------------------------------------------------------------------------------
+case $ENVIRONMENT in
+  "dev")
+    ENVIRONMENT=development
+    ;;
+  "int")
+    ENVIRONMENT=internal
+    ;;
+  "prod")
+    ENVIRONMENT=production
+    ;;
+esac
+
 if [ "$ENVIRONMENT" = "" ]; then
   echo "Must provide an environment to deploy."
   exit ${ENVIRONMENT_NO_FOUND}
 fi
-
-case $ENVIRONMENT in
-  "dev")
-      ENVIRONMENT=development
-    ;;
-  "int")
-      ENVIRONMENT=internal
-    ;;
-  "prod")
-      ENVIRONMENT=production
-    ;;
-esac
 
 ENVIRONMENT_PATH="env_$ENVIRONMENT"
 
@@ -93,6 +93,9 @@ echo "Environment Path: $ENVIRONMENT_PATH"
 echo "Environment Plan: $ENVIRONMENT_PLAN_PATH"
 if [ -f "$ENVIRONMENT_PLAN_PATH" ]; then
   echo "Environment Plan Exists"
+fi
+if [ "$FORCE_ACTION" = "true" ]; then
+  echo "Force Was Applied"
 fi
 echo "------------------------------------------------------------------------"
 

@@ -65,26 +65,6 @@ resource "aws_security_group" "rancher" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  ingress {
-    from_port = 500
-    to_port   = 500
-    protocol  = "udp"
-
-    cidr_blocks = [
-      "${data.aws_vpc.vpc.cidr_block}",
-    ]
-  }
-
-  ingress {
-    from_port = 4500
-    to_port   = 4500
-    protocol  = "udp"
-
-    cidr_blocks = [
-      "${data.aws_vpc.vpc.cidr_block}",
-    ]
-  }
-
   lifecycle {
     create_before_destroy = true
   }
@@ -106,6 +86,26 @@ resource "aws_security_group" "rancher_cluster" {
     protocol  = "-1"
 
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port = 500
+    to_port   = 500
+    protocol  = "udp"
+
+    cidr_blocks = [
+      "${data.aws_vpc.vpc.cidr_block}",
+    ]
+  }
+
+  ingress {
+    from_port = 4500
+    to_port   = 4500
+    protocol  = "udp"
+
+    cidr_blocks = [
+      "${data.aws_vpc.vpc.cidr_block}",
+    ]
   }
 
   ingress {
@@ -225,7 +225,7 @@ resource "aws_launch_configuration" "rancher" {
   image_id             = "${var.ami_image}"
   instance_type        = "${var.instance_type}"
   key_name             = "${var.keypair != "" ? var.keypair : join("", aws_key_pair.rancher.*.key_name)}"
-  user_data            = "${data.ct_config.config.rendered}"
+  user_data            = "${data.ct_config.rancher.rendered}"
 
   security_groups = [
     "${aws_security_group.rancher.id}",
