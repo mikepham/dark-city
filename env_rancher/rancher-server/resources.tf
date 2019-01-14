@@ -115,20 +115,20 @@ resource "aws_security_group" "rancher_database" {
 }
 
 resource "aws_db_instance" "rancher" {
-  name                       = "rancher"
-  allocated_storage          = 10
-  apply_immediately          = true
-  auto_minor_version_upgrade = true
-  engine                     = "mysql"
-  engine_version             = "5.7"
-  final_snapshot_identifier  = "final-snapshot-rancher"
-  instance_class             = "db.t2.micro"
+  name                       = "${var.database_name}"
+  allocated_storage          = "${var.disk_size}"
+  apply_immediately          = "${var.apply_immediately}"
+  auto_minor_version_upgrade = "${var.auto_minor_version_upgrade}"
+  engine                     = "${var.engine}"
+  engine_version             = "${var.engine_version}"
+  final_snapshot_identifier  = "${var.final_snapshot_identifier}"
+  instance_class             = "${var.database_instance_type}"
   password                   = "${module.secrets.secrets["RANCHER_DATABASE_PASSWORD"]}"
-  parameter_group_name       = "default.mysql5.7"
-  publicly_accessible        = true
-  username                   = "rancher"
-  skip_final_snapshot        = true
-  storage_type               = "gp2"
+  parameter_group_name       = "${var.parameter_group}"
+  publicly_accessible        = "${var.publicly_accessible}"
+  username                   = "${var.database_name}"
+  skip_final_snapshot        = "${var.skip_final_snapshot}"
+  storage_type               = "${var.storage_type}"
   vpc_security_group_ids     = ["${aws_security_group.rancher_database.id}"]
 
   lifecycle {
@@ -155,7 +155,7 @@ resource "aws_launch_configuration" "rancher" {
   iam_instance_profile = "${data.aws_iam_instance_profile.iam_ec2.arn}"
   image_id             = "${var.ami_image}"
   instance_type        = "${var.instance_type}"
-  key_name             = "${var.keypair}"
+  key_name             = "${var.keypair != 0 ? var.keypair : join("", aws_key_pair.rancher.*.key_name)}"
   user_data            = "${data.ct_config.config.rendered}"
 
   security_groups = [
@@ -183,16 +183,16 @@ resource "aws_autoscaling_group" "rancher_autoscale" {
     "aws_launch_configuration.rancher",
   ]
 
-  availability_zones        = "${var.availability_zones}"
-  desired_capacity          = 1
+  availability_zones        = ["${var.availability_zone}"]
+  desired_capacity          = "${var.capacity}"
   force_delete              = false
   health_check_grace_period = 180
-  health_check_type         = "EC2"
+  health_check_type         = "${var.iam_profile}"
   launch_configuration      = "${aws_launch_configuration.rancher.name}"
-  max_size                  = 1
-  min_size                  = 1
+  max_size                  = "${var.capacity_max}"
+  min_size                  = "${var.capacity_min}"
   target_group_arns         = ["${aws_alb_target_group.target_group.*.arn}"]
-  termination_policies      = ["OldestInstance"]
+  termination_policies      = ["${var.termination_policies}"]
   vpc_zone_identifier       = "${var.subnets}"
 
   lifecycle {

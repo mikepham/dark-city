@@ -28,7 +28,9 @@ data "template_file" "config_template" {
 
   vars {
     rancher_db_host = "${aws_db_instance.rancher.endpoint}"
+    rancher_db_name = "${var.database_name}"
     rancher_db_pass = "${module.secrets.secrets["RANCHER_DATABASE_PASSWORD"]}"
+    rancher_db_user = "${var.database_name}"
   }
 }
 
