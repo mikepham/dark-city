@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Exit Codes
+#------------------------------------------------------------------------------
+ENVIRONMENT_NO_FOUND=1
+ENVIRONMENT_INVALID=2
+ENVIRONMENT_REQUIRES_PLAN=3
+
 # Argument Parsing
 #------------------------------------------------------------------------------
 POSITIONAL=()
@@ -34,6 +40,11 @@ do
       shift
     ;;
 
+    -f|--force)
+      FORCE=true
+      shift
+    ;;
+
     *)
       ENVIRONMENT="$1"
       POSITIONAL+=("$1")
@@ -46,8 +57,8 @@ set -- "${POSITIONAL[@]}"
 # Validation
 #------------------------------------------------------------------------------
 if [ "$ENVIRONMENT" = "" ]; then
-  echo "Must provide an environment to deploy"
-  exit
+  echo "Must provide an environment to deploy."
+  exit ${ENVIRONMENT_NO_FOUND}
 fi
 
 case $ENVIRONMENT in
@@ -66,11 +77,13 @@ ENVIRONMENT_PATH="env_$ENVIRONMENT"
 
 if [ ! -d "$ENVIRONMENT_PATH" ]; then
   echo "Invalid Environment $ENVIRONMENT"
-  exit
+  exit ${ENVIRONMENT_INVALID}
 fi
 
 ENVIRONMENT_PLAN="$ENVIRONMENT.plan"
 ENVIRONMENT_PLAN_PATH="$ENVIRONMENT_PATH/$ENVIRONMENT_PLAN"
+
+FORCE_ACTION=${FORCE:-"false"}
 
 # Informational
 #------------------------------------------------------------------------------
@@ -115,6 +128,11 @@ cd $ENVIRONMENT_PATH
 
 function apply() {
   if [ ! -f "$ENVIRONMENT_PLAN" ]; then
+    if [ "$FORCE_ACTION" = "false" ]; then
+      echo "Must create a plan before you can apply. Alternatively, you can use the --force switch."
+      echo ""
+      exit ${ENVIRONMENT_REQUIRES_PLAN}
+    fi
     echo "Creating Plan File"
     echo "------------------------------------------------------------------------"
     run

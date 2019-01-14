@@ -10,7 +10,7 @@ etcd:
 
 systemd:
   units:
-    - name: rancher-bootstrap.service
+    - name: rancher-server.service
       enabled: true
       contents: |
         [Unit]
@@ -27,13 +27,11 @@ systemd:
           --hostname rancher \
           --rm \
           -p 80:8080 \
-          # -p 9345:9345 \
           rancher/server:v1.6.25 \
-          --db-host ${rancher_db_host} \
-          --db-name ${rancher_db_name} \
-          --db-pass ${rancher_db_pass} \
-          --db-user ${rancher_db_user} \
-          # --advertise-address $${CUSTOM_EC2_IPV4_LOCAL} \
+          --db-host "${rancher_db_host}" \
+          --db-name "${rancher_db_name}" \
+          --db-pass "${rancher_db_pass}" \
+          --db-user "${rancher_db_user}" \
         ;
 
         [Install]

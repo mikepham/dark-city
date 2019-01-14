@@ -27,6 +27,8 @@ Deploys the following services:
 
 ### Requirements
 
+- [jq](https://stedolan.github.io/jq/download)
+
 - [Go](https://golang.org/dl])
 
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)

@@ -1,3 +1,6 @@
+#------------------------------------------------------------------------------
+# SSH Keys
+#------------------------------------------------------------------------------
 resource "tls_private_key" "rancher" {
   count = "${local.create_key_pair}"
 
@@ -10,8 +13,20 @@ resource "aws_key_pair" "rancher" {
 
   key_name_prefix = "rancher-${local.domain_slug}-"
   public_key      = "${tls_private_key.rancher.public_key_openssh}"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
+resource "local_file" "private_key_pem" {
+  content  = "${join("", tls_private_key.rancher.*.private_key_pem)}"
+  filename = "/home/${data.external.current_username.result["username"]}/.ssh/${join("", aws_key_pair.rancher.*.key_name)}.pem"
+}
+
+#------------------------------------------------------------------------------
+# Security Groups
+#------------------------------------------------------------------------------
 resource "aws_security_group" "rancher" {
   name = "rancher-security"
 
@@ -70,6 +85,10 @@ resource "aws_security_group" "rancher" {
     ]
   }
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
   tags {
     Name = "rancher-security"
   }
@@ -97,6 +116,10 @@ resource "aws_security_group" "rancher_cluster" {
     cidr_blocks = [
       "${data.aws_vpc.vpc.cidr_block}",
     ]
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 
   tags {
@@ -138,11 +161,18 @@ resource "aws_security_group" "rancher_database" {
     ]
   }
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
   tags {
     Name = "rancher-security-database"
   }
 }
 
+#------------------------------------------------------------------------------
+# Database
+#------------------------------------------------------------------------------
 resource "aws_db_instance" "rancher" {
   name = "${var.database_name}"
 
@@ -175,11 +205,15 @@ resource "aws_db_instance" "rancher" {
   }
 }
 
+#------------------------------------------------------------------------------
+# AutoScaling Group
+#------------------------------------------------------------------------------
 resource "aws_launch_configuration" "rancher" {
   count       = "${var.cluster_size}"
   name_prefix = "${var.database_name}-configuration-"
 
   depends_on = [
+    "aws_alb.lb",
     "aws_security_group.rancher",
     "aws_security_group.rancher_database",
   ]
@@ -215,6 +249,7 @@ resource "aws_autoscaling_group" "rancher_autoscale" {
   name_prefix = "${var.database_name}-autoscale-"
 
   depends_on = [
+    "aws_alb.lb",
     "aws_alb_target_group.target_group",
     "aws_db_instance.rancher",
     "aws_launch_configuration.rancher",
@@ -243,8 +278,12 @@ resource "aws_autoscaling_group" "rancher_autoscale" {
   }
 }
 
+#------------------------------------------------------------------------------
+# Load Balancer
+#------------------------------------------------------------------------------
 resource "aws_alb" "lb" {
-  name = "${var.database_name}-${local.domain_slug}"
+  count = "1"
+  name  = "${var.database_name}-${local.domain_slug}"
 
   depends_on = [
     "aws_security_group.rancher",
@@ -253,6 +292,10 @@ resource "aws_alb" "lb" {
 
   enable_deletion_protection = "${var.enable_delete_protection}"
   subnets                    = "${var.subnets}"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 
   security_groups = [
     "${aws_security_group.rancher.id}",
@@ -265,9 +308,10 @@ resource "aws_alb" "lb" {
 }
 
 resource "aws_alb_listener" "http" {
+  count      = "1"
   depends_on = ["aws_alb.lb"]
 
-  load_balancer_arn = "${aws_alb.lb.arn}"
+  load_balancer_arn = "${element(aws_alb.lb.*.arn, count.index)}"
   port              = 80
   protocol          = "HTTP"
 
@@ -283,13 +327,15 @@ resource "aws_alb_listener" "http" {
 }
 
 resource "aws_alb_listener" "https" {
+  count = "1"
+
   depends_on = [
     "aws_alb.lb",
     "aws_alb_target_group.target_group",
   ]
 
   certificate_arn   = "${module.certificates.aws_certificate_arn}"
-  load_balancer_arn = "${aws_alb.lb.arn}"
+  load_balancer_arn = "${element(aws_alb.lb.*.arn, count.index)}"
   port              = 443
   protocol          = "HTTPS"
 
@@ -315,11 +361,18 @@ resource "aws_alb_target_group" "target_group" {
     port                = 80
   }
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
   tags {
     Name = "rancher-alb-target"
   }
 }
 
+#------------------------------------------------------------------------------
+# DNS
+#------------------------------------------------------------------------------
 resource "aws_route53_record" "rancher" {
   name = "rancher.${var.domain}"
 

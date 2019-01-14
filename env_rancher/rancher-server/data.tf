@@ -46,3 +46,7 @@ data "template_file" "ntp" {
 data "template_file" "ntp_timer" {
   template = "${file("${path.module}/.files/ntp-timer.yaml")}"
 }
+
+data "external" "current_username" {
+  program = ["/bin/bash", "${path.module}/.files/get_current_username.sh"]
+}

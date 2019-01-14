@@ -20,6 +20,10 @@ provider "aws" {
   version = "1.54"
 }
 
+provider "local" {
+  version = "1.1.0"
+}
+
 provider "template" {
   version = "1.0.0"
 }
