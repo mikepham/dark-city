@@ -20,6 +20,7 @@ data "ct_config" "config" {
     "${data.template_file.ntp_timer.rendered}",
     "${file("${path.module}/.files/swap.yaml")}",
     "${file("${path.module}/.files/sysctl.yaml")}",
+    "${file("${path.module}/.files/updates.yaml")}",
   ]
 }
 

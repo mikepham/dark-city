@@ -18,14 +18,18 @@ terraform {
 module "rancher_server" {
   source = "rancher-server"
 
-  ami_image              = "ami-0b1db01d775d666c2"
-  availability_zone      = "us-east-1"
-  database_instance_type = "db.t2.micro"
-  domain                 = "nativecode.net"
-  keypair                = "aws-nativecode-keypair"
-  instance_type          = "t2.micro"
-  volume_size            = 16
-  vpc_id                 = "vpc-ecedad97"
+  ami_image                = "ami-0b1db01d775d666c2"
+  availability_zone        = "us-east-1"
+  capacity                 = 1
+  capacity_max             = 1
+  capacity_min             = 1
+  cluster_size             = 1
+  database_instance_type   = "db.t2.micro"
+  domain                   = "nativecode.net"
+  enable_delete_protection = false
+  instance_type            = "t2.micro"
+  volume_size              = 16
+  vpc_id                   = "vpc-ecedad97"
 
   subnets = [
     "subnet-b27b9f9c",

@@ -1,10 +1,20 @@
+etcd:
+  name: "{HOSTNAME}"
+  auto-compaction-retention: 1
+  advertise_client_urls: "http://{PRIVATE_IPV4}:2379"
+  data_dir: /tmp
+  listen_client_urls: "http://{HOSTNAME}:2379,http://{PRIVATE_IPV4}:2379,http://localhost:2379"
+  listen_peer_urls: "http://{PRIVATE_IPV4}:2380"
+  initial_advertise_peer_urls: "http://{PRIVATE_IPV4}:2380"
+  initial_cluster: "{HOSTNAME}=http://{PRIVATE_IPV4}:2380"
+
 systemd:
   units:
     - name: rancher-bootstrap.service
       enabled: true
       contents: |
         [Unit]
-        Description=Rancher member
+        Description=Rancher Server
         After=docker.service
         Requires=docker.service
 
@@ -17,11 +27,13 @@ systemd:
           --hostname rancher \
           --rm \
           -p 80:8080 \
+          # -p 9345:9345 \
           rancher/server:v1.6.25 \
           --db-host ${rancher_db_host} \
           --db-name ${rancher_db_name} \
           --db-pass ${rancher_db_pass} \
           --db-user ${rancher_db_user} \
+          # --advertise-address $${CUSTOM_EC2_IPV4_LOCAL} \
         ;
 
         [Install]

@@ -115,6 +115,8 @@ cd $ENVIRONMENT_PATH
 
 function apply() {
   if [ ! -f "$ENVIRONMENT_PLAN" ]; then
+    echo "Creating Plan File"
+    echo "------------------------------------------------------------------------"
     run
     echo "------------------------------------------------------------------------"
   fi

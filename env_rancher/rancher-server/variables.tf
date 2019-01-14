@@ -33,7 +33,7 @@ variable "database_instance_type" {
 }
 
 variable "database_name" {
-  default = "drone"
+  default = "rancher"
 }
 
 variable "disk_size" {
@@ -41,6 +41,11 @@ variable "disk_size" {
 }
 
 variable "domain" {}
+
+variable "enable_delete_protection" {
+  default = true
+  type    = "string"
+}
 
 variable "engine" {
   default = "mysql"

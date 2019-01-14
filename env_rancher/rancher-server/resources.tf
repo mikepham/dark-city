@@ -15,7 +15,7 @@ resource "aws_key_pair" "rancher" {
 resource "aws_security_group" "rancher" {
   name = "rancher-security"
 
-  description = "Allows rancher traffic from instances within the VPC."
+  description = "Allows Rancher traffic from instances within the VPC."
   vpc_id      = "${data.aws_vpc.vpc.id}"
 
   egress {
@@ -75,6 +75,35 @@ resource "aws_security_group" "rancher" {
   }
 }
 
+resource "aws_security_group" "rancher_cluster" {
+  name = "rancher-security-cluster"
+
+  description = "Allows Rancher HA traffic from instances within the VPC."
+  vpc_id      = "${data.aws_vpc.vpc.id}"
+
+  egress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port = 9345
+    to_port   = 9345
+    protocol  = "tcp"
+
+    cidr_blocks = [
+      "${data.aws_vpc.vpc.cidr_block}",
+    ]
+  }
+
+  tags {
+    Name = "rancher-security-cluster"
+  }
+}
+
 resource "aws_security_group" "rancher_database" {
   name = "rancher-security-database"
 
@@ -115,34 +144,40 @@ resource "aws_security_group" "rancher_database" {
 }
 
 resource "aws_db_instance" "rancher" {
-  name                       = "${var.database_name}"
+  name = "${var.database_name}"
+
   allocated_storage          = "${var.disk_size}"
   apply_immediately          = "${var.apply_immediately}"
   auto_minor_version_upgrade = "${var.auto_minor_version_upgrade}"
   engine                     = "${var.engine}"
   engine_version             = "${var.engine_version}"
   final_snapshot_identifier  = "${var.final_snapshot_identifier}"
+  identifier_prefix          = "${var.database_name}-${local.domain_slug}-"
   instance_class             = "${var.database_instance_type}"
   password                   = "${module.secrets.secrets["RANCHER_DATABASE_PASSWORD"]}"
   parameter_group_name       = "${var.parameter_group}"
   publicly_accessible        = "${var.publicly_accessible}"
-  username                   = "${var.database_name}"
   skip_final_snapshot        = "${var.skip_final_snapshot}"
-  storage_type               = "${var.storage_type}"
-  vpc_security_group_ids     = ["${aws_security_group.rancher_database.id}"]
+
+  # snapshot_identifier        = "${aws_db_snapshot.before_upgrade.id}"
+  storage_type           = "${var.storage_type}"
+  username               = "${var.database_name}"
+  vpc_security_group_ids = ["${aws_security_group.rancher_database.id}"]
 
   lifecycle {
     create_before_destroy = true
   }
 
   tags {
-    Product     = "Rancher"
-    ProductRole = "Database"
+    Product         = "Rancher"
+    ProductInstance = "${var.database_name}"
+    ProductRole     = "Database"
   }
 }
 
 resource "aws_launch_configuration" "rancher" {
-  name_prefix = "rancher-configuration-"
+  count       = "${var.cluster_size}"
+  name_prefix = "${var.database_name}-configuration-"
 
   depends_on = [
     "aws_security_group.rancher",
@@ -155,12 +190,13 @@ resource "aws_launch_configuration" "rancher" {
   iam_instance_profile = "${data.aws_iam_instance_profile.iam_ec2.arn}"
   image_id             = "${var.ami_image}"
   instance_type        = "${var.instance_type}"
-  key_name             = "${var.keypair != 0 ? var.keypair : join("", aws_key_pair.rancher.*.key_name)}"
+  key_name             = "${var.keypair != "" ? var.keypair : join("", aws_key_pair.rancher.*.key_name)}"
   user_data            = "${data.ct_config.config.rendered}"
 
   security_groups = [
     "${aws_security_group.rancher.id}",
     "${aws_security_group.rancher_database.id}",
+    "${aws_security_group.rancher_cluster.id}",
   ]
 
   lifecycle {
@@ -175,7 +211,8 @@ resource "aws_launch_configuration" "rancher" {
 }
 
 resource "aws_autoscaling_group" "rancher_autoscale" {
-  name_prefix = "rancher-autoscale-"
+  count       = "${var.cluster_size}"
+  name_prefix = "${var.database_name}-autoscale-"
 
   depends_on = [
     "aws_alb_target_group.target_group",
@@ -201,20 +238,20 @@ resource "aws_autoscaling_group" "rancher_autoscale" {
 
   tag {
     key                 = "Name"
-    value               = "rancher-autoscale"
+    value               = "${var.database_name}-autoscale"
     propagate_at_launch = true
   }
 }
 
 resource "aws_alb" "lb" {
-  name = "rancher-${local.domain_slug}"
+  name = "${var.database_name}-${local.domain_slug}"
 
   depends_on = [
     "aws_security_group.rancher",
     "aws_security_group.rancher_database",
   ]
 
-  enable_deletion_protection = false
+  enable_deletion_protection = "${var.enable_delete_protection}"
   subnets                    = "${var.subnets}"
 
   security_groups = [
@@ -223,7 +260,7 @@ resource "aws_alb" "lb" {
   ]
 
   tags {
-    Name = "rancher-alb"
+    Name = "${var.database_name}-alb"
   }
 }
 
