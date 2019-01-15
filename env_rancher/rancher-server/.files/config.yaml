@@ -6,6 +6,13 @@ etcd:
   listen_peer_urls: "http://{PRIVATE_IPV4}:2380"
   initial_cluster: "{HOSTNAME}=http://{PRIVATE_IPV4}:2380"
 
+passw:
+  users:
+    - name: coreos
+      sshAuthorizedKeys:
+        - "${ssh_authorized_keys}"
+      uid: 1000
+
 storage:
   files:
     - path: /etc/hostname

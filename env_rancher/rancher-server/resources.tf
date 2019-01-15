@@ -11,6 +11,10 @@ resource "tls_private_key" "rancher" {
 resource "aws_key_pair" "rancher" {
   count = "${local.create_key_pair}"
 
+  depends_on = [
+    "tls_private_key.rancher",
+  ]
+
   key_name_prefix = "rancher-${local.domain_slug}-"
   public_key      = "${tls_private_key.rancher.public_key_openssh}"
 
@@ -20,6 +24,12 @@ resource "aws_key_pair" "rancher" {
 }
 
 resource "local_file" "private_key_pem" {
+  depends_on = [
+    "aws_key_pair.rancher",
+    "data.external.current_username",
+    "tls_private_key.rancher",
+  ]
+
   content  = "${join("", tls_private_key.rancher.*.private_key_pem)}"
   filename = "/home/${data.external.current_username.result["username"]}/.ssh/${join("", aws_key_pair.rancher.*.key_name)}.pem"
 }
@@ -28,7 +38,11 @@ resource "local_file" "private_key_pem" {
 # Security Groups
 #------------------------------------------------------------------------------
 resource "aws_security_group" "rancher" {
-  name = "rancher-security"
+  name = "${var.database_name}-security"
+
+  depends_on = [
+    "data.aws_vpc.vpc",
+  ]
 
   description = "Allows Rancher traffic from instances within the VPC."
   vpc_id      = "${data.aws_vpc.vpc.id}"
@@ -70,12 +84,16 @@ resource "aws_security_group" "rancher" {
   }
 
   tags {
-    Name = "rancher-security"
+    Name = "${var.database_name}-security"
   }
 }
 
 resource "aws_security_group" "rancher_cluster" {
-  name = "rancher-security-cluster"
+  name = "${var.database_name}-security-cluster"
+
+  depends_on = [
+    "data.aws_vpc.vpc",
+  ]
 
   description = "Allows Rancher HA traffic from instances within the VPC."
   vpc_id      = "${data.aws_vpc.vpc.id}"
@@ -123,12 +141,16 @@ resource "aws_security_group" "rancher_cluster" {
   }
 
   tags {
-    Name = "rancher-security-cluster"
+    Name = "${var.database_name}-security-cluster"
   }
 }
 
 resource "aws_security_group" "rancher_database" {
-  name = "rancher-security-database"
+  name = "${var.database_name}-security-database"
+
+  depends_on = [
+    "data.aws_vpc.vpc",
+  ]
 
   description = "Allows Database traffic from instances within the VPC."
   vpc_id      = "${data.aws_vpc.vpc.id}"
@@ -166,7 +188,7 @@ resource "aws_security_group" "rancher_database" {
   }
 
   tags {
-    Name = "rancher-security-database"
+    Name = "${var.database_name}-security-database"
   }
 }
 
@@ -175,6 +197,11 @@ resource "aws_security_group" "rancher_database" {
 #------------------------------------------------------------------------------
 resource "aws_db_instance" "rancher" {
   name = "${var.database_name}"
+
+  depends_on = [
+    "aws_security_group.rancher_database",
+    "module.secrets",
+  ]
 
   allocated_storage          = "${var.disk_size}"
   apply_immediately          = "${var.apply_immediately}"
@@ -213,9 +240,11 @@ resource "aws_launch_configuration" "rancher" {
   name_prefix = "${var.database_name}-configuration-"
 
   depends_on = [
-    "aws_alb.lb",
     "aws_security_group.rancher",
+    "aws_security_group.rancher_cluster",
     "aws_security_group.rancher_database",
+    "data.aws_iam_instance_profile.iam_ec2",
+    "data.ct_config.rancher",
   ]
 
   associate_public_ip_address = true
@@ -229,8 +258,8 @@ resource "aws_launch_configuration" "rancher" {
 
   security_groups = [
     "${aws_security_group.rancher.id}",
-    "${aws_security_group.rancher_database.id}",
     "${aws_security_group.rancher_cluster.id}",
+    "${aws_security_group.rancher_database.id}",
   ]
 
   lifecycle {
@@ -249,9 +278,7 @@ resource "aws_autoscaling_group" "rancher_autoscale" {
   name_prefix = "${var.database_name}-autoscale-"
 
   depends_on = [
-    "aws_alb.lb",
     "aws_alb_target_group.target_group",
-    "aws_db_instance.rancher",
     "aws_launch_configuration.rancher",
   ]
 
@@ -273,7 +300,7 @@ resource "aws_autoscaling_group" "rancher_autoscale" {
 
   tag {
     key                 = "Name"
-    value               = "${var.database_name}-autoscale"
+    value               = "${var.database_name}-${local.domain_slug}-autoscale"
     propagate_at_launch = true
   }
 }
@@ -282,12 +309,11 @@ resource "aws_autoscaling_group" "rancher_autoscale" {
 # Load Balancer
 #------------------------------------------------------------------------------
 resource "aws_alb" "lb" {
-  count = "1"
+  count = "${local.loadbalancer_count}"
   name  = "${var.database_name}-${local.domain_slug}"
 
   depends_on = [
     "aws_security_group.rancher",
-    "aws_security_group.rancher_database",
   ]
 
   enable_deletion_protection = "${var.enable_delete_protection}"
@@ -299,17 +325,19 @@ resource "aws_alb" "lb" {
 
   security_groups = [
     "${aws_security_group.rancher.id}",
-    "${aws_security_group.rancher_database.id}",
   ]
 
   tags {
-    Name = "${var.database_name}-alb"
+    Name = "${local.domain_slug}-alb"
   }
 }
 
 resource "aws_alb_listener" "http" {
-  count      = "1"
-  depends_on = ["aws_alb.lb"]
+  count = "${local.loadbalancer_count}"
+
+  depends_on = [
+    "aws_alb.lb",
+  ]
 
   load_balancer_arn = "${element(aws_alb.lb.*.arn, count.index)}"
   port              = 80
@@ -327,11 +355,11 @@ resource "aws_alb_listener" "http" {
 }
 
 resource "aws_alb_listener" "https" {
-  count = "1"
+  count = "${local.loadbalancer_count}"
 
   depends_on = [
-    "aws_alb.lb",
     "aws_alb_target_group.target_group",
+    "module.certificates",
   ]
 
   certificate_arn   = "${module.certificates.aws_certificate_arn}"
@@ -346,7 +374,7 @@ resource "aws_alb_listener" "https" {
 }
 
 resource "aws_alb_target_group" "target_group" {
-  name = "rancher-${local.domain_slug}"
+  name = "${var.database_name}-${local.domain_slug}"
 
   port     = 80
   protocol = "HTTP"
@@ -366,7 +394,7 @@ resource "aws_alb_target_group" "target_group" {
   }
 
   tags {
-    Name = "rancher-alb-target"
+    Name = "${var.database_name}-${local.domain_slug}-alb-target"
   }
 }
 
@@ -375,6 +403,10 @@ resource "aws_alb_target_group" "target_group" {
 #------------------------------------------------------------------------------
 resource "aws_route53_record" "rancher" {
   name = "rancher.${var.domain}"
+
+  depends_on = [
+    "data.aws_route53_zone.zone",
+  ]
 
   type    = "A"
   zone_id = "${data.aws_route53_zone.zone.id}"
