@@ -47,8 +47,9 @@ echo "PATH=~/go:$PATH" >> ~/.profile
 ### Install Plugins
 ```bash
 go get github.com/coreos/terraform-provider-ct
-go get github.com/TimDurward/terraform-provider-slack
+go get github.com/segmentio/terraform-docs
 go get github.com/EvilSuperstars/terraform-provider-jsondecode
+go get github.com/TimDurward/terraform-provider-slack
 go get github.com/ashald/terraform-provider-yaml
 ```
 

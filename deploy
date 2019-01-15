@@ -85,24 +85,6 @@ echo "------------------------------------------------------------------------"
 
 # Entry Point
 #------------------------------------------------------------------------------
-echo "Generating documentation for $ENVIRONMENT"
-echo "------------------------------------------------------------------------"
-
-function generate() {
-  echo "# Environment: $ENVIRONMENT" > ./$ENVIRONMENT_PATH/README.md
-  terraform-docs markdown environment >> ./$ENVIRONMENT_PATH/README.md
-
-  echo "# Module: certificates" > ./modules/certificates/README.md
-  terraform-docs markdown modules/certificates >> ./modules/certificates/README.md
-
-  echo "# Module: rancher" > ./modules/rancher/README.md
-  terraform-docs markdown modules/rancher >> ./modules/rancher/README.md
-
-  echo "# Module: secrets" > ./modules/secrets/README.md
-  terraform-docs markdown modules/secrets >> ./modules/secrets/README.md
-}
-generate
-
 #------------------------------------------------------------------------------
 echo "Formatting source files for $ENVIRONMENT"
 echo "------------------------------------------------------------------------"
@@ -160,3 +142,22 @@ case $ACTION in
       run
     ;;
 esac
+
+cd ..
+echo "Generating documentation for $ENVIRONMENT"
+echo "------------------------------------------------------------------------"
+
+function generate() {
+  echo "# Environment: $ENVIRONMENT" > ./$ENVIRONMENT_PATH/README.md
+  terraform-docs markdown environment >> ./$ENVIRONMENT_PATH/README.md
+
+  echo "# Module: certificates" > ./modules/certificates/README.md
+  terraform-docs markdown modules/certificates >> ./modules/certificates/README.md
+
+  echo "# Module: rancher" > ./modules/rancher/README.md
+  terraform-docs markdown modules/rancher >> ./modules/rancher/README.md
+
+  echo "# Module: secrets" > ./modules/secrets/README.md
+  terraform-docs markdown modules/secrets >> ./modules/secrets/README.md
+}
+generate
