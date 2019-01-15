@@ -7,6 +7,8 @@ if [ "$1" = "get_current_username" ]; then
 fi
 
 if [ "$1" = "update_ssh_pem" ]; then
-  chmod 0600 $2
+  chmod 0600 "$2"
   jq -n '{}'
 fi
+
+exit
