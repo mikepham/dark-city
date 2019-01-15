@@ -91,6 +91,10 @@ variable "subnets" {
   type = "list"
 }
 
+variable "swap_size" {
+  type = "string"
+}
+
 variable "termination_policies" {
   default = ["OldestInstance"]
   type    = "list"

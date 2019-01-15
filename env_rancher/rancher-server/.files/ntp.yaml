@@ -3,6 +3,9 @@ systemd:
     - name: ntp.service
       enabled: true
       contents: |
+        [Unit]
+        Requires=network.service
+
         [Service]
         Type=oneshot
         ExecStart=/sbin/ntpdate ${ntp_host}

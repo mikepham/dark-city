@@ -28,7 +28,8 @@ module "rancher_server" {
   domain                   = "nativecode.net"
   enable_delete_protection = false
   instance_type            = "t2.micro"
-  volume_size              = 16
+  swap_size                = 2048
+  volume_size              = 32
   vpc_id                   = "vpc-ecedad97"
 
   subnets = [
