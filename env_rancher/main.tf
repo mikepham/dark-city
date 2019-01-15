@@ -29,7 +29,7 @@ module "rancher_server" {
   enable_delete_protection = false
   instance_type            = "t2.micro"
   swap_size                = 2048
-  volume_size              = 32
+  volume_size              = 8
   vpc_id                   = "vpc-ecedad97"
 
   subnets = [
