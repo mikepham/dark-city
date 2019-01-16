@@ -139,6 +139,7 @@ function destroy() {
 
 function init () {
   terraform init
+  run
 }
 
 function run() {

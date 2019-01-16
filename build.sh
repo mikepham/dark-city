@@ -1,9 +1,20 @@
 #!/bin/bash
 
+# Clean the fast way!
+#------------------------------------------------------------------------------
+git stash
+rm -rf 
+git stash pop
+
+
 # Exit Codes
 #------------------------------------------------------------------------------
-GO_BINARY_NOT_FOUND
+GO_BINARY_NOT_FOUND=1
 GO_PATH_NOT_SET=2
+TERRAFORM_BINARY_NOT_FOUND=3
+
+echo "Validating Development Environment"
+echo "------------------------------------------------------------------------"
 
 
 # Validate Go Installation
@@ -22,16 +33,53 @@ if [ "$GO_PATH" = "" ]; then
   exit $GO_PATH_NOT_SET
 fi
 
+
 # Validate Terraform Installation
 #------------------------------------------------------------------------------
 TERRAFORM=`which terraform`
 
+if [ "$TERRAFORM" = "" ]; then
+  echo "Terrform was not found. Have you installed Terraform?"
+  exit $TERRAFORM_BINARY_NOT_FOUND
+fi
+
+
+# Informational
+#------------------------------------------------------------------------------
+echo "GO: $GO"
+echo "GOPATH: $GO_PATH"
+echo "TERRAFORM: $TERRAFORM"
+echo "------------------------------------------------------------------------"
 
 
 # Install Terraform Go Plugins
 #------------------------------------------------------------------------------
-go get github.com/coreos/terraform-provider-ct
-go get github.com/segmentio/terraform-docs
-go get github.com/EvilSuperstars/terraform-provider-jsondecode
-go get github.com/TimDurward/terraform-provider-slack
-go get github.com/ashald/terraform-provider-yaml
+if [ ! -f "$GOPATH/bin/terraform-docs" ]; then
+  echo "Installing Terraform Docs"
+  go get github.com/segmentio/terraform-docs
+  echo "------------------------------------------------------------------------"
+fi
+
+if [ ! -f "$GOPATH/bin/terraform-provider-ct" ]; then
+  echo "Installing Terraform Config Transform (CoreOS)"
+  go get github.com/coreos/terraform-provider-ct
+  echo "------------------------------------------------------------------------"
+fi
+
+if [ ! -f "$GOPATH/bin/terraform-provider-jsondecode" ]; then
+  echo "Installing Terraform JSON Decode"
+  go get github.com/EvilSuperstars/terraform-provider-jsondecode
+  echo "------------------------------------------------------------------------"
+fi
+
+if [ ! -f "$GOPATH/bin/terraform-provider-slack" ]; then
+  echo "Installing Terraform Slack"
+  go get github.com/TimDurward/terraform-provider-slack
+  echo "------------------------------------------------------------------------"
+fi
+
+if [ ! -f "$GOPATH/bin/terraform-provider-yaml" ]; then
+  echo "Installing Terraform Yaml"
+  go get github.com/ashald/terraform-provider-yaml
+  echo "------------------------------------------------------------------------"
+fi
