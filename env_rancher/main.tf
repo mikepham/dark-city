@@ -20,8 +20,8 @@ module "rancher_server" {
 
   ami_image                = "ami-0547d9705af5e8fb2"
   availability_zone        = "us-east-1"
-  capacity                 = 1
-  capacity_max             = 1
+  capacity                 = 2
+  capacity_max             = 2
   capacity_min             = 1
   cluster_size             = 1
   database_instance_type   = "db.t2.micro"

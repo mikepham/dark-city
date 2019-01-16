@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Exit Codes
 #------------------------------------------------------------------------------
 ENVIRONMENT_NO_FOUND=1
@@ -24,16 +26,6 @@ do
       shift
     ;;
 
-    -i|--init)
-      ACTION=init
-      shift
-    ;;
-
-    --destroy)
-      ACTION=destroy
-      shift
-    ;;
-
     -e|--environment)
       ENVIRONMENT="$2"
       shift
@@ -45,6 +37,31 @@ do
       shift
     ;;
 
+    -i|--init)
+      ACTION=init
+      shift
+    ;;
+
+    --destroy)
+      ACTION=destroy
+      shift
+    ;;
+
+    --env-clean)
+      ENV_CLEAN="--clean"
+      shift
+    ;;
+
+    --env-plugins)
+      ENV_PLUGINS="--plugins"
+      shift
+    ;;
+
+    --env-validation)
+      ENV_VALIDATE="--validation"
+      shift
+    ;;
+
     *)
       ENVIRONMENT="$1"
       POSITIONAL+=("$1")
@@ -53,6 +70,8 @@ do
   esac
 done
 set -- "${POSITIONAL[@]}"
+
+source ./env.sh $ENV_CLEAN $ENV_PLUGINS $ENV_VALIDATE
 
 # Validation
 #------------------------------------------------------------------------------
@@ -91,16 +110,17 @@ echo "Current Working Directory: `pwd`"
 echo "Environment: $ENVIRONMENT"
 echo "Environment Path: $ENVIRONMENT_PATH"
 echo "Environment Plan: $ENVIRONMENT_PLAN_PATH"
+
 if [ -f "$ENVIRONMENT_PLAN_PATH" ]; then
   echo "Environment Plan Exists"
 fi
+
 if [ "$FORCE_ACTION" = "true" ]; then
   echo "Force Was Applied"
 fi
 echo "------------------------------------------------------------------------"
 
 # Entry Point
-#------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 echo "Formatting source files for $ENVIRONMENT"
 echo "------------------------------------------------------------------------"
@@ -144,7 +164,7 @@ function init () {
 
 function run() {
   if [ ! -d ".terraform" ]; then
-    init
+    terraform init
     terraform validate
   fi
   terraform plan -out="$ENVIRONMENT_PLAN"
@@ -166,6 +186,7 @@ case $ACTION in
 esac
 
 cd ..
+
 echo "Generating documentation for $ENVIRONMENT"
 echo "------------------------------------------------------------------------"
 
@@ -182,4 +203,5 @@ function generate() {
   echo "# Module: secrets" > ./modules/secrets/README.md
   terraform-docs markdown modules/secrets >> ./modules/secrets/README.md
 }
+
 generate
