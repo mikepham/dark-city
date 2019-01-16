@@ -60,7 +60,7 @@ module "environment" {
   elasticsearch_zone_awareness_enabled   = false
 
   # Rancher
-  rancher_ami_image          = "ami-0b1db01d775d666c2"
+  rancher_ami_image          = "ami-0547d9705af5e8fb2"
   rancher_availability_zones = ["us-east-1"]
   rancher_environment_domain = "nativecode.net"
   rancher_keypair            = "aws-nativecode-keypair"

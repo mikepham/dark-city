@@ -88,6 +88,41 @@ resource "aws_security_group" "rancher" {
   }
 }
 
+resource "aws_security_group" "rancher_server" {
+  name = "${var.database_name}-security-server"
+
+  depends_on = [
+    "data.aws_vpc.vpc",
+  ]
+
+  description = "Allows Rancher Server traffic from instances within the VPC."
+  vpc_id      = "${data.aws_vpc.vpc.id}"
+
+  egress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port = 8080
+    to_port   = 8080
+    protocol  = "tcp"
+
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tags {
+    Name = "${var.database_name}-security"
+  }
+}
+
 resource "aws_security_group" "rancher_cluster" {
   name = "${var.database_name}-security-cluster"
 
@@ -260,6 +295,7 @@ resource "aws_launch_configuration" "rancher" {
     "${aws_security_group.rancher.id}",
     "${aws_security_group.rancher_cluster.id}",
     "${aws_security_group.rancher_database.id}",
+    "${aws_security_group.rancher_server.id}",
   ]
 
   lifecycle {
@@ -290,9 +326,16 @@ resource "aws_autoscaling_group" "rancher_autoscale" {
   launch_configuration      = "${aws_launch_configuration.rancher.name}"
   max_size                  = "${var.capacity_max}"
   min_size                  = "${var.capacity_min}"
-  target_group_arns         = ["${aws_alb_target_group.target_group.*.arn}"]
+  target_group_arns         = ["${element(aws_alb_target_group.target_group.*.arn, count.index)}"]
   termination_policies      = ["${var.termination_policies}"]
   vpc_zone_identifier       = "${var.subnets}"
+
+  initial_lifecycle_hook {
+    default_result       = "ABANDON"
+    heartbeat_timeout    = 3600
+    lifecycle_transition = "autoscaling:EC2_INSTANCE_LAUNCHING"
+    name                 = "${var.database_name}-${local.domain_slug}"
+  }
 
   lifecycle {
     create_before_destroy = true
@@ -301,6 +344,12 @@ resource "aws_autoscaling_group" "rancher_autoscale" {
   tag {
     key                 = "Name"
     value               = "${var.database_name}-${local.domain_slug}-autoscale"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "Environment"
+    value               = "${var.database_name}"
     propagate_at_launch = true
   }
 }
@@ -368,15 +417,15 @@ resource "aws_alb_listener" "https" {
   protocol          = "HTTPS"
 
   default_action {
-    target_group_arn = "${aws_alb_target_group.target_group.arn}"
+    target_group_arn = "${element(aws_alb_target_group.target_group.*.arn, count.index)}"
     type             = "forward"
   }
 }
 
 resource "aws_alb_target_group" "target_group" {
-  name = "${var.database_name}-${local.domain_slug}"
+  count = "${var.cluster_size}"
 
-  port     = 80
+  port     = 8080
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
 
@@ -386,7 +435,7 @@ resource "aws_alb_target_group" "target_group" {
     timeout             = 5
     interval            = 10
     path                = "/v1/scripts/api.crt"
-    port                = 80
+    port                = 8080
   }
 
   lifecycle {

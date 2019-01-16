@@ -18,11 +18,11 @@ terraform {
 module "rancher_server" {
   source = "rancher-server"
 
-  ami_image                = "ami-0b1db01d775d666c2"
+  ami_image                = "ami-0547d9705af5e8fb2"
   availability_zone        = "us-east-1"
-  capacity                 = 1
-  capacity_max             = 1
-  capacity_min             = 1
+  capacity                 = 3
+  capacity_max             = 5
+  capacity_min             = 3
   cluster_size             = 1
   database_instance_type   = "db.t2.micro"
   domain                   = "nativecode.net"

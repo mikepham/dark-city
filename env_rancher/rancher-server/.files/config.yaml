@@ -6,6 +6,9 @@ etcd:
   listen_peer_urls: "http://{PRIVATE_IPV4}:2380"
   initial_cluster: "{HOSTNAME}=http://{PRIVATE_IPV4}:2380"
 
+locksmith:
+  reboot_strategy: "etcd-lock"
+
 storage:
   files:
     - path: /etc/hostname
@@ -13,6 +16,21 @@ storage:
       contents:
         inline: |
           rancher-server
+
+    - path: /etc/sysctl.d/80-swappiness.conf
+      filesystem: root
+      contents:
+        inline: "vm.swappiness=10"
+
+    - path: /etc/sysctl.d/90-filesystem.conf
+      filesystem: root
+      contents:
+        inline: "fs.file-max=200000"
+
+    - path: /etc/sysctl.d/91-virtual-memory.conf
+      filesystem: root
+      contents:
+        inline: "vm.max_map_count=262144"
 
 systemd:
   units:
@@ -25,6 +43,7 @@ systemd:
         Requires=docker.service
 
         [Service]
+        EnvironmentFile=/run/metadata/coreos
         TimeoutSec=600
         Type=oneshot
         ExecStartPre=/usr/bin/docker pull rancher/server:v1.6.25
@@ -32,13 +51,14 @@ systemd:
           --name rancher \
           --hostname rancher \
           --rm \
-          -p 80:8080 \
+          -p 8080:8080 \
           -p 9345:9345 \
           rancher/server:v1.6.25 \
           --db-host "${rancher_db_host}" \
           --db-name "${rancher_db_name}" \
           --db-pass "${rancher_db_pass}" \
           --db-user "${rancher_db_user}" \
+          --advertise-address "$${COREOS_EC2_IPV4_LOCAL}" \
         ;
 
         [Install]
@@ -50,3 +70,59 @@ systemd:
           contents: |
             [Service]
             TTYVTDisallocate=no
+
+    - name: ntp-timer.service
+      enabled: true
+      contents: |
+        [Timer]
+        OnCalendar=*:0/15
+        RandomizedDelaySec=120
+        OnBootSec=1min
+
+        [Install]
+        WantedBy=timers.target
+
+    - name: ntp.service
+      enabled: true
+      contents: |
+        [Unit]
+        Requires=network.service
+
+        [Service]
+        Type=oneshot
+        ExecStart=/sbin/ntpdate ${ntp_host}
+
+        [Install]
+        WantedBy=multi-user.target
+
+    - name: create-swapfile.service
+      contents: |
+        [Unit]
+        Description=Create swapfile
+        RequiresMountsFor=/var
+        ConditionPathExists=!/var/vm/swapfile
+
+        [Service]
+        Type=oneshot
+        ExecStart=/usr/bin/mkdir -p /var/vm
+        ExecStart=/usr/bin/dd if=/dev/zero of=/var/vm/swapfile bs=${swap_size} count=1048576
+        ExecStart=/usr/bin/chmod 600 /var/vm/swapfile
+        ExecStart=/usr/sbin/mkswap /var/vm/swapfile
+        RemainAfterExit=true
+
+    - name: var-vm-swapfile.swap
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Enable swapon
+        After=create-swapfile.service
+        Requires=create-swapfile.service
+
+        [Swap]
+        What=/var/vm/swapfile
+
+        [Install]
+        WantedBy=multi-user.target
+
+update:
+  group: "rancher"
