@@ -111,7 +111,9 @@ resource "aws_security_group" "rancher_server" {
     to_port   = 8080
     protocol  = "tcp"
 
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [
+      "${data.aws_vpc.vpc.cidr_block}",
+    ]
   }
 
   lifecycle {
