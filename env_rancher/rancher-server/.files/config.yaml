@@ -44,21 +44,17 @@ systemd:
 
         [Service]
         EnvironmentFile=/run/metadata/coreos
-        TimeoutSec=600
-        Type=oneshot
         ExecStartPre=/usr/bin/docker pull rancher/server:v1.6.25
         ExecStart=/usr/bin/docker run \
           --name rancher \
           --hostname rancher \
           --rm \
           -p 8080:8080 \
-          -p 9345:9345 \
           rancher/server:v1.6.25 \
           --db-host "${rancher_db_host}" \
           --db-name "${rancher_db_name}" \
           --db-pass "${rancher_db_pass}" \
           --db-user "${rancher_db_user}" \
-          --advertise-address "$${COREOS_EC2_IPV4_LOCAL}" \
         ;
 
         [Install]
