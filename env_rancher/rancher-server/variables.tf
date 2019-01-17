@@ -59,6 +59,10 @@ variable "final_snapshot_identifier" {
   default = "final-snapshot-rancher"
 }
 
+variable "health_check_type" {
+  default = "EC2"
+}
+
 variable "iam_profile" {
   default = "EC2"
 }
@@ -98,6 +102,10 @@ variable "swap_size" {
 variable "termination_policies" {
   default = ["OldestInstance"]
   type    = "list"
+}
+
+variable "volume_iops" {
+  default = 100
 }
 
 variable "volume_size" {}

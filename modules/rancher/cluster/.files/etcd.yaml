@@ -8,13 +8,6 @@ etcd:
   listen_peer_urls: "http://{PRIVATE_IPV4}:2380"
   initial_advertise_peer_urls: "http://{PRIVATE_IPV4}:2380"
 
-storage:
-  files:
-    - path: /run/metadata/etcd
-      filesystem: root
-      contents: |
-        ETCDCTL_API=3
-
 systemd:
   units:
     - name: var-nfs.mount
@@ -25,7 +18,7 @@ systemd:
 
         [Mount]
         What=${etcd_nfs_mount}
-        Where=/var/nfs
+        Where=/mnt/nfs
         Type=nfs
 
         [Install]
@@ -44,7 +37,6 @@ systemd:
         Description=Remove Member from Cluster
 
         [Service]
-        EnvironmentFile=/etc/environment
         EnvironmentFile=/run/metadata/coreos
         Type=oneshot
         RemainAfterExit=true
@@ -57,13 +49,11 @@ systemd:
       contents: |
         [Unit]
         Description=Backup ETCD Data
-        After=var-nfs.mount
-        Requires=var-nfs.mount
+        After=mnt-nfs.mount
+        Requires=mnt-nfs.mount
 
         [Service]
-        EnvironmetnFile=/etc/environment
         EnvironmentFile=/run/metadata/coreos
-        EnvironmentFile=/run/metadata/etcd
         ExecStartPre=/usr/bin/mkdir -p /var/nfs/$${HOSTNAME}
         ExecStart=/usr/bin/etcdctl backup --with-v3 --backup-dir /var/nfs/$${HOSTNAME} --backup-wal-dir /var/nfs/$${HOSTNAME}
         Type=oneshot
@@ -73,11 +63,22 @@ systemd:
       contents: |
         [Unit]
         Description=Run etcd-member-backup.service every hour
-        After=var-nfs.mount
-        Requires=var-nfs.mount
+        After=mnt-nfs.mount
+        Requires=mnt-nfs.mount
 
         [Timer]
         OnCalendar=*:0/60
 
         [Install]
         WantedBy=multi-user.target
+
+    - name: ntp-timer.service
+      enabled: true
+      contents: |
+        [Timer]
+        OnCalendar=*:0/15
+        RandomizedDelaySec=120
+        OnBootSec=1min
+
+        [Install]
+        WantedBy=timers.target

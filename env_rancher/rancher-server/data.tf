@@ -20,13 +20,14 @@ data "template_file" "rancher_template" {
   template = "${file("${path.module}/.files/config.yaml")}"
 
   vars {
-    ntp_host            = "time.nist.gov"
-    rancher_db_host     = "${replace(aws_db_instance.rancher.endpoint, ":3306", "")}"
-    rancher_db_name     = "${var.database_name}"
-    rancher_db_pass     = "${module.secrets.secrets["RANCHER_DATABASE_PASSWORD"]}"
-    rancher_db_user     = "${var.database_name}"
-    ssh_authorized_keys = "${data.local_file.current_ssh_public_key.content}"
-    swap_size           = "${var.swap_size}"
+    # discovery_url   = "${random_id.etcd_discovery.keepers.discovery_url}"
+    discovery_url   = "${module.secrets.secrets["ETCD_DISCOVERY_URL"]}"
+    ntp_host        = "time.nist.gov"
+    rancher_db_host = "${replace(aws_db_instance.rancher.endpoint, ":3306", "")}"
+    rancher_db_name = "${var.database_name}"
+    rancher_db_pass = "${module.secrets.secrets["RANCHER_DATABASE_PASSWORD"]}"
+    rancher_db_user = "${var.database_name}"
+    swap_size       = "${var.swap_size}"
   }
 }
 
@@ -40,4 +41,8 @@ data "external" "update_ssh_pem" {
 
 data "local_file" "current_ssh_public_key" {
   filename = "/home/${data.external.current_username.result["username"]}/.ssh/id_rsa.pub"
+}
+
+data "http" "etcd_discovery" {
+  url = "https://discovery.etcd.io/new"
 }

@@ -20,11 +20,6 @@ data "ct_config" "config" {
 
   snippets = [
     "${data.template_file.etcd.rendered}",
-    "${data.template_file.ntp.rendered}",
-    "${data.template_file.ntp_timer.rendered}",
-    "${file("${path.module}/.files/swap.yaml")}",
-    "${file("${path.module}/.files/sysctl.yaml")}",
-    "${file("${path.module}/.files/updates.yaml")}",
   ]
 }
 
@@ -35,10 +30,6 @@ data "template_file" "config_template" {
     environment = "${var.environment_name}"
     startup     = "${replace(var.agent_startup, "sudo docker", "/usr/bin/docker")}"
   }
-}
-
-data "http" "etcd_discovery" {
-  url = "https://discovery.etcd.io/new"
 }
 
 data "template_file" "etcd" {
@@ -53,14 +44,6 @@ data "template_file" "etcd" {
   }
 }
 
-data "template_file" "ntp" {
-  template = "${file("${path.module}/.files/ntp.yaml")}"
-
-  vars {
-    ntp_host = "${join(" ", var.ntp_hosts)}"
-  }
-}
-
-data "template_file" "ntp_timer" {
-  template = "${file("${path.module}/.files/ntp-timer.yaml")}"
+data "http" "etcd_discovery" {
+  url = "https://discovery.etcd.io/new"
 }

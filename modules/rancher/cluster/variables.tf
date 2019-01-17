@@ -77,6 +77,11 @@ variable "etcd_token" {
   type        = "string"
 }
 
+variable "health_check_type" {
+  default     = "ELB"
+  description = "Determines how to determine a system's health"
+}
+
 variable "http_port" {
   default     = 80
   description = "HTTP Port"

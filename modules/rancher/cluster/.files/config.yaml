@@ -1,3 +1,23 @@
+locksmith:
+  reboot_strategy: "etcd-lock"
+
+storage:
+  files:
+    - path: /etc/sysctl.d/90-filesystem.conf
+      filesystem: root
+      contents:
+        inline: "fs.file-max=200000"
+
+    - path: /etc/sysctl.d/91-virtual-memory.conf
+      filesystem: root
+      contents:
+        inline: "vm.max_map_count=262144"
+
+    - path: /etc/sysctl.d/80-swappiness.conf
+      filesystem: root
+      contents:
+        inline: "vm.swappiness=10"
+
 systemd:
   units:
     - name: rancher-bootstrap.service
@@ -9,8 +29,8 @@ systemd:
         Requires=docker.service
 
         [Service]
-        ExecStart=${startup}
         Type=oneshot
+        ExecStart=${startup}
 
         [Install]
         WantedBy=multi-user.target
@@ -21,3 +41,48 @@ systemd:
           contents: |
             [Service]
             TTYVTDisallocate=no
+
+    - name: ntp.service
+      enabled: true
+      contents: |
+        [Service]
+        ExecStart=/sbin/ntpdate ${ntp_host}
+        Type=oneshot
+
+        [Install]
+        WantedBy=multi-user.target
+
+    - name: create-swapfile.service
+      contents: |
+        [Unit]
+        Description=Create a swapfile
+        ConditionPathExists=!/var/vm/swapfile
+        RequiresMountsFor=/var
+
+        [Service]
+        ExecStart=/usr/bin/mkdir -p /var/vm
+        ExecStart=/usr/bin/dd if=/dev/zero of=/var/vm/swapfile bs=${swap_size} count=1048576
+        ExecStart=/usr/bin/chmod 600 /var/vm/swapfile
+        ExecStart=/usr/sbin/mkswap /var/vm/swapfile
+        RemainAfterExit=true
+        Type=oneshot
+
+        [Install]
+        WantedBy=multi-user.target
+
+    - name: var-vm-swapfile.swap
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Turn on swap
+        After=create-swapfile.service
+        Requires=create-swapfile.service
+
+        [Swap]
+        What=/var/vm/swapfile
+
+        [Install]
+        WantedBy=multi-user.target
+
+update:
+  group: "rancher-agents"

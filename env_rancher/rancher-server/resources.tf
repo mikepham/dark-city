@@ -121,7 +121,7 @@ resource "aws_security_group" "rancher_server" {
   }
 
   tags {
-    Name = "${var.database_name}-security"
+    Name = "${var.database_name}-security-server"
   }
 }
 
@@ -306,6 +306,7 @@ resource "aws_launch_configuration" "rancher" {
 
   root_block_device {
     delete_on_termination = true
+    iops                  = "${var.volume_iops}"
     volume_size           = "${var.volume_size}"
     volume_type           = "${var.volume_type}"
   }
@@ -324,7 +325,7 @@ resource "aws_autoscaling_group" "rancher_autoscale" {
   desired_capacity          = "${var.capacity}"
   force_delete              = false
   health_check_grace_period = 180
-  health_check_type         = "${var.iam_profile}"
+  health_check_type         = "${var.health_check_type}"
   launch_configuration      = "${aws_launch_configuration.rancher.name}"
   max_size                  = "${var.capacity_max}"
   min_size                  = "${var.capacity_min}"

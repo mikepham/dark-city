@@ -116,9 +116,9 @@ fi
 # Install Terraform Go Plugins
 #------------------------------------------------------------------------------
 function plugins() {
-  echo $GO
-  echo $JQ
-  echo $TERRAFORM
+  echo `go version`
+  echo `jq --version`
+  echo `terraform --version`
   echo "------------------------------------------------------------------------"
   echo $GOPATH
   echo "------------------------------------------------------------------------"

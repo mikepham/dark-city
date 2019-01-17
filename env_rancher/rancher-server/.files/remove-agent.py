@@ -14,36 +14,47 @@ Options:
     -h --help           display this help text
 """
 
-import requests, json, sys, socket, os, traceback, time  
-from requests.auth import HTTPBasicAuth  
-from docopt import docopt  
-from create_pagerduty_incident import trigger_incident
+import requests
+import json
+import sys
+import socket
+import os
+import traceback
+import time from requests.auth
+import HTTPBasicAuth from docopt
+import docopt from create_pagerduty_incident
+import trigger_incident
 
 PD_OPSLOW_INTKEY = "1901u0a902304890509180948109480918a"
 
 # Path for a file laid down by the amibuilder ansible job. This file should not
 # exist on a live box, as it is laid down on ephemeral volume by amibuilder
 
-amibuilderfile = "/mnt/tmp/amibuilder.txt"  
+amibuilderfile = "/mnt/tmp/amibuilder.txt"
 instance_type_path = "instance-type"
 
-class TooManyMatches(Exception):  
+
+class TooManyMatches(Exception):
     pass
 
-class NoMatches(Exception):  
+
+class NoMatches(Exception):
     pass
 
-class FailureInPostAction(Exception):  
+
+class FailureInPostAction(Exception):
     pass
 
-def get_hostname():  
+
+def get_hostname():
     return socket.gethostname()
 
-def post_request_to_rancher(rancher_url, project_id, host_id, action, desiredstate, auth):  
+
+def post_request_to_rancher(rancher_url, project_id, host_id, action, desiredstate, auth):
     resp = requests.post(
         "{}/v1/projects/{}/hosts/{}/?action={}".format(
             rancher_url, project_id, host_id, action
-    ), auth=auth)
+        ), auth=auth)
     if resp.status_code == 202:
         i = 0
         while i <= 6:
@@ -59,19 +70,21 @@ def post_request_to_rancher(rancher_url, project_id, host_id, action, desiredsta
     else:
         raise FailureInPostAction("Action: {} - Non-202 Response Code: {}".format(
             action, resp.status_code
-            )
+        )
         )
 
-def get_rancher_host_state(rancher_url, project_id, host_id, desiredstate, auth):  
-    return requests.get(
-    "{}/v1/projects/{}/hosts/{}".format(rancher_url, project_id, host_id), 
-    auth=auth).json()['state']
 
-def get_rancher_host_id(rancher_url, project_id, local_hostname, auth):  
+def get_rancher_host_state(rancher_url, project_id, host_id, desiredstate, auth):
+    return requests.get(
+        "{}/v1/projects/{}/hosts/{}".format(rancher_url, project_id, host_id),
+        auth=auth).json()['state']
+
+
+def get_rancher_host_id(rancher_url, project_id, local_hostname, auth):
     resp = requests.get(
-            "{}/v1/projects/{}/hosts/".format(
-                rancher_url, project_id
-            ), auth=auth).json()
+        "{}/v1/projects/{}/hosts/".format(
+            rancher_url, project_id
+        ), auth=auth).json()
     if resp['data']:
         matches = []
         for h in resp['data']:
@@ -80,14 +93,16 @@ def get_rancher_host_id(rancher_url, project_id, local_hostname, auth):
         if len(matches) > 1:
             raise TooManyMatches("More than one match for hostname: {}".format(
                 local_hostname
-                )
+            )
             )
         elif len(matches) == 0:
-            raise NoMatches("No hosts found matching {}".format(local_hostname))
+            raise NoMatches(
+                "No hosts found matching {}".format(local_hostname))
         else:
             return str(matches[0])
 
-if __name__ == '__main__':  
+
+if __name__ == '__main__':
     if os.path.isfile(amibuilderfile):
         sys.exit(0)
     arguments = docopt(__doc__)
@@ -116,7 +131,7 @@ if __name__ == '__main__':
     except (FailureInPostAction, NoMatches, TooManyMatches) as e:
         trigger_incident(
             PD_OPSLOW_INTKEY, repr(e)
-            )
+        )
 
     except Exception as e:
         trigger_incident(

@@ -35,7 +35,7 @@ resource "aws_autoscaling_group" "cluster_autoscale" {
   desired_capacity          = "${var.capacity}"
   force_delete              = false
   health_check_grace_period = 180
-  health_check_type         = "EC2"
+  health_check_type         = "${var.health_check_type}"
   launch_configuration      = "${element(aws_launch_configuration.cluster.*.name, count.index)}"
   max_size                  = "${var.capacity_max}"
   min_size                  = "${var.capacity_min}"
