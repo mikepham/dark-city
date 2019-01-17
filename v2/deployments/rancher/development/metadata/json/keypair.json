@@ -1,0 +1,38 @@
+{
+  "Comment": "",
+  "Inputs": [
+    {
+      "Name": "algorithm",
+      "Description": "SSH KeyPair algorithm",
+      "Default": {
+        "Type": "string",
+        "Value": "RSA"
+      },
+      "Type": "string"
+    },
+    {
+      "Name": "keypair_name",
+      "Description": "SSH KeyPair name",
+      "Default": {
+        "Type": "string",
+        "Value": ""
+      },
+      "Type": "string"
+    },
+    {
+      "Name": "rsa_bits",
+      "Description": "Length of RSA KeyPair",
+      "Default": {
+        "Type": "string",
+        "Value": "4096"
+      },
+      "Type": "string"
+    }
+  ],
+  "Outputs": [
+    {
+      "Name": "keypair_name",
+      "Description": ""
+    }
+  ]
+}

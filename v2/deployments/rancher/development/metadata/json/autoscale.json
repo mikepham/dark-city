@@ -14,8 +14,20 @@
       "Type": "string"
     },
     {
+      "Name": "enable_monitoring",
+      "Description": "Enable monitoring",
+      "Default": null,
+      "Type": "string"
+    },
+    {
       "Name": "instance_type",
       "Description": "AWS Instance Type",
+      "Default": null,
+      "Type": "string"
+    },
+    {
+      "Name": "keypair_name",
+      "Description": "AWS KeyPair name",
       "Default": null,
       "Type": "string"
     },
@@ -50,8 +62,38 @@
       "Type": "string"
     },
     {
+      "Name": "security_groups",
+      "Description": "Security groups for instances",
+      "Default": null,
+      "Type": "list"
+    },
+    {
       "Name": "user_data",
       "Description": "CoreOS User Data",
+      "Default": null,
+      "Type": "string"
+    },
+    {
+      "Name": "volume_delete_on_termination",
+      "Description": "Delete volume when instance is terminated",
+      "Default": null,
+      "Type": "string"
+    },
+    {
+      "Name": "volume_iops",
+      "Description": "Volume IOPS",
+      "Default": null,
+      "Type": "string"
+    },
+    {
+      "Name": "volume_size",
+      "Description": "Volume size",
+      "Default": null,
+      "Type": "string"
+    },
+    {
+      "Name": "volume_type",
+      "Description": "Volume type",
       "Default": null,
       "Type": "string"
     }

@@ -1,5 +1,5 @@
 output "ami_id" {
-  value = "${data.http.coreos_manifest.body}"
+  value = "${trimspace(data.http.coreos_manifest.body)}"
 }
 
 output "user_data" {

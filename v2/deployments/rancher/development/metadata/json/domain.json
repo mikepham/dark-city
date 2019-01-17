@@ -6,9 +6,30 @@
       "Description": "Zone record for domain",
       "Default": null,
       "Type": "string"
+    },
+    {
+      "Name": "environment",
+      "Description": "Environment name",
+      "Default": {
+        "Type": "string",
+        "Value": ""
+      },
+      "Type": "string"
     }
   ],
   "Outputs": [
+    {
+      "Name": "domain_name",
+      "Description": ""
+    },
+    {
+      "Name": "domain_slug",
+      "Description": ""
+    },
+    {
+      "Name": "env_domain_slug",
+      "Description": ""
+    },
     {
       "Name": "zone_id",
       "Description": "AWS Zone ID"

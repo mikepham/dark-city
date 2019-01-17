@@ -8,8 +8,18 @@ variable "associate_public_ip_address" {
   type        = "string"
 }
 
+variable "enable_monitoring" {
+  description = "Enable monitoring"
+  type        = "string"
+}
+
 variable "instance_type" {
   description = "AWS Instance Type"
+  type        = "string"
+}
+
+variable "keypair_name" {
+  description = "AWS KeyPair name"
   type        = "string"
 }
 
@@ -38,7 +48,32 @@ variable "release_channel" {
   type        = "string"
 }
 
+variable "security_groups" {
+  description = "Security groups for instances"
+  type        = "list"
+}
+
 variable "user_data" {
   description = "CoreOS User Data"
+  type        = "string"
+}
+
+variable "volume_delete_on_termination" {
+  description = "Delete volume when instance is terminated"
+  type        = "string"
+}
+
+variable "volume_iops" {
+  description = "Volume IOPS"
+  type        = "string"
+}
+
+variable "volume_size" {
+  description = "Volume size"
+  type        = "string"
+}
+
+variable "volume_type" {
+  description = "Volume type"
   type        = "string"
 }

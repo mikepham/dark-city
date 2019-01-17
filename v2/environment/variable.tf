@@ -4,9 +4,20 @@ variable "autoscale_associate_public_ip_address" {
   type        = "string"
 }
 
+variable "autoscale_enable_monitoring" {
+  description = "Enable instance monitoring"
+  type        = "string"
+}
+
 variable "autoscale_instance_type" {
   default     = "t2.micro"
   description = "AWS Instance Type"
+  type        = "string"
+}
+
+variable "autoscale_keypair_name" {
+  default     = ""
+  description = "AWS KeyPair name"
   type        = "string"
 }
 
@@ -28,6 +39,35 @@ variable "autoscale_release_channel" {
   type        = "string"
 }
 
+variable "autoscale_security_groups" {
+  default     = []
+  description = "Security groups for instances"
+  type        = "list"
+}
+
+variable "autoscale_volume_delete_on_termination" {
+  default     = true
+  description = "Delete volume when instance is terminated"
+  type        = "string"
+}
+
+variable "autoscale_volume_iops" {
+  default     = 100
+  description = "Volume IOPS"
+  type        = "string"
+}
+
+variable "autoscale_volume_size" {
+  description = "Volume size"
+  type        = "string"
+}
+
+variable "autoscale_volume_type" {
+  default     = "gp2"
+  description = "Volume type"
+  type        = "string"
+}
+
 variable "domain" {
   description = "Primary Environment Domain Name"
   type        = "string"
@@ -39,21 +79,25 @@ variable "coreos_cluster_size" {
 }
 
 variable "coreos_enable_etcd" {
+  default     = false
   description = "Enable the CoreOS ETCD service"
   type        = "string"
 }
 
 variable "coreos_enable_ntp" {
+  default     = false
   description = "Enable the CoreOS NTP service"
   type        = "string"
 }
 
 variable "coreos_reboot_group" {
+  default     = "loosies"
   description = "Determines reboot order to maintain quorum"
   type        = "string"
 }
 
 variable "coreos_reboot_strategy" {
+  default     = "off"
   description = "CoreOS Reboot Strategy"
   type        = "string"
 }
