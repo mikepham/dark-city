@@ -23,6 +23,7 @@ module "coreos" {
   enable_ntp        = "${var.coreos_enable_etcd || var.coreos_enable_ntp}"
   reboot_group      = "${var.coreos_reboot_group}"
   reboot_strategy   = "${var.coreos_reboot_strategy}"
+  region            = "${var.region}"
   swap_size         = "${var.coreos_swap_size}"
 }
 

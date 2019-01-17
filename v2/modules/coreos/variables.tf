@@ -26,6 +26,11 @@ variable "reboot_strategy" {
   description = "Determines how updates are applied"
 }
 
+variable "region" {
+  description = "AWS Region to use for the late AMI"
+  type        = "string"
+}
+
 variable "release_channel" {
   default     = "stable"
   description = "CoreOS Release Channel"

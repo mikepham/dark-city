@@ -47,6 +47,12 @@
       "Type": "string"
     },
     {
+      "Name": "region",
+      "Description": "AWS Region to use for the late AMI",
+      "Default": null,
+      "Type": "string"
+    },
+    {
       "Name": "release_channel",
       "Description": "CoreOS Release Channel",
       "Default": {
