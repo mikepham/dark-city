@@ -44,3 +44,13 @@ data "template_file" "ntp" {
     ntp_host = "${var.ntp_host}"
   }
 }
+
+data "http" "coreos_manifest" {
+  url = "https://${var.release_channel}.release.core-os.net/amd64-usr/current/coreos_production_ami_all.json"
+}
+
+data "jsondecode_decode" "coreos_manifest" {
+  depends_on = ["data.http.coreos_manifest"]
+
+  input = "${data.http.coreos_manifest.body}"
+}

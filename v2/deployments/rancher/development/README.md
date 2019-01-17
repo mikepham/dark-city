@@ -21,6 +21,7 @@
 | ntp\_host | NTP time server | string | `"time.nist.gov"` | no |
 | reboot\_group | Group to assign reboots to in order to maintain quorum | string | n/a | yes |
 | reboot\_strategy | Determines how updates are applied | string | n/a | yes |
+| release\_channel | CoreOS Release Channel | string | `"stable"` | no |
 | swap\_size | Swap size | string | n/a | yes |
 
 ## Outputs

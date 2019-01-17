@@ -47,6 +47,15 @@
       "Type": "string"
     },
     {
+      "Name": "release_channel",
+      "Description": "CoreOS Release Channel",
+      "Default": {
+        "Type": "string",
+        "Value": "stable"
+      },
+      "Type": "string"
+    },
+    {
       "Name": "swap_size",
       "Description": "Swap size",
       "Default": null,

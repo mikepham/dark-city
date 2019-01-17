@@ -26,6 +26,12 @@ variable "reboot_strategy" {
   description = "Determines how updates are applied"
 }
 
+variable "release_channel" {
+  default     = "stable"
+  description = "CoreOS Release Channel"
+  type        = "string"
+}
+
 variable "ntp_host" {
   default     = "time.nist.gov"
   description = "NTP time server"
