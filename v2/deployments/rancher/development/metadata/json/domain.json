@@ -1,0 +1,17 @@
+{
+  "Comment": "",
+  "Inputs": [
+    {
+      "Name": "domain",
+      "Description": "Zone record for domain",
+      "Default": null,
+      "Type": "string"
+    }
+  ],
+  "Outputs": [
+    {
+      "Name": "zone_id",
+      "Description": "AWS Zone ID"
+    }
+  ]
+}

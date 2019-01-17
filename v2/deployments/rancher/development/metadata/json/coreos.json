@@ -1,0 +1,62 @@
+{
+  "Comment": "",
+  "Inputs": [
+    {
+      "Name": "cluster_size",
+      "Description": "Cluster size. Musst be a value divisible by 3, 5, or 7 for a quorum",
+      "Default": null,
+      "Type": "string"
+    },
+    {
+      "Name": "enable_clustering",
+      "Description": "Enable Clustering",
+      "Default": null,
+      "Type": "string"
+    },
+    {
+      "Name": "enable_etcd",
+      "Description": "Enables ETCD Configuration",
+      "Default": null,
+      "Type": "string"
+    },
+    {
+      "Name": "enable_ntp",
+      "Description": "Enables the NTP service",
+      "Default": null,
+      "Type": "string"
+    },
+    {
+      "Name": "ntp_host",
+      "Description": "NTP time server",
+      "Default": {
+        "Type": "string",
+        "Value": "time.nist.gov"
+      },
+      "Type": "string"
+    },
+    {
+      "Name": "reboot_group",
+      "Description": "Group to assign reboots to in order to maintain quorum",
+      "Default": null,
+      "Type": "string"
+    },
+    {
+      "Name": "reboot_strategy",
+      "Description": "Determines how updates are applied",
+      "Default": null,
+      "Type": "string"
+    },
+    {
+      "Name": "swap_size",
+      "Description": "Swap size",
+      "Default": null,
+      "Type": "string"
+    }
+  ],
+  "Outputs": [
+    {
+      "Name": "ignition",
+      "Description": ""
+    }
+  ]
+}

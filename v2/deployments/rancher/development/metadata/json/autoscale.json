@@ -1,0 +1,42 @@
+{
+  "Comment": "",
+  "Inputs": [
+    {
+      "Name": "associate_public_ip_address",
+      "Description": "Associate a public IP address",
+      "Default": null,
+      "Type": "string"
+    },
+    {
+      "Name": "instance_type",
+      "Description": "AWS Instance Type",
+      "Default": null,
+      "Type": "string"
+    },
+    {
+      "Name": "max_size",
+      "Description": "Maximum number of VMs to create",
+      "Default": null,
+      "Type": "string"
+    },
+    {
+      "Name": "min_size",
+      "Description": "Minimum number of VMs to create",
+      "Default": null,
+      "Type": "string"
+    },
+    {
+      "Name": "name",
+      "Description": "Auto-Scaling Group name",
+      "Default": null,
+      "Type": "string"
+    },
+    {
+      "Name": "region",
+      "Description": "AWS Region",
+      "Default": null,
+      "Type": "string"
+    }
+  ],
+  "Outputs": null
+}
