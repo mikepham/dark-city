@@ -85,6 +85,10 @@ case $ENVIRONMENT in
     ENVIRONMENT=development
   ;;
 
+  "int")
+    ENVIRONMENT=internal
+  ;;
+
   "qa")
     ENVIRONMENT=qa
   ;;

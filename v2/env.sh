@@ -10,9 +10,9 @@ export DARKCITY_VERSION_MINOR=1
 export DARKCITY_VERSION="v$DARKCITY_VERSION_MAJOR.$DARKCITY_VERSION_MINOR"
 
 if [ "$GOPATH" = "" ]; then
-  mkdir -p ~/.local/go
-  export GOPATH=~/.local/go
-  export PATH=$GOPATH/bin:$PATH
+    mkdir -p ~/.local/go
+    export GOPATH=~/.local/go
+    export PATH=$GOPATH/bin:$PATH
 fi
 
 
@@ -30,30 +30,30 @@ echo "------------------------------------------------------------------------"
 POSITIONAL=()
 while [[ $# -gt 0 ]]
 do
-  key="$1"
-
-  case $key in
-    --clean)
-      CLEAN=true
-      shift
-    ;;
-
-    --plugins)
-      PLUGINS=true
-      shift
-    ;;
-
-    --validation)
-      VALIDATION=true
-      shift
-    ;;
-
-    *)
-      ENVIRONMENT="$1"
-      POSITIONAL+=("$1")
-      shift
-    ;;
-  esac
+    key="$1"
+    
+    case $key in
+        --clean)
+            CLEAN=true
+            shift
+        ;;
+        
+        --plugins)
+            PLUGINS=true
+            shift
+        ;;
+        
+        --validation)
+            VALIDATION=true
+            shift
+        ;;
+        
+        *)
+            ENVIRONMENT="$1"
+            POSITIONAL+=("$1")
+            shift
+        ;;
+    esac
 done
 set -- "${POSITIONAL[@]}"
 
@@ -76,13 +76,13 @@ GO_PATH_NOT_SET=200
 # Clean the fast way!
 #------------------------------------------------------------------------------
 function clean() {
-  echo "Cleaning folders"
-  echo "------------------------------------------------------------------------"
-  find . -name ".terraform" -type d -exec rm -r {} +
+    echo "Cleaning folders"
+    echo "------------------------------------------------------------------------"
+    find . -name ".terraform" -type d -exec rm -r {} +
 }
 
 if [ "$CLEAN" = "true" ]; then
-  clean
+    clean
 fi
 
 
@@ -90,48 +90,48 @@ fi
 # Validation
 #------------------------------------------------------------------------------
 function validate() {
-  echo "Validating Development Environment"
-  echo "------------------------------------------------------------------------"
-
-  #------------------------------------------------------------------------------
-  # Validate Go Installation
-  #------------------------------------------------------------------------------
-  export GO=`which go`
-  if [ "$GO" = "" ]; then
-    echo "Go was not found. Have you installed Go?"
-    exit $GO_BINARY_NOT_FOUND
-  fi
-
-  #------------------------------------------------------------------------------
-  # Validating JQ Installation
-  #------------------------------------------------------------------------------
-  export JQ=`which jq`
-  if [ "$JQ" = "" ]; then
-    echo "JQ was not found. Have you installed JQ?"
-    exit $JQ_BINARY_NOT_FOUND
-  fi
-
-  #------------------------------------------------------------------------------
-  # Validate Terraform Installation
-  #------------------------------------------------------------------------------
-  export TERRAFORM=`which terraform`
-  if [ "$TERRAFORM" = "" ]; then
-    echo "Terrform was not found. Have you installed Terraform?"
-    exit $TERRAFORM_BINARY_NOT_FOUND
-  fi
-
-  #------------------------------------------------------------------------------
-  # Validate Terraform Docs Installation
-  #------------------------------------------------------------------------------
-  export TERRAFORM_DOCS="$GOPATH/bin/terraform-docs"
-  if [ ! -f "$TERRAFORM_DOCS" ]; then
-    echo "Terrform-Docs was not found. Did you install the plugins?"
-    exit $TERRAFORM_DOCS_BINARY_NOT_FOUND
-  fi
+    echo "Validating Development Environment"
+    echo "------------------------------------------------------------------------"
+    
+    #------------------------------------------------------------------------------
+    # Validate Go Installation
+    #------------------------------------------------------------------------------
+    export GO=`which go`
+    if [ "$GO" = "" ]; then
+        echo "Go was not found. Have you installed Go?"
+        exit $GO_BINARY_NOT_FOUND
+    fi
+    
+    #------------------------------------------------------------------------------
+    # Validating JQ Installation
+    #------------------------------------------------------------------------------
+    export JQ=`which jq`
+    if [ "$JQ" = "" ]; then
+        echo "JQ was not found. Have you installed JQ?"
+        exit $JQ_BINARY_NOT_FOUND
+    fi
+    
+    #------------------------------------------------------------------------------
+    # Validate Terraform Installation
+    #------------------------------------------------------------------------------
+    export TERRAFORM=`which terraform`
+    if [ "$TERRAFORM" = "" ]; then
+        echo "Terrform was not found. Have you installed Terraform?"
+        exit $TERRAFORM_BINARY_NOT_FOUND
+    fi
+    
+    #------------------------------------------------------------------------------
+    # Validate Terraform Docs Installation
+    #------------------------------------------------------------------------------
+    export TERRAFORM_DOCS="$GOPATH/bin/terraform-docs"
+    if [ ! -f "$TERRAFORM_DOCS" ]; then
+        echo "Terrform-Docs was not found. Did you install the plugins?"
+        exit $TERRAFORM_DOCS_BINARY_NOT_FOUND
+    fi
 }
 
 if [ "$VALIDATION" = "true" ]; then
-  validate
+    validate
 fi
 
 
@@ -139,50 +139,62 @@ fi
 # Install Terraform Go Plugins
 #------------------------------------------------------------------------------
 function plugins() {
-  echo $GO
-  echo $JQ
-  echo $TERRAFORM
-  echo "------------------------------------------------------------------------"
-  echo $GOPATH
-  echo "------------------------------------------------------------------------"
-
-  if [ ! -f "$GOPATH/bin/terraform-docs" ]; then
-    echo "Installing Terraform Docs"
-    go get github.com/segmentio/terraform-docs
+    echo $GO
+    echo $JQ
+    echo $TERRAFORM
     echo "------------------------------------------------------------------------"
-  fi
-
-  if [ ! -f "$GOPATH/bin/terraform-provider-ct" ]; then
-    echo "Installing Terraform Config Transform (CoreOS)"
-    go get github.com/coreos/terraform-provider-ct
+    echo $GOPATH
     echo "------------------------------------------------------------------------"
-  fi
-
-  if [ ! -f "$GOPATH/bin/terraform-provider-jsondecode" ]; then
-    echo "Installing Terraform JSON Decode"
-    go get github.com/EvilSuperstars/terraform-provider-jsondecode
-    echo "------------------------------------------------------------------------"
-  fi
-
-  if [ ! -f "$GOPATH/bin/terraform-provider-slack" ]; then
-    echo "Installing Terraform Slack"
-    go get github.com/TimDurward/terraform-provider-slack
-    echo "------------------------------------------------------------------------"
-  fi
-
-  if [ ! -f "$GOPATH/bin/terraform-provider-yaml" ]; then
-    echo "Installing Terraform Yaml"
-    go get github.com/ashald/terraform-provider-yaml
-    echo "------------------------------------------------------------------------"
-  fi
+    
+    if [ ! -f "$GOPATH/bin/terraform-docs" ]; then
+        echo "Installing Terraform Docs"
+        go get github.com/segmentio/terraform-docs
+        echo "------------------------------------------------------------------------"
+    fi
+    
+    if [ ! -f "$GOPATH/bin/terraform-provider-ct" ]; then
+        echo "Installing Terraform Config Transform (CoreOS)"
+        go get github.com/coreos/terraform-provider-ct
+        echo "------------------------------------------------------------------------"
+    fi
+    
+    if [ ! -f "$GOPATH/bin/terraform-provider-jsondecode" ]; then
+        echo "Installing Terraform JSON Decode"
+        go get github.com/EvilSuperstars/terraform-provider-jsondecode
+        echo "------------------------------------------------------------------------"
+    fi
+    
+    if [ ! -f "$GOPATH/bin/terraform-provider-slack" ]; then
+        echo "Installing Terraform Slack"
+        go get github.com/TimDurward/terraform-provider-slack
+        echo "------------------------------------------------------------------------"
+    fi
+    
+    if [ ! -f "$GOPATH/bin/terraform-provider-yaml" ]; then
+        echo "Installing Terraform Yaml"
+        go get github.com/ashald/terraform-provider-yaml
+        echo "------------------------------------------------------------------------"
+    fi
+    
+    if [ ! -f "$GOPATH/bin/terraform-provider-windows-dns" ]; then
+        echo "Installing Terraform Windows DNS"
+        go get github.com/elliottsam/terraform-provider-windows-dns
+        echo "------------------------------------------------------------------------"
+    fi
+    
+    if [ ! -f "$GOPATH/bin/winrm-dns-client" ]; then
+        echo "Installing Terraform WinRM Client"
+        go get github.com/elliottsam/winrm-dns-client
+        echo "------------------------------------------------------------------------"
+    fi
 }
 
 if [ "$PLUGINS" = "false" ]; then
-
-  if [ "$VALIDATION" = "false" ]; then
-    validate
-  fi
-
-  plugins
-
+    
+    if [ "$VALIDATION" = "false" ]; then
+        validate
+    fi
+    
+    plugins
+    
 fi

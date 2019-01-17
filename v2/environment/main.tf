@@ -4,7 +4,7 @@ provider "aws" {
 }
 
 module "autoscale" {
-  source = "../modules/autoscale"
+  source = "../modules/aws/autoscale"
   name   = "${module.domain.env_domain_slug}"
 
   ami_id                       = "${module.coreos.ami_id}"
@@ -25,7 +25,7 @@ module "autoscale" {
 }
 
 module "coreos" {
-  source = "../modules/coreos"
+  source = "../modules/common/coreos"
 
   cluster_size      = "${var.coreos_cluster_size}"
   enable_clustering = "${var.coreos_cluster_size > 0}"
@@ -38,14 +38,14 @@ module "coreos" {
 }
 
 module "domain" {
-  source = "../modules/domain"
+  source = "../modules/aws/domain"
 
   domain      = "${var.domain}"
   environment = "${var.environment}"
 }
 
 module "keypair" {
-  source = "../modules/keypair"
+  source = "../modules/aws/keypair"
 
   keypair_name = "${module.domain.env_domain_slug}"
 }

@@ -53,6 +53,8 @@ go get github.com/segmentio/terraform-docs
 go get github.com/EvilSuperstars/terraform-provider-jsondecode
 go get github.com/TimDurward/terraform-provider-slack
 go get github.com/ashald/terraform-provider-yaml
+go get github.com/elliottsam/terraform-provider-windows-dns
+go get github.com/elliottsam/winrm-dns-client
 ```
 
 ### Run Environment Script

@@ -11,5 +11,5 @@ provider "tls" {
 }
 
 module "env" {
-  source = "../env"
+  source = "../../common/env"
 }
