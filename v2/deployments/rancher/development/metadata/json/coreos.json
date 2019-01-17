@@ -72,6 +72,10 @@
     {
       "Name": "ignition",
       "Description": ""
+    },
+    {
+      "Name": "latest_hvm",
+      "Description": ""
     }
   ]
 }

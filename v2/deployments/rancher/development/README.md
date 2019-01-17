@@ -30,6 +30,7 @@
 | Name | Description |
 |------|-------------|
 | ignition |  |
+| latest\_hvm |  |
 
 ## Inputs
 

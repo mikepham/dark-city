@@ -46,20 +46,5 @@ data "template_file" "ntp" {
 }
 
 data "http" "coreos_manifest" {
-  url = "https://${var.release_channel}.release.core-os.net/amd64-usr/current/coreos_production_ami_hvm.txt"
-}
-
-locals {
-  ami_list_split    = "${split("|", data.http.coreos_manifest.body)}"
-  ami_list_complete = "${split("|", data.http.coreos_manifest.body)}"
-  ami_list          = "${map(local.ami_list_complete)}"
-}
-
-data "null_data_source" "coreos_ami_list" {
-  count      = "${length(local.ami_list)}"
-  depends_on = ["data.http.coreos_manifest"]
-
-  inputs = {
-    latest = "${lookup}"
-  }
+  url = "https://${var.release_channel}.release.core-os.net/amd64-usr/current/coreos_production_ami_hvm_us-east-1.txt"
 }
