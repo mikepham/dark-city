@@ -2,6 +2,12 @@
   "Comment": "",
   "Inputs": [
     {
+      "Name": "ami_id",
+      "Description": "AMI ID",
+      "Default": null,
+      "Type": "string"
+    },
+    {
       "Name": "associate_public_ip_address",
       "Description": "Associate a public IP address",
       "Default": null,
@@ -34,6 +40,18 @@
     {
       "Name": "region",
       "Description": "AWS Region",
+      "Default": null,
+      "Type": "string"
+    },
+    {
+      "Name": "release_channel",
+      "Description": "CoreOS Release Channel",
+      "Default": null,
+      "Type": "string"
+    },
+    {
+      "Name": "user_data",
+      "Description": "CoreOS User Data",
       "Default": null,
       "Type": "string"
     }

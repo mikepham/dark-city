@@ -1,3 +1,8 @@
+variable "ami_id" {
+  description = "AMI ID"
+  type        = "string"
+}
+
 variable "associate_public_ip_address" {
   description = "Associate a public IP address"
   type        = "string"
@@ -25,5 +30,15 @@ variable "name" {
 
 variable "region" {
   description = "AWS Region"
+  type        = "string"
+}
+
+variable "release_channel" {
+  description = "CoreOS Release Channel"
+  type        = "string"
+}
+
+variable "user_data" {
+  description = "CoreOS User Data"
   type        = "string"
 }

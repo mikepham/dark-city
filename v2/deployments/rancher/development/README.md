@@ -3,12 +3,15 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
+| ami\_id | AMI ID | string | n/a | yes |
 | associate\_public\_ip\_address | Associate a public IP address | string | n/a | yes |
 | instance\_type | AWS Instance Type | string | n/a | yes |
 | max\_size | Maximum number of VMs to create | string | n/a | yes |
 | min\_size | Minimum number of VMs to create | string | n/a | yes |
 | name | Auto-Scaling Group name | string | n/a | yes |
 | region | AWS Region | string | n/a | yes |
+| release\_channel | CoreOS Release Channel | string | n/a | yes |
+| user\_data | CoreOS User Data | string | n/a | yes |
 
 ## Inputs
 
@@ -29,8 +32,8 @@
 
 | Name | Description |
 |------|-------------|
-| ignition |  |
-| latest\_hvm |  |
+| ami\_id |  |
+| user\_data |  |
 
 ## Inputs
 

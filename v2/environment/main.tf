@@ -7,11 +7,14 @@ module "autoscale" {
   source = "../modules/autoscale"
 
   associate_public_ip_address = "${var.autoscale_associate_public_ip_address}"
+  ami_id                      = "${module.coreos.ami_id}"
   instance_type               = "${var.autoscale_instance_type}"
   max_size                    = "${var.autoscale_max_size}"
   min_size                    = "${var.autoscale_min_size}"
   name                        = "${var.environment}"
   region                      = "${var.region}"
+  release_channel             = "${var.autoscale_release_channel}"
+  user_data                   = "${module.coreos.user_data}"
 }
 
 module "coreos" {

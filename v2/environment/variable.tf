@@ -22,6 +22,12 @@ variable "autoscale_min_size" {
   type        = "string"
 }
 
+variable "autoscale_release_channel" {
+  default     = "stable"
+  description = "CoreOS Release Channel"
+  type        = "string"
+}
+
 variable "domain" {
   description = "Primary Environment Domain Name"
   type        = "string"

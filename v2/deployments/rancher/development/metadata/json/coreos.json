@@ -70,11 +70,11 @@
   ],
   "Outputs": [
     {
-      "Name": "ignition",
+      "Name": "ami_id",
       "Description": ""
     },
     {
-      "Name": "latest_hvm",
+      "Name": "user_data",
       "Description": ""
     }
   ]

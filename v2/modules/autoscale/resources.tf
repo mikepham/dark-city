@@ -2,8 +2,9 @@ resource "aws_launch_configuration" "configuration" {
   name = "${var.name}-launch-configuration"
 
   associate_public_ip_address = "${var.associate_public_ip_address}"
-  image_id                    = "${module.ami.ami_id}"
+  image_id                    = "${var.ami_id}"
   instance_type               = "${var.instance_type}"
+  user_data                   = "${var.user_data}"
 }
 
 resource "aws_autoscaling_group" "autoscaling" {
