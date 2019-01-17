@@ -6,8 +6,8 @@ provider "aws" {
 module "autoscale" {
   source = "../modules/autoscale"
 
-  associate_public_ip_address = "${var.autoscale_associate_public_ip_address}"
   ami_id                      = "${module.coreos.ami_id}"
+  associate_public_ip_address = "${var.autoscale_associate_public_ip_address}"
   instance_type               = "${var.autoscale_instance_type}"
   max_size                    = "${var.autoscale_max_size}"
   min_size                    = "${var.autoscale_min_size}"
