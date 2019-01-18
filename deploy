@@ -77,7 +77,7 @@ do
 done
 set -- "${POSITIONAL[@]}"
 
-source ./env.sh $ENV_CLEAN $ENV_PLUGINS $ENV_VALIDATE
+source ./env.sh $ENV_CLEAN $ENV_PLUGINS $ENV_VALIDATE --silent
 
 
 #------------------------------------------------------------------------------
@@ -228,7 +228,7 @@ function init () {
 
 function run() {
   if [ ! -d "$WORKING_DIRECTORY/.terraform" ]; then
-    source "$SCRIPT_PATH/env.sh" --plugins --validation
+    source "$SCRIPT_PATH/env.sh" --plugins --validation --silent
     init
 
     if [ "$ACTION" = "" ]; then

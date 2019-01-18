@@ -40,6 +40,11 @@ do
             shift
         ;;
         
+        --silent)
+            OUTPUT=true
+            shift
+        ;;
+        
         *)
             ENVIRONMENT="$1"
             POSITIONAL+=("$1")
@@ -50,6 +55,7 @@ done
 set -- "${POSITIONAL[@]}"
 
 CLEAN=${CLEAN:-false}
+OUTPUT=${OUTPUT:-false}
 PLUGINS=${PLUGINS:-false}
 VALIDATION=${VALIDATION:-true}
 
@@ -65,6 +71,10 @@ echo "ENV_CLEAN=$CLEAN"
 echo "ENV_PLUGINS=$PLUGINS"
 echo "ENV_VALIDATION=$VALIDATION"
 echo "------------------------------------------------------------------------"
+
+if [ "$OUTPUT" = "false" ]; then
+  stty -echo
+fi
 
 
 #------------------------------------------------------------------------------
@@ -82,8 +92,9 @@ GO_PATH_NOT_SET=200
 #------------------------------------------------------------------------------
 function do_clean() {
     echo "Cleaning folders"
-    echo "------------------------------------------------------------------------"
+    echo "========================================================================"
     find . -name ".terraform" -type d -exec rm -r {} +
+    find . -name ".tfstate" -type d -exec rm -r {} +
 }
 
 if [ "$CLEAN" = "true" ]; then
@@ -96,7 +107,7 @@ fi
 #------------------------------------------------------------------------------
 function do_validate() {
     echo "Validating Development Environment"
-    echo "------------------------------------------------------------------------"
+    echo "========================================================================"
     
     #------------------------------------------------------------------------------
     # Validate Go Installation
@@ -156,9 +167,9 @@ function do_plugins() {
     PLUGINS["terraform-provider-ct"]="github.com/coreos/terraform-provider-ct"
     PLUGINS["terraform-provider-jsondecode"]="github.com/EvilSuperstars/terraform-provider-jsondecode"
     PLUGINS["terraform-provider-slack"]="github.com/TimDurward/terraform-provider-slack"
-    PLUGINS["terraform-provider-yaml"]="github.com/ashald/terraform-provider-yaml"
     PLUGINS["terraform-provider-windns"]="github.com/portofportland/terraform-provider-windns"
     PLUGINS["terraform-provider-windows-dns"]="github.com/elliottsam/terraform-provider-windows-dns"
+    PLUGINS["terraform-provider-yaml"]="github.com/ashald/terraform-provider-yaml"
     
     declare -A TOOLS
     TOOLS["terraform-docs"]="github.com/segmentio/terraform-docs"
@@ -189,7 +200,7 @@ function do_plugins() {
         fi
     done
     
-    echo "------------------------------------------------------------------------"
+    echo "========================================================================"
 }
 
 if [ "$PLUGINS" = "true" ]; then
@@ -198,4 +209,8 @@ if [ "$PLUGINS" = "true" ]; then
     fi
     
     do_plugins
+fi
+
+if [ "$OUTPUT" = "false" ]; then
+  stty echo
 fi
