@@ -65,6 +65,11 @@ do
       shift
     ;;
 
+    --no-env-check)
+      ENV_CHECK=false
+      shift
+    ;;
+
     *)
       DEPLOYMENT=${DEPLOYMENT:-"$1"}
       POSITIONAL+=("$1")
@@ -74,7 +79,13 @@ do
 done
 set -- "${POSITIONAL[@]}"
 
-source ./env.sh $ENV_CLEAN $ENV_PLUGINS $ENV_VALIDATE
+ENV_CHECK=${ENV_CHECK:-true}
+
+if [ "$ENV_CHECK" = "true" ]; then
+  source ./env.sh --clean --plugins --validation
+else
+  source ./env.sh $ENV_CLEAN $ENV_PLUGINS $ENV_VALIDATE
+fi
 
 
 #------------------------------------------------------------------------------

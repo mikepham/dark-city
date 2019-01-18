@@ -61,6 +61,11 @@ CLEAN=${CLEAN:-false}
 PLUGINS=${PLUGINS:-false}
 VALIDATION=${VALIDATION:-false}
 
+echo "ENV_FLAG_CLEAN=$CLEAN"
+echo "ENV_FLAG_PLUGINS=$PLUGINS"
+echo "ENV_FLAG_VALIDATION=$VALIDATION"
+echo "------------------------------------------------------------------------"
+
 
 #------------------------------------------------------------------------------
 # Exit Codes
@@ -75,21 +80,21 @@ GO_PATH_NOT_SET=200
 #------------------------------------------------------------------------------
 # Clean the fast way!
 #------------------------------------------------------------------------------
-function clean() {
+function do_clean() {
     echo "Cleaning folders"
     echo "------------------------------------------------------------------------"
     find . -name ".terraform" -type d -exec rm -r {} +
 }
 
 if [ "$CLEAN" = "true" ]; then
-    clean
+    do_clean
 fi
 
 
 #------------------------------------------------------------------------------
 # Validation
 #------------------------------------------------------------------------------
-function validate() {
+function do_validate() {
     echo "Validating Development Environment"
     echo "------------------------------------------------------------------------"
     
@@ -121,24 +126,19 @@ function validate() {
     fi
     
     #------------------------------------------------------------------------------
-    # Validate Terraform Docs Installation
+    # Validate Terraform Docs
     #------------------------------------------------------------------------------
     export TERRAFORM_DOCS="$GOPATH/bin/terraform-docs"
-    if [ ! -f "$TERRAFORM_DOCS" ]; then
-        echo "Terrform-Docs was not found. Did you install the plugins?"
-        exit $TERRAFORM_DOCS_BINARY_NOT_FOUND
-    fi
 }
 
 if [ "$VALIDATION" = "true" ]; then
-    validate
+    do_validate
 fi
-
 
 #------------------------------------------------------------------------------
 # Install Terraform Go Plugins
 #------------------------------------------------------------------------------
-function plugins() {
+function do_plugins() {
     echo $GO
     echo $JQ
     echo $TERRAFORM
@@ -146,55 +146,54 @@ function plugins() {
     echo $GOPATH
     echo "------------------------------------------------------------------------"
     
-    if [ ! -f "$GOPATH/bin/terraform-docs" ]; then
-        echo "Installing Terraform Docs"
-        go get github.com/segmentio/terraform-docs
-        echo "------------------------------------------------------------------------"
+    declare -A PLUGINS
+    PLUGINS["terraform-provider-ct"]="github.com/coreos/terraform-provider-ct"
+    PLUGINS["terraform-provider-jsondecode"]="github.com/EvilSuperstars/terraform-provider-jsondecode"
+    PLUGINS["terraform-provider-slack"]="github.com/TimDurward/terraform-provider-slack"
+    PLUGINS["terraform-provider-yaml"]="github.com/ashald/terraform-provider-yaml"
+    PLUGINS["terraform-provider-windows-dns"]="github.com/elliottsam/terraform-provider-windows-dns"
+    
+    declare -A TOOLS
+    TOOLS["terraform-docs"]="github.com/segmentio/terraform-docs"
+    TOOLS["winrm-dns-client"]="github.com/elliottsam/winrm-dns-client"
+    
+    for plugin in "${!PLUGINS[@]}"; do
+        if [ ! -f "$GOPATH/bin/$plugin" ]; then
+            echo "Installing $plugin"
+            go get "${PLUGINS[$plugin]}"
+            echo "------------------------------------------------------------------------"
+        else
+            echo "Skipping $plugin"
+        fi
+    done
+    
+    for tool in "${!TOOLS[@]}"; do
+        if [ ! -f "$GOPATH/bin/$tool" ]; then
+            echo "Installing $tool"
+            go get "${TOOLS[$tool]}"
+            echo "------------------------------------------------------------------------"
+        else
+            echo "Skipping $tool"
+        fi
+    done
+    
+    TERRAFORM_PLUGINS_PATH=$HOME/.terraform.d/plugins/linux_amd64
+    
+    if [ ! -d "$TERRAFORM_PLUGINS_PATH" ]; then
+        mkdir "$TERRAFORM_PLUGINS_PATH" -p
     fi
     
-    if [ ! -f "$GOPATH/bin/terraform-provider-ct" ]; then
-        echo "Installing Terraform Config Transform (CoreOS)"
-        go get github.com/coreos/terraform-provider-ct
-        echo "------------------------------------------------------------------------"
-    fi
-    
-    if [ ! -f "$GOPATH/bin/terraform-provider-jsondecode" ]; then
-        echo "Installing Terraform JSON Decode"
-        go get github.com/EvilSuperstars/terraform-provider-jsondecode
-        echo "------------------------------------------------------------------------"
-    fi
-    
-    if [ ! -f "$GOPATH/bin/terraform-provider-slack" ]; then
-        echo "Installing Terraform Slack"
-        go get github.com/TimDurward/terraform-provider-slack
-        echo "------------------------------------------------------------------------"
-    fi
-    
-    if [ ! -f "$GOPATH/bin/terraform-provider-yaml" ]; then
-        echo "Installing Terraform Yaml"
-        go get github.com/ashald/terraform-provider-yaml
-        echo "------------------------------------------------------------------------"
-    fi
-    
-    if [ ! -f "$GOPATH/bin/terraform-provider-windows-dns" ]; then
-        echo "Installing Terraform Windows DNS"
-        go get github.com/elliottsam/terraform-provider-windows-dns
-        echo "------------------------------------------------------------------------"
-    fi
-    
-    if [ ! -f "$GOPATH/bin/winrm-dns-client" ]; then
-        echo "Installing Terraform WinRM Client"
-        go get github.com/elliottsam/winrm-dns-client
-        echo "------------------------------------------------------------------------"
-    fi
+    for plugin in "${!PLUGINS[@]}"; do
+        if [ ! -h "$TERRAFORM_PLUGINS_PATH/$plugin" ]; then
+            ln -s "$GOPATH/bin/$plugin" "$TERRAFORM_PLUGINS_PATH/$plugin"
+        fi
+    done
 }
 
-if [ "$PLUGINS" = "false" ]; then
-    
+if [ "$PLUGINS" = "true" ]; then
     if [ "$VALIDATION" = "false" ]; then
-        validate
+        do_validate
     fi
     
-    plugins
-    
+    do_plugins
 fi

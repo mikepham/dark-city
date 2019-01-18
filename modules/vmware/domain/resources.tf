@@ -1,4 +1,4 @@
-resource "windows-dns_recprd" "dns" {
+resource "windows-dns_record" "dns" {
   name = "${local.domain_name}"
 
   domain = "${var.domain}"
