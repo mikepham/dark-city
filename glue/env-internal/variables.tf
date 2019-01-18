@@ -43,3 +43,8 @@ variable "secret_name" {
   description = "AWS Secret Manager Secret Name"
   type        = "string"
 }
+
+variable "vmware_allow_unverified_ssl" {
+  description = "Allow self-signed certificates"
+  type        = "string"
+}

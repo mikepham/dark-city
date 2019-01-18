@@ -22,3 +22,13 @@ module "secrets" "secrets" {
 
   secret_name = "${var.secret_name}"
 }
+
+module "virtual_machine" {
+  source = "../../modules/vmware/virtual-machine"
+
+  allow_unverified_ssl = "${var.vmware_allow_unverified_ssl}"
+  host                 = "vm01"
+  password             = "${module.secrets.secrets["VMWARE_PASSWORD"]}"
+  server               = "vm01.in.nativecode.com"
+  username             = "${module.secrets.secrets["VMWARE_USERNAME"]}"
+}
