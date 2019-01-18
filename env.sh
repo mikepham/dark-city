@@ -59,7 +59,7 @@ set -- "${POSITIONAL[@]}"
 
 CLEAN=${CLEAN:-false}
 PLUGINS=${PLUGINS:-false}
-VALIDATION=${VALIDATION:-false}
+VALIDATION=${VALIDATION:-true}
 
 echo "ENV_FLAG_CLEAN=$CLEAN"
 echo "ENV_FLAG_PLUGINS=$PLUGINS"
@@ -186,8 +186,11 @@ function do_plugins() {
     for plugin in "${!PLUGINS[@]}"; do
         if [ ! -h "$TERRAFORM_PLUGINS_PATH/$plugin" ]; then
             ln -s "$GOPATH/bin/$plugin" "$TERRAFORM_PLUGINS_PATH/$plugin"
+            echo "Created SymLink at $TERRAFORM_PLUGINS_PATH/$plugin"
         fi
     done
+
+    echo "------------------------------------------------------------------------"
 }
 
 if [ "$PLUGINS" = "true" ]; then
