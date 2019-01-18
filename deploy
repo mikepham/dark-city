@@ -230,8 +230,8 @@ function run() {
   if [ ! -d "$WORKING_DIRECTORY/.terraform" ]; then
     source "$SCRIPT_PATH/env.sh" --plugins --validation
     init
-    echo $ACTION
-    if [ "$ACTION" = "clean" ]; then
+
+    if [ "$ACTION" = "" ]; then
       exit
     fi
   fi
