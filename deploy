@@ -217,7 +217,7 @@ function init () {
   $TERRAFORM validate
 
   AMI_MODULE=`find $WORKING_DIRECTORY/.terraform/modules -type f -name 'getvariables.rb' | sed -r 's|/[^/]+$||' |sort |uniq`
-  echo $AMI_MODULE
+
   if [ -f "$AMI_MODULE/getvariables.rb" ]; then
     ruby $AMI_MODULE/getvariables.rb > $AMI_MODULE/variables.tf.json
   fi

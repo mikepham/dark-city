@@ -24,7 +24,7 @@ provider "aws" {
 # Modules
 #------------------------------------------------------------------------------
 module "environment" {
-  source = "../environment"
+  source = "../glue/env-rancher"
 
   # Overrides
   drone_database_instance_type        = "db.t2.micro"

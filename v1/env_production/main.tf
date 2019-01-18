@@ -23,7 +23,7 @@ provider "aws" {
 # Modules
 #------------------------------------------------------------------------------
 module "environment" {
-  source = "../environment"
+  source = "../glue/env-rancher"
 
   # Per Instance
   rancher_capacity     = 3

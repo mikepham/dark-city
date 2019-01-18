@@ -39,11 +39,6 @@ variable "password" {
   type        = "string"
 }
 
-variable "ttl" {
-  description = "Record time-to-live duration"
-  type        = "string"
-}
-
 variable "username" {
   description = "Windows Credentials"
   type        = "string"
