@@ -8,8 +8,38 @@ variable "associate_public_ip_address" {
   type        = "string"
 }
 
+variable "availability_zone" {
+  description = "Availability Zone"
+  type        = "string"
+}
+
+variable "capacity" {
+  description = "Number of machines desired"
+  type        = "string"
+}
+
+variable "capacity_max" {
+  description = "Maximum number of VMs to create"
+  type        = "string"
+}
+
+variable "capacity_min" {
+  description = "Minimum number of VMs to create"
+  type        = "string"
+}
+
 variable "enable_monitoring" {
   description = "Enable monitoring"
+  type        = "string"
+}
+
+variable "health_check_type" {
+  description = "Health Check Type"
+  type        = "string"
+}
+
+variable "iam_profile" {
+  description = "IAM Profile"
   type        = "string"
 }
 
@@ -20,16 +50,6 @@ variable "instance_type" {
 
 variable "keypair_name" {
   description = "AWS KeyPair name"
-  type        = "string"
-}
-
-variable "max_size" {
-  description = "Maximum number of VMs to create"
-  type        = "string"
-}
-
-variable "min_size" {
-  description = "Minimum number of VMs to create"
   type        = "string"
 }
 
@@ -50,6 +70,36 @@ variable "release_channel" {
 
 variable "security_groups" {
   description = "Security groups for instances"
+  type        = "list"
+}
+
+variable "subnets" {
+  description = "Subnets"
+  type        = "list"
+}
+
+variable "target_port" {
+  description = "Target Group Port"
+  type        = "string"
+}
+
+variable "target_protocol" {
+  description = "Target Group Protocol"
+  type        = "string"
+}
+
+variable "target_health_path" {
+  description = "Target Group health check path"
+  type        = "string"
+}
+
+variable "target_health_port" {
+  description = "Target Group health check port"
+  type        = "string"
+}
+
+variable "termination_policies" {
+  description = "Termination Policies"
   type        = "list"
 }
 
@@ -75,5 +125,10 @@ variable "volume_size" {
 
 variable "volume_type" {
   description = "Volume type"
+  type        = "string"
+}
+
+variable "vpc_id" {
+  description = "AWS VPC"
   type        = "string"
 }

@@ -4,8 +4,40 @@ variable "autoscale_associate_public_ip_address" {
   type        = "string"
 }
 
+variable "autoscale_availability_zone" {
+  description = "Availability Zone"
+  type        = "string"
+}
+
+variable "autoscale_capacity" {
+  description = "Number of machines desired"
+}
+
+variable "autoscale_capacity_max" {
+  default     = 1
+  description = "Maxmimum number of VMs to create"
+  type        = "string"
+}
+
+variable "autoscale_capacity_min" {
+  default     = 1
+  description = "Minimum number of VMs to create"
+  type        = "string"
+}
+
 variable "autoscale_enable_monitoring" {
   description = "Enable instance monitoring"
+  type        = "string"
+}
+
+variable "autoscale_health_check_type" {
+  default     = "ELB"
+  description = "Health check type"
+  type        = "string"
+}
+
+variable "autoscale_iam_profile" {
+  description = "IAM Profile"
   type        = "string"
 }
 
@@ -21,18 +53,6 @@ variable "autoscale_keypair_name" {
   type        = "string"
 }
 
-variable "autoscale_max_size" {
-  default     = 1
-  description = "Maxmimum number of VMs to create"
-  type        = "string"
-}
-
-variable "autoscale_min_size" {
-  default     = 1
-  description = "Minimum number of VMs to create"
-  type        = "string"
-}
-
 variable "autoscale_release_channel" {
   default     = "stable"
   description = "CoreOS Release Channel"
@@ -42,6 +62,36 @@ variable "autoscale_release_channel" {
 variable "autoscale_security_groups" {
   default     = []
   description = "Security groups for instances"
+  type        = "list"
+}
+
+variable "autoscale_subnets" {
+  description = "Subnets"
+  type        = "list"
+}
+
+variable "autoscale_target_port" {
+  description = "Target Group Port"
+  type        = "string"
+}
+
+variable "autoscale_target_protocol" {
+  description = "Target Group Protocol"
+  type        = "string"
+}
+
+variable "autoscale_target_health_path" {
+  description = "Target Group Health Path"
+  type        = "string"
+}
+
+variable "autoscale_target_health_port" {
+  description = "Target Group Health Port"
+  type        = "string"
+}
+
+variable "autoscale_termination_policies" {
+  description = "Termination Policies"
   type        = "list"
 }
 
@@ -116,5 +166,10 @@ variable "environment" {
 variable "region" {
   default     = "us-east-1"
   description = "AWS Region"
+  type        = "string"
+}
+
+variable "vpc_id" {
+  description = "AWS VPC"
   type        = "string"
 }
