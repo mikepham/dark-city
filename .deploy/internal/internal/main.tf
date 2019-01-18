@@ -1,3 +1,11 @@
+terraform {
+  backend "etcdv3" {
+    endpoints = ["etcd:2379"]
+    lock      = true
+    prefix    = "/root/terraform/rancher/v1/internal.tfstate"
+  }
+}
+
 provider "aws" {
   region  = "${var.region}"
   version = "1.56.0"

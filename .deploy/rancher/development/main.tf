@@ -1,5 +1,5 @@
 module "environment" {
-  source = "../../../environment"
+  source = "../../../glue"
 
   autoscale_enable_monitoring = true
   autoscale_volume_size       = 8
