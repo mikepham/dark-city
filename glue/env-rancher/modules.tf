@@ -58,8 +58,7 @@ module "domain" {
 module "keypair" {
   source = "../../modules/aws/keypair"
 
-  domain      = "${var.domain}"
-  environment = "${var.environment}"
-
-  # keypair_name = "${module.domain.env_domain_slug}"
+  domain       = "${var.domain}"
+  environment  = "${var.environment}"
+  keypair_name = "${module.domain.env_domain_slug}"
 }

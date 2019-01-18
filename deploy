@@ -5,6 +5,9 @@ set -e
 #------------------------------------------------------------------------------
 # Exit Codes
 #------------------------------------------------------------------------------
+SCRIPT=$(readlink -f "$0")
+SCRIPT_PATH=$(dirname "$SCRIPT")
+
 DEPLOYMENT_NOT_FOUND=100
 ENVIRONMENT_NOT_FOUND=101
 ENVIRONMENT_INVALID=102
@@ -225,7 +228,12 @@ function init () {
 
 function run() {
   if [ ! -d "$WORKING_DIRECTORY/.terraform" ]; then
+    source "$SCRIPT_PATH/env.sh" --plugins --validation
     init
+    echo $ACTION
+    if [ "$ACTION" = "clean" ]; then
+      exit
+    fi
   fi
   $TERRAFORM plan -out="$ENVIRONMENT_PLAN"
 }

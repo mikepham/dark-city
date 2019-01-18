@@ -6,7 +6,7 @@ set -e
 # Export Environment Variables
 #------------------------------------------------------------------------------
 export DARKCITY_VERSION_MAJOR=0
-export DARKCITY_VERSION_MINOR=1
+export DARKCITY_VERSION_MINOR=2
 export DARKCITY_VERSION="v$DARKCITY_VERSION_MAJOR.$DARKCITY_VERSION_MINOR"
 
 if [ "$GOPATH" = "" ]; then
@@ -146,6 +146,12 @@ function do_plugins() {
     echo $GOPATH
     echo "------------------------------------------------------------------------"
     
+    TERRAFORM_PLUGINS_PATH=$HOME/.terraform.d/plugins/linux_amd64
+    
+    if [ ! -d "$TERRAFORM_PLUGINS_PATH" ]; then
+        mkdir "$TERRAFORM_PLUGINS_PATH" -p
+    fi
+    
     declare -A PLUGINS
     PLUGINS["terraform-provider-ct"]="github.com/coreos/terraform-provider-ct"
     PLUGINS["terraform-provider-jsondecode"]="github.com/EvilSuperstars/terraform-provider-jsondecode"
@@ -162,7 +168,12 @@ function do_plugins() {
         if [ ! -f "$GOPATH/bin/$plugin" ]; then
             echo "Installing $plugin"
             go get "${PLUGINS[$plugin]}"
-            echo "------------------------------------------------------------------------"
+            
+            # Create symink
+            if [ ! -h "$TERRAFORM_PLUGINS_PATH/$plugin" ]; then
+                ln -s "$GOPATH/bin/$plugin" "$TERRAFORM_PLUGINS_PATH/$plugin"
+                echo "Created SymLink at $TERRAFORM_PLUGINS_PATH/$plugin"
+            fi
         else
             echo "Skipping $plugin"
         fi
@@ -178,19 +189,6 @@ function do_plugins() {
         fi
     done
     
-    TERRAFORM_PLUGINS_PATH=$HOME/.terraform.d/plugins/linux_amd64
-    
-    if [ ! -d "$TERRAFORM_PLUGINS_PATH" ]; then
-        mkdir "$TERRAFORM_PLUGINS_PATH" -p
-    fi
-    
-    for plugin in "${!PLUGINS[@]}"; do
-        if [ ! -h "$TERRAFORM_PLUGINS_PATH/$plugin" ]; then
-            ln -s "$GOPATH/bin/$plugin" "$TERRAFORM_PLUGINS_PATH/$plugin"
-            echo "Created SymLink at $TERRAFORM_PLUGINS_PATH/$plugin"
-        fi
-    done
-
     echo "------------------------------------------------------------------------"
 }
 
