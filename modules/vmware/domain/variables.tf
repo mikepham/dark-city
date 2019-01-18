@@ -9,13 +9,23 @@ variable "environment" {
   type        = "string"
 }
 
-variable "dns_record_type" {
-  description = "Record type to create"
+variable "hostname_alias" {
+  description = "Hostname alias"
   type        = "string"
 }
 
-variable "dns_record_value" {
+variable "record_ip" {
+  description = "DNS IP address"
+  type        = "string"
+}
+
+variable "record_name" {
   description = "Record value to create"
+  type        = "string"
+}
+
+variable "record_type" {
+  description = "Record type to create"
   type        = "string"
 }
 

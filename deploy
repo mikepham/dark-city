@@ -74,12 +74,7 @@ do
 done
 set -- "${POSITIONAL[@]}"
 
-if [ ! -f "$TERRAFORM" ]; then
-  echo "Executing Environment Check"
-  source ./env.sh --plugins --validation
-else
-  source ./env.sh $ENV_CLEAN $ENV_PLUGINS $ENV_VALIDATE
-fi
+source ./env.sh $ENV_CLEAN $ENV_PLUGINS $ENV_VALIDATE
 
 
 #------------------------------------------------------------------------------
@@ -137,7 +132,7 @@ FORCE_ACTION=${FORCE:-"false"}
 #------------------------------------------------------------------------------
 # Informational
 #------------------------------------------------------------------------------
-echo "Current Working Directory: `pwd`"
+echo "Current Directory: `pwd`"
 echo "------------------------------------------------------------------------"
 echo "Environment: $ENVIRONMENT"
 echo "Environment Path: $ENVIRONMENT_PATH"
@@ -188,7 +183,7 @@ echo "Executing $ENVIRONMENT"
 echo "------------------------------------------------------------------------"
 cd $ENVIRONMENT_PATH
 WORKING_DIRECTORY=`pwd`
-echo "Workspace Working Directory: `pwd`"
+echo "Workspace: `pwd`"
 echo "------------------------------------------------------------------------"
 
 function apply() {

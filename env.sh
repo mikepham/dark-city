@@ -151,6 +151,7 @@ function do_plugins() {
     PLUGINS["terraform-provider-jsondecode"]="github.com/EvilSuperstars/terraform-provider-jsondecode"
     PLUGINS["terraform-provider-slack"]="github.com/TimDurward/terraform-provider-slack"
     PLUGINS["terraform-provider-yaml"]="github.com/ashald/terraform-provider-yaml"
+    PLUGINS["terraform-provider-windns"]="github.com/portofportland/terraform-provider-windns"
     PLUGINS["terraform-provider-windows-dns"]="github.com/elliottsam/terraform-provider-windows-dns"
     
     declare -A TOOLS

@@ -1,5 +1,6 @@
-provider "windows-dns" {
-  password    = "${var.password}"
-  server_name = "${var.domain_controller}"
-  username    = "${var.username}"
+provider "windns" {
+  server   = "${var.domain_controller}"
+  username = "${var.username}"
+  password = "${var.password}"
+  usessl   = true
 }

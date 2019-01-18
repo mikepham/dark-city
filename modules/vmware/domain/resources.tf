@@ -1,8 +1,7 @@
-resource "windows-dns_record" "dns" {
-  name = "${local.domain_name}"
-
-  domain = "${var.domain}"
-  ttl    = "${var.ttl}"
-  type   = "${var.dns_record_type}"
-  value  = "${var.dns_record_value}"
+resource "windns" "dns" {
+  hostnamealias = "${length(var.record_ip) == 0 ? var.hostname_alias : ""}"
+  ipv4address   = "${length(var.hostname_alias) == 0 ? var.record_ip : ""}"
+  record_name   = "${var.record_name}"
+  record_type   = "${var.record_type}"
+  zone_name     = "${var.domain}"
 }
