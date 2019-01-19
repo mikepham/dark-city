@@ -1,3 +1,9 @@
+variable "additional_configurations" {
+  default     = []
+  description = "List of additional configurations"
+  type        = "list"
+}
+
 variable "cluster_size" {
   description = "Cluster size. Musst be a value divisible by 3, 5, or 7 for a quorum"
   type        = "string"

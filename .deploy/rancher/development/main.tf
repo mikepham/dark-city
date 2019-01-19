@@ -22,10 +22,10 @@ module "env" {
   vpc_id      = "${local.vpc_id}"
 
   autoscale_availability_zone  = "us-east-1"
-  autoscale_capacity           = 1
-  autoscale_capacity_max       = 1
-  autoscale_capacity_min       = 1
-  autoscale_cluster_size       = 3
+  autoscale_capacity           = 3
+  autoscale_capacity_max       = 5
+  autoscale_capacity_min       = 3
+  autoscale_cluster_size       = 2
   autoscale_enable_monitoring  = true
   autoscale_iam_profile        = "EC2"
   autoscale_subnets            = ["${local.subnets}"]

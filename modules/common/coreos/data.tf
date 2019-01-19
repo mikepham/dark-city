@@ -1,12 +1,16 @@
-data "ct_config" "config" {
-  content  = "${file("${path.module}/.files/default.yaml")}"
-  platform = "ec2"
-
+locals {
   snippets = [
     "${data.template_file.common.rendered}",
     "${var.enable_clustering ? data.template_file.etcd_cluster.rendered : data.template_file.etcd.rendered}",
     "${var.enable_ntp ? data.template_file.ntp.rendered : data.template_file.common.rendered}",
   ]
+}
+
+data "ct_config" "config" {
+  content  = "${file("${path.module}/.files/default.yaml")}"
+  platform = "ec2"
+
+  snippets = ["${concat(local.snippets, var.additional_configurations)}"]
 }
 
 data "http" "discovery_url" {

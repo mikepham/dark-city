@@ -7,7 +7,7 @@ module "alb" {
   source = "../../modules/aws/alb"
 
   certificate_arn   = "${module.certificates.certificate_arn}"
-  domain_slug       = "${module.domain.domain_slug}"
+  domain_slug       = "${module.domain.env_domain_slug}"
   name              = "${var.environment}"
   security_groups   = ["${module.autoscale.autoscaling_security_groups}"]
   subnets           = ["${var.autoscale_subnets}"]
