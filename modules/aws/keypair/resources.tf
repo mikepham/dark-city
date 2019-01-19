@@ -20,5 +20,5 @@ resource "local_file" "pem" {
   ]
 
   content  = "${join("", module.tls.private_key_pem)}"
-  filename = "/home/${module.env.current_username}/.ssh/${local.pem_keypair_name}"
+  filename = "/home/${module.env.username}/.ssh/${local.pem_keypair_name}"
 }

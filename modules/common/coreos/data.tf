@@ -7,8 +7,9 @@ locals {
 }
 
 data "ct_config" "config" {
-  content  = "${file("${path.module}/.files/default.yaml")}"
-  platform = "ec2"
+  content      = "${file("${path.module}/.files/default.yaml")}"
+  platform     = "ec2"
+  pretty_print = true
 
   snippets = ["${concat(local.snippets, var.additional_configurations)}"]
 }

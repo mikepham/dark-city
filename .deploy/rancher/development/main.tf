@@ -25,7 +25,7 @@ module "env" {
   autoscale_capacity           = 3
   autoscale_capacity_max       = 5
   autoscale_capacity_min       = 3
-  autoscale_cluster_size       = 2
+  autoscale_cluster_size       = 1
   autoscale_enable_monitoring  = true
   autoscale_iam_profile        = "EC2"
   autoscale_subnets            = ["${local.subnets}"]
@@ -38,4 +38,11 @@ module "env" {
   coreos_reboot_strategy = "off"
 
   efs_subnets = ["${local.subnets}"]
+
+  rds_disk_size       = 10
+  rds_instance_type   = "t2.micro"
+  rds_parameter_group = "default.mysql5.7"
+  rds_type            = "mysql"
+  rds_type_version    = "5.7"
+  rds_username        = "rancher"
 }

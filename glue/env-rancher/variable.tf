@@ -190,6 +190,42 @@ variable "environment" {
   type        = "string"
 }
 
+variable "rds_disk_size" {
+  description = ""
+  type        = "string"
+}
+
+variable "rds_instance_type" {
+  description = ""
+  type        = "string"
+}
+
+variable "rds_parameter_group" {
+  description = ""
+  type        = "string"
+}
+
+variable "rds_type" {
+  description = ""
+  type        = "string"
+}
+
+variable "rds_type_version" {
+  description = ""
+  type        = "string"
+}
+
+variable "rds_password" {
+  default     = ""
+  description = ""
+  type        = "string"
+}
+
+variable "rds_username" {
+  description = ""
+  type        = "string"
+}
+
 variable "region" {
   default     = "us-east-1"
   description = "AWS Region"

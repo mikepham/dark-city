@@ -1,24 +1,12 @@
-provider "aws" {
-  region  = "${var.region}"
-  version = "1.56.0"
+module "rancher_agent" {
+  source = "../../modules/rancher/agents"
 }
 
-module "alb" {
-  source = "../../modules/aws/alb"
-
-  certificate_arn   = "${module.certificates.certificate_arn}"
-  domain_slug       = "${module.domain.env_domain_slug}"
-  name              = "${var.environment}"
-  security_groups   = ["${module.autoscale.autoscaling_security_groups}"]
-  subnets           = ["${var.autoscale_subnets}"]
-  target_group_arns = ["${module.autoscale.autoscaling_group_targets["arns"]}"]
-}
-
-module "autoscale" {
+module "rancher_agent_autoscale" {
   source = "../../modules/aws/autoscale"
   name   = "${module.domain.env_domain_slug}"
 
-  ami_id                       = "${module.coreos.ami_id}"
+  ami_id                       = "${module.rancher_agent_coreos.ami_id}"
   associate_public_ip_address  = "${var.autoscale_associate_public_ip_address}"
   availability_zone            = "${var.autoscale_availability_zone}"
   capacity                     = "${var.autoscale_capacity}"
@@ -38,7 +26,7 @@ module "autoscale" {
   target_protocol              = "${var.autoscale_target_protocol}"
   target_port                  = "${var.autoscale_target_port}"
   termination_policies         = "${var.autoscale_termination_policies}"
-  user_data                    = "${module.coreos.user_data}"
+  user_data                    = "${module.rancher_agent_coreos.user_data}"
   vpc_id                       = "${var.vpc_id}"
   volume_delete_on_termination = "${var.autoscale_volume_delete_on_termination}"
   volume_iops                  = "${var.autoscale_volume_iops}"
@@ -47,19 +35,17 @@ module "autoscale" {
   wait_for_elb_capacity        = "${var.autoscale_wait_for_elb_capacity}"
 
   security_groups = [
-    "${var.autoscale_security_groups}",
+    "${module.rancher_agent_autoscale.autoscale_security_groups}",
     "${module.efs.efs_security_group}",
   ]
 }
 
-module "certificates" {
-  source = "../../modules/aws/certificates"
-
-  domain = "${var.domain}"
-}
-
-module "coreos" {
+module "rancher_agent_coreos" {
   source = "../../modules/common/coreos"
+
+  additional_configurations = [
+    "${module.rancher_server.ignition}",
+  ]
 
   cluster_size      = "${var.coreos_cluster_size}"
   enable_clustering = "${var.coreos_cluster_size > 0}"
@@ -69,30 +55,4 @@ module "coreos" {
   reboot_strategy   = "${var.coreos_reboot_strategy}"
   region            = "${var.region}"
   swap_size         = "${var.coreos_swap_size}"
-}
-
-module "domain" {
-  source = "../../modules/aws/domain"
-
-  domain      = "${var.domain}"
-  environment = "${var.environment}"
-}
-
-module "efs" {
-  source = "../../modules/aws/efs"
-  domain = "${var.domain}"
-
-  enabled     = "${var.efs_enabled}"
-  environment = "${var.environment}"
-  name        = "${module.domain.env_domain_slug}"
-  subnets     = ["${var.efs_subnets}"]
-  vpc_ids     = ["${var.vpc_id}"]
-}
-
-module "keypair" {
-  source = "../../modules/aws/keypair"
-  domain = "${var.domain}"
-
-  environment  = "${var.environment}"
-  keypair_name = "${module.domain.env_domain_slug}"
 }

@@ -1,0 +1,16 @@
+systemd:
+  units:
+    - name: rancher-bootstrap.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Rancher member
+        After=docker.service
+        Requires=docker.service
+
+        [Service]
+        Type=oneshot
+        ExecStart=${startup}
+
+        [Install]
+        WantedBy=multi-user.target

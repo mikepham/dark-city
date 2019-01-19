@@ -1,7 +1,3 @@
-output "current_username" {
-  value = "${data.external.current_username.result["username"]}"
-}
-
 output "domain_name" {
   value = "${local.domain_name}"
 }
@@ -16,4 +12,12 @@ output "domain_slug" {
 
 output "env_domain_slug" {
   value = "${local.env_domain_slug}"
+}
+
+output "home" {
+  value = "${data.external.env.result["home"]}"
+}
+
+output "username" {
+  value = "${data.external.env.result["username"]}"
 }

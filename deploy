@@ -20,89 +20,93 @@ ENVIRONMENT_REQUIRES_PLAN=200
 POSITIONAL=()
 while [[ $# -gt 0 ]]
 do
-  key="$1"
-
-  case $key in
-    -a|--apply)
-      ACTION=apply
-      shift
-    ;;
-
-    -d|--docs)
-      DOCS=true
-      shift
-    ;;
-
-    -e|--environment)
-      ENVIRONMENT="$2"
-      shift
-    ;;
-
-    -f|--force)
-      FORCE=true
-      shift
-    ;;
-
-    -i|--init)
-      ACTION=init
-      shift
-    ;;
-
-    --destroy)
-      ACTION=destroy
-      shift
-    ;;
-
-    --env-clean)
-      ENV_CLEAN="--clean"
-      shift
-    ;;
-
-    --env-plugins)
-      ENV_PLUGINS="--plugins"
-      shift
-    ;;
-
-    --env-validation)
-      ENV_VALIDATE="--validation"
-      shift
-    ;;
-
-    *)
-      DEPLOYMENT=${DEPLOYMENT:-"$1"}
-      POSITIONAL+=("$1")
-      shift
-    ;;
-  esac
+    key="$1"
+    
+    case $key in
+        -a|--apply)
+            ACTION=apply
+            shift
+        ;;
+        
+        -d|--docs)
+            DOCS=true
+            shift
+        ;;
+        
+        -e|--environment)
+            ENVIRONMENT="$2"
+            shift
+        ;;
+        
+        -f|--force)
+            FORCE=true
+            shift
+        ;;
+        
+        -i|--init)
+            ACTION=init
+            shift
+        ;;
+        
+        --destroy)
+            ACTION=destroy
+            shift
+        ;;
+        
+        --env-clean)
+            ENV_CLEAN="--clean"
+            shift
+        ;;
+        
+        --env-plugins)
+            ENV_PLUGINS="--plugins"
+            shift
+        ;;
+        
+        --env-validation)
+            ENV_VALIDATE="--validation"
+            shift
+        ;;
+        
+        *)
+            DEPLOYMENT=${DEPLOYMENT:-"$1"}
+            POSITIONAL+=("$1")
+            shift
+        ;;
+    esac
 done
 set -- "${POSITIONAL[@]}"
 
 source ./env.sh $ENV_CLEAN $ENV_PLUGINS $ENV_VALIDATE --silent
+
+if [ "$ENV_CLEAN" != "" ]; then
+    exit
+fi
 
 
 #------------------------------------------------------------------------------
 # Validation
 #------------------------------------------------------------------------------
 case $ENVIRONMENT in
-  "dev")
-    ENVIRONMENT=development
-  ;;
-
-  "int")
-    ENVIRONMENT=internal
-  ;;
-
-  "qa")
-    ENVIRONMENT=qa
-  ;;
-
-  "prod")
-    ENVIRONMENT=production
-  ;;
-
-  "staging")
-    ENVIRONMENT=staging
-  ;;
+    "dev")
+        ENVIRONMENT=development
+    ;;
+    
+    "int")
+        ENVIRONMENT=internal
+    ;;
+    
+    "qa")
+        ENVIRONMENT=qa
+    ;;
+    
+    "prod")
+        ENVIRONMENT=production
+    ;;
+    
+    "staging")
+        ENVIRONMENT=staging
+    ;;
 esac
 
 ENVIRONMENT_PATH=".deploy/$DEPLOYMENT/$ENVIRONMENT"
@@ -110,23 +114,23 @@ ENVIRONMENT_PLAN="metadata/$ENVIRONMENT.plan"
 ENVIRONMENT_PLAN_PATH="$ENVIRONMENT_PATH/$ENVIRONMENT_PLAN"
 
 if [ "$DEPLOYMENT" = "" ]; then
-  echo "Must provide a deployment type."
-  exit ${DEPLOYMENT_NOT_FOUND}
+    echo "Must provide a deployment type."
+    exit ${DEPLOYMENT_NOT_FOUND}
 fi
 
 if [ "$ENVIRONMENT" = "" ]; then
-  echo "Must provide a deployment environment."
-  exit ${ENVIRONMENT_NOT_FOUND}
+    echo "Must provide a deployment environment."
+    exit ${ENVIRONMENT_NOT_FOUND}
 fi
 
 if [ ! -d ".deploy/$DEPLOYMENT" ]; then
-  echo "Invalid Deployment $DEPLOYMENT"
-  exit ${DEPLOYMENT_INVALID}
+    echo "Invalid Deployment $DEPLOYMENT"
+    exit ${DEPLOYMENT_INVALID}
 fi
 
 if [ ! -d "$ENVIRONMENT_PATH" ]; then
-  echo "Invalid Environment $ENVIRONMENT"
-  exit ${ENVIRONMENT_INVALID}
+    echo "Invalid Environment $ENVIRONMENT"
+    exit ${ENVIRONMENT_INVALID}
 fi
 
 FORCE_ACTION=${FORCE:-"false"}
@@ -142,11 +146,11 @@ echo "Environment Path: $ENVIRONMENT_PATH"
 echo "Environment Plan: $ENVIRONMENT_PLAN_PATH"
 
 if [ -f "$ENVIRONMENT_PLAN_PATH" ]; then
-  echo "Environment Plan Exists"
+    echo "Environment Plan Exists"
 fi
 
 if [ "$FORCE_ACTION" = "true" ]; then
-  echo "Force Was Applied"
+    echo "Force Was Applied"
 fi
 echo "------------------------------------------------------------------------"
 
@@ -162,20 +166,20 @@ echo "------------------------------------------------------------------------"
 echo "Generating documentation for $ENVIRONMENT modules"
 echo "------------------------------------------------------------------------"
 function generate() {
-  echo "# Modules" > "$ENVIRONMENT_PATH/README.md"
-  echo "$ENVIRONMENT_PATH/README.md"
-  EMPTY=""
-  for module in $(find modules -maxdepth 1 -type d -not -path modules -print); do
-    $TERRAFORM_DOCS markdown $module >> "$ENVIRONMENT_PATH/README.md"
-    JSON_NAME=${module/modules\//$EMPTY}
-    JSON_PATH="$ENVIRONMENT_PATH/metadata/json"
-    JSON_FILEPATH="$JSON_PATH/$JSON_NAME.json"
-    if [ ! -d "$JSON_PATH" ]; then
-      mkdir -p $JSON_PATH
-    fi
-    $TERRAFORM_DOCS json $module > $JSON_FILEPATH
-    echo $JSON_FILEPATH
-  done
+    echo "# Modules" > "$ENVIRONMENT_PATH/README.md"
+    echo "$ENVIRONMENT_PATH/README.md"
+    EMPTY=""
+    for module in $(find modules -maxdepth 1 -type d -not -path modules -print); do
+        $TERRAFORM_DOCS markdown $module >> "$ENVIRONMENT_PATH/README.md"
+        JSON_NAME=${module/modules\//$EMPTY}
+        JSON_PATH="$ENVIRONMENT_PATH/metadata/json"
+        JSON_FILEPATH="$JSON_PATH/$JSON_NAME.json"
+        if [ ! -d "$JSON_PATH" ]; then
+            mkdir -p $JSON_PATH
+        fi
+        $TERRAFORM_DOCS json $module > $JSON_FILEPATH
+        echo $JSON_FILEPATH
+    done
 }
 generate
 echo "------------------------------------------------------------------------"
@@ -190,65 +194,65 @@ echo "Workspace: `pwd`"
 echo "------------------------------------------------------------------------"
 
 function apply() {
-  if [ ! -f "$ENVIRONMENT_PLAN" ]; then
-    if [ "$FORCE_ACTION" = "false" ]; then
-      echo "Must create a plan before you can apply. Alternatively, you can use the --force switch."
-      echo ""
-      exit ${ENVIRONMENT_REQUIRES_PLAN}
+    if [ ! -f "$ENVIRONMENT_PLAN" ]; then
+        if [ "$FORCE_ACTION" = "false" ]; then
+            echo "Must create a plan before you can apply. Alternatively, you can use the --force switch."
+            echo ""
+            exit ${ENVIRONMENT_REQUIRES_PLAN}
+        fi
+        echo "Creating Plan File"
+        echo "------------------------------------------------------------------------"
+        run
+        echo "------------------------------------------------------------------------"
     fi
-    echo "Creating Plan File"
-    echo "------------------------------------------------------------------------"
-    run
-    echo "------------------------------------------------------------------------"
-  fi
-  $TERRAFORM apply $ENVIRONMENT_PLAN
-  cleanup
+    $TERRAFORM apply $ENVIRONMENT_PLAN
+    cleanup
 }
 
 function cleanup() {
-  if [ -f "$ENVIRONMENT_PLAN" ]; then
-    rm -r "$ENVIRONMENT_PLAN"
-  fi
+    if [ -f "$ENVIRONMENT_PLAN" ]; then
+        rm -r "$ENVIRONMENT_PLAN"
+    fi
 }
 
 function destroy() {
-  $TERRAFORM destroy
+    $TERRAFORM destroy
 }
 
 function init () {
-  $TERRAFORM init
-  $TERRAFORM validate
-
-  AMI_MODULE=`find $WORKING_DIRECTORY/.terraform/modules -type f -name 'getvariables.rb' | sed -r 's|/[^/]+$||' |sort |uniq`
-
-  if [ -f "$AMI_MODULE/getvariables.rb" ]; then
-    ruby $AMI_MODULE/getvariables.rb > $AMI_MODULE/variables.tf.json
-  fi
+    $TERRAFORM init
+    $TERRAFORM validate
+    
+    AMI_MODULE=`find $WORKING_DIRECTORY/.terraform/modules -type f -name 'getvariables.rb' | sed -r 's|/[^/]+$||' |sort |uniq`
+    
+    if [ -f "$AMI_MODULE/getvariables.rb" ]; then
+        ruby $AMI_MODULE/getvariables.rb > $AMI_MODULE/variables.tf.json
+    fi
 }
 
 function run() {
-  if [ ! -d "$WORKING_DIRECTORY/.terraform" ]; then
-    source "$SCRIPT_PATH/env.sh" --plugins --validation --silent
-    init
-
-    if [ "$ACTION" = "" ]; then
-      exit
+    if [ ! -d "$WORKING_DIRECTORY/.terraform" ]; then
+        source "$SCRIPT_PATH/env.sh" --plugins --validation --silent
+        init
+        
+        if [ "$ACTION" = "" ]; then
+            exit
+        fi
     fi
-  fi
-  $TERRAFORM plan -out="$ENVIRONMENT_PLAN"
+    $TERRAFORM plan -out="$ENVIRONMENT_PLAN"
 }
 
 case $ACTION in
-  "apply")
-      apply
+    "apply")
+        apply
     ;;
-  "destroy")
-      destroy
+    "destroy")
+        destroy
     ;;
-  "init")
-      init
+    "init")
+        init
     ;;
-  *)
-      run
+    *)
+        run
     ;;
 esac
