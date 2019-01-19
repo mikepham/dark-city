@@ -12,7 +12,7 @@ data "ct_config" "config" {
 data "http" "discovery_url" {
   count = "${var.enable_clustering ? 1 : 0}"
 
-  url = "https://discovery.etcd.io/new"
+  url = "https://discovery.etcd.io/new${var.cluster_size == 0 ? "" : "?new=${var.cluster_size}"}"
 }
 
 data "template_file" "common" {

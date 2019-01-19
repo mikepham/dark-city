@@ -1,15 +1,14 @@
 resource "aws_launch_configuration" "configuration" {
-  name = "${var.name}"
+  name_prefix = "${var.name}-"
 
   associate_public_ip_address = "${var.associate_public_ip_address}"
   enable_monitoring           = "${var.enable_monitoring}"
-  iam_instance_profile        = "${data.aws_iam_instance_profile.iam_ec2.arn}"
+  iam_instance_profile        = "${data.aws_iam_instance_profile.profile.arn}"
   image_id                    = "${var.ami_id}"
   instance_type               = "${var.instance_type}"
   key_name                    = "${var.keypair_name}"
+  security_groups             = ["${var.security_groups}"]
   user_data                   = "${var.user_data}"
-
-  security_groups = ["${var.security_groups}"]
 
   lifecycle {
     create_before_destroy = true
@@ -24,9 +23,11 @@ resource "aws_launch_configuration" "configuration" {
 }
 
 resource "aws_autoscaling_group" "autoscaling" {
-  name = "${var.name}"
+  count       = "${var.cluster_size}"
+  name_prefix = "${var.name}-"
 
   depends_on = [
+    "aws_alb_target_group.target_group",
     "aws_launch_configuration.configuration",
   ]
 
@@ -38,13 +39,14 @@ resource "aws_autoscaling_group" "autoscaling" {
   launch_configuration      = "${aws_launch_configuration.configuration.name}"
   max_size                  = "${var.capacity_max}"
   min_size                  = "${var.capacity_min}"
-  target_group_arns         = ["${aws_alb_target_group.target_group.arn}"]
+  target_group_arns         = ["${aws_alb_target_group.target_group.*.arn}"]
   termination_policies      = "${var.termination_policies}"
   vpc_zone_identifier       = "${var.subnets}"
+  wait_for_elb_capacity     = "${var.wait_for_elb_capacity}"
 }
 
 resource "aws_alb_target_group" "target_group" {
-  name = "${var.name}"
+  count = "${var.cluster_size}"
 
   port     = "${var.target_port}"
   protocol = "${var.target_protocol}"
@@ -61,5 +63,67 @@ resource "aws_alb_target_group" "target_group" {
 
   tags {
     Name = "${var.name}-alb-target"
+  }
+}
+
+resource "aws_security_group" "etcd" {
+  name_prefix = "${var.name}-security-etcd-"
+
+  description = "Allows etcd traffic from instances within the VPC."
+  vpc_id      = "${data.aws_vpc.vpc.id}"
+
+  ingress {
+    from_port = 2379
+    to_port   = 2379
+    protocol  = "tcp"
+
+    cidr_blocks = ["${data.aws_vpc.vpc.cidr_block}"]
+  }
+
+  ingress {
+    from_port = 2380
+    to_port   = 2380
+    protocol  = "tcp"
+
+    cidr_blocks = ["${data.aws_vpc.vpc.cidr_block}"]
+  }
+
+  tags {
+    Name = "${var.name}-security-etcd"
+  }
+}
+
+resource "aws_security_group" "member" {
+  name_prefix = "${var.name}-security-web-"
+
+  description = "Allows Web public traffic."
+  vpc_id      = "${data.aws_vpc.vpc.id}"
+
+  egress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port = 80
+    to_port   = 80
+    protocol  = "tcp"
+
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port = 443
+    to_port   = 443
+    protocol  = "tcp"
+
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags {
+    Name = "${var.name}-security"
   }
 }

@@ -1,5 +1,5 @@
 module "env" {
-  source = "../../modules/common/env"
+  source = "../../common/env"
 
   domain      = "${var.domain}"
   environment = "${var.environment}"

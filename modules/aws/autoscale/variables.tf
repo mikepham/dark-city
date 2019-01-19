@@ -28,6 +28,11 @@ variable "capacity_min" {
   type        = "string"
 }
 
+variable "cluster_size" {
+  description = "Number of AutoScaling groups"
+  type        = "string"
+}
+
 variable "enable_monitoring" {
   description = "Enable monitoring"
   type        = "string"
@@ -130,5 +135,10 @@ variable "volume_type" {
 
 variable "vpc_id" {
   description = "AWS VPC"
+  type        = "string"
+}
+
+variable "wait_for_elb_capacity" {
+  description = "Waits for the load balancers to appear healthy as well"
   type        = "string"
 }

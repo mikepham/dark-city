@@ -1,4 +1,4 @@
-data "aws_iam_instance_profile" "iam_ec2" {
+data "aws_iam_instance_profile" "profile" {
   name = "${var.iam_profile}"
 }
 

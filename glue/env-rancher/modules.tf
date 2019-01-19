@@ -3,6 +3,17 @@ provider "aws" {
   version = "1.56.0"
 }
 
+module "alb" {
+  source = "../../modules/aws/alb"
+
+  certificate_arn   = "${module.certificates.certificate_arn}"
+  domain_slug       = "${module.domain.domain_slug}"
+  name              = "${var.environment}"
+  security_groups   = ["${module.autoscale.autoscaling_security_groups}"]
+  subnets           = ["${var.autoscale_subnets}"]
+  target_group_arns = ["${module.autoscale.autoscaling_group_targets["arns"]}"]
+}
+
 module "autoscale" {
   source = "../../modules/aws/autoscale"
   name   = "${module.domain.env_domain_slug}"
@@ -13,6 +24,7 @@ module "autoscale" {
   capacity                     = "${var.autoscale_capacity}"
   capacity_max                 = "${var.autoscale_capacity_max}"
   capacity_min                 = "${var.autoscale_capacity_min}"
+  cluster_size                 = "${var.autoscale_cluster_size}"
   enable_monitoring            = "${var.autoscale_enable_monitoring}"
   health_check_type            = "${var.autoscale_health_check_type}"
   iam_profile                  = "${var.autoscale_iam_profile}"
@@ -20,8 +32,7 @@ module "autoscale" {
   keypair_name                 = "${module.keypair.keypair_name}"
   region                       = "${var.region}"
   release_channel              = "${var.autoscale_release_channel}"
-  security_groups              = ["${var.autoscale_security_groups}"]
-  subnets                      = "${var.autoscale_subnets}"
+  subnets                      = ["${var.autoscale_subnets}"]
   target_health_path           = "${var.autoscale_target_health_path}"
   target_health_port           = "${var.autoscale_target_health_port}"
   target_protocol              = "${var.autoscale_target_protocol}"
@@ -33,6 +44,18 @@ module "autoscale" {
   volume_iops                  = "${var.autoscale_volume_iops}"
   volume_size                  = "${var.autoscale_volume_size}"
   volume_type                  = "${var.autoscale_volume_type}"
+  wait_for_elb_capacity        = "${var.autoscale_wait_for_elb_capacity}"
+
+  security_groups = [
+    "${var.autoscale_security_groups}",
+    "${module.efs.efs_security_group}",
+  ]
+}
+
+module "certificates" {
+  source = "../../modules/aws/certificates"
+
+  domain = "${var.domain}"
 }
 
 module "coreos" {
@@ -55,10 +78,21 @@ module "domain" {
   environment = "${var.environment}"
 }
 
+module "efs" {
+  source = "../../modules/aws/efs"
+  domain = "${var.domain}"
+
+  enabled     = "${var.efs_enabled}"
+  environment = "${var.environment}"
+  name        = "${module.domain.env_domain_slug}"
+  subnets     = ["${var.efs_subnets}"]
+  vpc_ids     = ["${var.vpc_id}"]
+}
+
 module "keypair" {
   source = "../../modules/aws/keypair"
+  domain = "${var.domain}"
 
-  domain       = "${var.domain}"
   environment  = "${var.environment}"
   keypair_name = "${module.domain.env_domain_slug}"
 }

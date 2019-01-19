@@ -25,6 +25,12 @@ variable "autoscale_capacity_min" {
   type        = "string"
 }
 
+variable "autoscale_cluster_size" {
+  default     = 1
+  description = "Number of AutoScaling clusters to create"
+  type        = "string"
+}
+
 variable "autoscale_enable_monitoring" {
   description = "Enable instance monitoring"
   type        = "string"
@@ -71,26 +77,31 @@ variable "autoscale_subnets" {
 }
 
 variable "autoscale_target_port" {
+  default     = 80
   description = "Target Group Port"
   type        = "string"
 }
 
 variable "autoscale_target_protocol" {
+  default     = "HTTP"
   description = "Target Group Protocol"
   type        = "string"
 }
 
 variable "autoscale_target_health_path" {
+  default     = "/"
   description = "Target Group Health Path"
   type        = "string"
 }
 
 variable "autoscale_target_health_port" {
+  default     = 80
   description = "Target Group Health Port"
   type        = "string"
 }
 
 variable "autoscale_termination_policies" {
+  default     = ["OldestInstance"]
   description = "Termination Policies"
   type        = "list"
 }
@@ -115,6 +126,12 @@ variable "autoscale_volume_size" {
 variable "autoscale_volume_type" {
   default     = "gp2"
   description = "Volume type"
+  type        = "string"
+}
+
+variable "autoscale_wait_for_elb_capacity" {
+  default     = "0"
+  description = "Waits for the load balancers to appear healthy as well"
   type        = "string"
 }
 
@@ -156,6 +173,16 @@ variable "coreos_swap_size" {
   default     = 2
   description = "Swap size"
   type        = "string"
+}
+
+variable "efs_enabled" {
+  default = true
+  type    = "string"
+}
+
+variable "efs_subnets" {
+  description = "Subnets"
+  type        = "list"
 }
 
 variable "environment" {
