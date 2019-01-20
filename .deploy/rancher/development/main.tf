@@ -43,7 +43,7 @@ module "env" {
   do_monitoring         = false
   do_name               = "agent"
   do_private_networking = false
-  do_region             = "nyc2"
+  do_region             = "nyc3"
   do_resize_disk        = true
   do_ssh_keys           = []
   do_size               = "1gb"           # s-2vcpu-2gb
