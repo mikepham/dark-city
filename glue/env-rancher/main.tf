@@ -3,6 +3,11 @@ provider "aws" {
   version = ">=1.56"
 }
 
+provider "digitalocean" {
+  token = "${module.secrets.secrets["DIGITALOCEAN_API_KEY"]}"
+  version = ">=1.1"
+}
+
 provider "external" {
   version = ">=1.0"
 }
@@ -35,7 +40,7 @@ module "alb" {
   ]
 
   subnets = [
-    "${var.autoscale_subnets}",
+    "${var.subnets}",
   ]
 
   target_group_arns = [
@@ -82,6 +87,6 @@ module "efs" {
   enabled     = "${var.efs_enabled}"
   environment = "${var.environment}"
   name        = "${module.domain.env_domain_slug}"
-  subnets     = ["${var.efs_subnets}"]
+  subnets     = ["${var.subnets}"]
   vpc_ids     = ["${var.vpc_id}"]
 }

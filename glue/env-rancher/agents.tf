@@ -20,7 +20,7 @@ module "rancher_agent_autoscale" {
   keypair_name                 = "${module.keypair.keypair_name}"
   region                       = "${var.region}"
   release_channel              = "${var.autoscale_release_channel}"
-  subnets                      = ["${var.autoscale_subnets}"]
+  subnets                      = ["${var.subnets}"]
   target_health_path           = "${var.autoscale_target_health_path}"
   target_health_port           = "${var.autoscale_target_health_port}"
   target_protocol              = "${var.autoscale_target_protocol}"
@@ -35,7 +35,7 @@ module "rancher_agent_autoscale" {
   wait_for_elb_capacity        = "${var.autoscale_wait_for_elb_capacity}"
 
   security_groups = [
-    "${module.rancher_agent_autoscale.autoscale_security_groups}",
+    "${module.rancher_agent_autoscale.autoscaling_security_groups}",
     "${module.efs.efs_security_group}",
   ]
 }
@@ -44,7 +44,7 @@ module "rancher_agent_coreos" {
   source = "../../modules/common/coreos"
 
   additional_configurations = [
-    "${module.rancher_server.ignition}",
+    "${module.rancher_agent.ignition}",
   ]
 
   cluster_size      = "${var.coreos_cluster_size}"

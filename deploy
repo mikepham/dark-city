@@ -77,12 +77,28 @@ do
 done
 set -- "${POSITIONAL[@]}"
 
-source ./env.sh $ENV_CLEAN $ENV_PLUGINS $ENV_VALIDATE --silent
+EXIT=false
 
 if [ "$ENV_CLEAN" != "" ]; then
-    exit
+    source ./env.sh $ENV_CLEAN --no-banner
+    EXIT=true
 fi
 
+if [ "$ENV_PLUGINS" != "" ]; then
+    source ./env.sh $ENV_PLUGINS --no-banner
+    EXIT=true
+fi
+
+if [ "$ENV_VALIDATED" != "" ]; then
+    source ./env.sh $ENV_VALIDATE --no-banner
+    EXIT=true
+fi
+
+if [ "$EXIT" = "true" ]; then
+  exit
+fi
+
+source ./env.sh $ENV_CLEAN $ENV_PLUGINS $ENV_VALIDATE
 
 #------------------------------------------------------------------------------
 # Validation

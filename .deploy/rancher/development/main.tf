@@ -28,7 +28,6 @@ module "env" {
   autoscale_cluster_size       = 1
   autoscale_enable_monitoring  = true
   autoscale_iam_profile        = "EC2"
-  autoscale_subnets            = ["${local.subnets}"]
   autoscale_target_health_path = "/health"
   autoscale_target_health_port = 2379
   autoscale_volume_size        = 8
@@ -37,7 +36,19 @@ module "env" {
   coreos_reboot_group    = "${local.environment}"
   coreos_reboot_strategy = "off"
 
-  efs_subnets = ["${local.subnets}"]
+  do_backups            = false
+  do_count              = 3
+  do_image              = "coreos-stable"
+  do_ipv6               = false
+  do_monitoring         = false
+  do_name               = "agent"
+  do_private_networking = false
+  do_region             = "nyc2"
+  do_resize_disk        = true
+  do_ssh_keys           = []
+  do_size               = "1gb"           # s-2vcpu-2gb
+  do_tags               = ["internal"]
+  do_volume_ids         = []
 
   rds_disk_size       = 10
   rds_instance_type   = "t2.micro"
@@ -45,4 +56,6 @@ module "env" {
   rds_type            = "mysql"
   rds_type_version    = "5.7"
   rds_username        = "rancher"
+
+  subnets = "${local.subnets}"
 }

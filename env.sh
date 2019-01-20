@@ -40,6 +40,11 @@ do
             shift
         ;;
         
+        --no-banner)
+            SHOW_BANNER=false
+            shift
+        ;;
+        
         --silent)
             OUTPUT=true
             shift
@@ -57,23 +62,26 @@ set -- "${POSITIONAL[@]}"
 CLEAN=${CLEAN:-false}
 OUTPUT=${OUTPUT:-false}
 PLUGINS=${PLUGINS:-false}
+SHOW_BANNER=${SHOW_BANNER:-true}
 VALIDATION=${VALIDATION:-true}
 
 #------------------------------------------------------------------------------
 # Banner
 #------------------------------------------------------------------------------
-echo "========================================================================"
-echo "Dark City $DARKCITY_VERSION © `date +'%Y'` NativeCode Development"
-echo "========================================================================"
-echo "Branch: `git branch | grep \* | cut -d ' ' -f2`"
-echo "------------------------------------------------------------------------"
-echo "ENV_CLEAN=$CLEAN"
-echo "ENV_PLUGINS=$PLUGINS"
-echo "ENV_VALIDATION=$VALIDATION"
-echo "------------------------------------------------------------------------"
+if [ "$SHOW_BANNER" = "true" ]; then
+    echo "========================================================================"
+    echo "Dark City $DARKCITY_VERSION © `date +'%Y'` NativeCode Development"
+    echo "========================================================================"
+    echo "Branch: `git branch | grep \* | cut -d ' ' -f2`"
+    echo "------------------------------------------------------------------------"
+    echo "ENV_CLEAN=$CLEAN"
+    echo "ENV_PLUGINS=$PLUGINS"
+    echo "ENV_VALIDATION=$VALIDATION"
+    echo "------------------------------------------------------------------------"
+fi
 
 if [ "$OUTPUT" = "false" ]; then
-  stty -echo
+    stty -echo
 fi
 
 
@@ -209,5 +217,5 @@ if [ "$PLUGINS" = "true" ]; then
 fi
 
 if [ "$OUTPUT" = "false" ]; then
-  stty echo
+    stty echo
 fi
