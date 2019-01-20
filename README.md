@@ -35,6 +35,52 @@ Deploys the following services:
 
 - [Terraform](https://www.terraform.io/downloads.html)
 
+## Automatic Setup
+
+You can use the `deploy` script, which can make sure you have the proper environment configured.
+
+### First, we need to run the plugin and validation just once.
+
+```bash
+./deploy --env-plugins --env-validate
+```
+
+### Next, we can run the deploy with the target and environment and initialize terraform.
+
+```bash
+./deploy rancher -e dev -i
+```
+or
+```bash
+./deploy rancher -e dev --init
+```
+
+### Finally, you can repeatedly run the `deploy` unless you have made changes to your providers, in which case you must run the initialize again.
+
+```bash
+./deploy rancher -e dev
+```
+or
+```bash
+./deploy rancher --environment dev
+```
+
+### When you are ready to apply the deployment plan, simply run the apply.
+
+```bash
+./deploy rancher -e dev -a
+```
+or
+```bash
+./deploy rancher -e dev --apply
+```
+
+|Tips and Tricks|
+|---|
+|`./deploy rancher -e dev`|
+
+## Manual Setup
+
 ### Configure AWS
 ```bash
 aws configure
