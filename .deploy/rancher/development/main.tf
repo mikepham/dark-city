@@ -21,34 +21,35 @@ module "env" {
   environment = "${local.environment}"
   vpc_id      = "${local.vpc_id}"
 
-  autoscale_availability_zone  = "us-east-1"
-  autoscale_capacity           = 3
-  autoscale_capacity_max       = 5
-  autoscale_capacity_min       = 3
-  autoscale_cluster_size       = 1
-  autoscale_enable_monitoring  = true
-  autoscale_iam_profile        = "EC2"
-  autoscale_target_health_path = "/health"
-  autoscale_target_health_port = 2379
-  autoscale_volume_size        = 8
+  autoscale_server_availability_zone  = "us-east-1"
+  autoscale_server_capacity           = 1
+  autoscale_server_capacity_max       = 1
+  autoscale_server_capacity_min       = 1
+  autoscale_server_cluster_size       = 1
+  autoscale_server_enable_monitoring  = true
+  autoscale_server_iam_profile        = "EC2"
+  autoscale_server_target_health_path = "/health"
+  autoscale_server_target_health_port = 2379
+  autoscale_server_volume_size        = 8
 
-  coreos_cluster_size    = 0
-  coreos_reboot_group    = "${local.environment}"
-  coreos_reboot_strategy = "off"
+  autoscale_agent_availability_zone  = "us-east-1"
+  autoscale_agent_capacity           = 3
+  autoscale_agent_capacity_max       = 5
+  autoscale_agent_capacity_min       = 3
+  autoscale_agent_cluster_size       = 1
+  autoscale_agent_enable_monitoring  = true
+  autoscale_agent_iam_profile        = "EC2"
+  autoscale_agent_target_health_path = "/health"
+  autoscale_agent_target_health_port = 2379
+  autoscale_agent_volume_size        = 8
 
-  do_backups            = false
-  do_count              = 3
-  do_image              = "coreos-stable"
-  do_ipv6               = false
-  do_monitoring         = false
-  do_name               = "agent"
-  do_private_networking = false
-  do_region             = "nyc3"
-  do_resize_disk        = true
-  do_ssh_keys           = []
-  do_size               = "1gb"           # s-2vcpu-2gb
-  do_tags               = ["internal"]
-  do_volume_ids         = []
+  coreos_agent_cluster_size    = 0
+  coreos_agent_reboot_group    = "${local.environment}"
+  coreos_agent_reboot_strategy = "off"
+
+  coreos_server_cluster_size    = 0
+  coreos_server_reboot_group    = "${local.environment}"
+  coreos_server_reboot_strategy = "off"
 
   rds_disk_size       = 10
   rds_instance_type   = "t2.micro"

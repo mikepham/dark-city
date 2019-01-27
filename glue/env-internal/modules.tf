@@ -3,6 +3,11 @@ provider "aws" {
   version = "1.56.0"
 }
 
+provider "digitalocean" {
+  token = "${module.secrets.secrets["DIGITALOCEAN_API_KEY"]}"
+  version = ">=1.1"
+}
+
 module "domain" "dns" {
   source = "../../modules/vmware/domain"
   domain = "${var.domain}"

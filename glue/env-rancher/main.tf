@@ -3,11 +3,6 @@ provider "aws" {
   version = ">=1.56"
 }
 
-provider "digitalocean" {
-  token = "${module.secrets.secrets["DIGITALOCEAN_API_KEY"]}"
-  version = ">=1.1"
-}
-
 provider "external" {
   version = ">=1.0"
 }
