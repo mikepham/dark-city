@@ -3,6 +3,14 @@ variable "allow_unverified_ssl" {
   type        = "string"
 }
 
+variable "disk_label" {
+  type = "string"
+}
+
+variable "disk_size" {
+  type = "string"
+}
+
 variable "host" {
   description = "vSphere host"
   type        = "string"

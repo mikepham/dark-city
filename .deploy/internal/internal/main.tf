@@ -6,24 +6,15 @@ terraform {
   }
 }
 
+provider "aws" {
+  region  = "${var.region}"
+  version = "1.56.0"
+}
+
 module "env" {
   source = "../../../glue/env-internal"
 
-  do_backups            = false
-  do_count              = 3
-  do_image              = "coreos-stable"
-  do_ipv6               = false
-  do_monitoring         = false
-  do_name               = "agent"
-  do_private_networking = false
-  do_region             = "nyc3"
-  do_resize_disk        = true
-  do_ssh_keys           = []
-  do_size               = "1gb"           # s-2vcpu-2gb
-  do_tags               = ["internal"]
-  do_volume_ids         = []
-
-  domain                      = "in.nativecode.com"
+  domain                      = "vm01.in.nativecode.com"
   environment                 = "int"
   dns_domain_controller       = "dc01.in.nativecode.com"
   dns_record_ip               = "192.168.1.40"

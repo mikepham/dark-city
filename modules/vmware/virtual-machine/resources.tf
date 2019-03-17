@@ -4,7 +4,7 @@ resource "vsphere_virtual_machine" "vm" {
   resource_pool_id = "${data.vsphere_resource_pool.pool.id}"
 
   num_cpus = 2
-  memory   = 1024
+  memory   = 2048
   guest_id = "other3xLinux64Guest"
 
   network_interface {
@@ -12,7 +12,7 @@ resource "vsphere_virtual_machine" "vm" {
   }
 
   disk {
-    label = "disk0"
-    size  = 20
+    label = "${var.disk_label}"
+    size  = "${var.disk_size}"
   }
 }
